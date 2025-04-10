@@ -8,7 +8,7 @@ const Login = () => {
 
     const handleLogin = () => {
         sessionStorage.setItem("user", "Loggged in")
-        router.push("/index")
+        router.push("/home")
     }
 
     return (

@@ -36,7 +36,7 @@ const DashboardLayout = ({ children }) => {
                     </div>
 
                     <nav className="p-3 space-y-1">
-                        <Link href="/index" className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 text-gray-300 hover:text-teal-400 cursor-pointer transition-colors">
+                        <Link href="/home" className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 text-gray-300 hover:text-teal-400 cursor-pointer transition-colors">
                            
                             <MdHome className="w-5 h-5 text-center" />
                             <span>Главная</span>

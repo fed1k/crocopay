@@ -8,8 +8,9 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!sessionStorage.getItem("user")) {
-      // router.push("/index")
+    if (sessionStorage.getItem("user")) {
+      router.push("/home")
+    } else {
       router.push("/login")
     }
   }, [])
