@@ -6,6 +6,11 @@ const Login = () => {
 
     const router = useRouter()
 
+    const handleLogin = () => {
+        sessionStorage.setItem("user", "Loggged in")
+        router.push("/index")
+    }
+
     return (
         <div className="from-gray-800 relative bg-gradient-to-b min-h-screen flex justify-center items-center to-gray-900">
             <div>
@@ -22,7 +27,7 @@ const Login = () => {
                             <input className="block text-white p-3 bg-gray-700 w-full rounded-lg" type="password" name="" id="token" placeholder="Введите токен" />
                         </div>
 
-                        <button onClick={() => router.push("/index")} type="button" className="text-white mt-6 to-blue-500 from-teal-400 bg-gradient-to-r rounded-lg py-3 w-full">Войти</button>
+                        <button onClick={handleLogin} type="button" className="text-white mt-6 to-blue-500 from-teal-400 bg-gradient-to-r rounded-lg py-3 w-full">Войти</button>
                     </form>
                 </div>
             </div>

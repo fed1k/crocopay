@@ -55,9 +55,9 @@ const DashboardLayout = ({ children }) => {
                                 <Link href="/orders-in" className="px-3 py-2 flex items-center text-sm text-gray-400 hover:bg-gray-800/30 rounded-lg">
                                     <FaArrowDown className="mr-2 text-teal-400" /> <span>Pay in</span>
                                 </Link>
-                                <a href="/orders-out" className="flex items-center px-3 py-2 text-sm text-gray-400 hover:bg-gray-800/30 rounded-lg">
+                                <Link href="/orders-out" className="flex items-center px-3 py-2 text-sm text-gray-400 hover:bg-gray-800/30 rounded-lg">
                                     <FaArrowUp className="text-red-400 mr-2" /> <span>Pay out</span>
-                                </a>
+                                </Link>
                             </div>
                         </div>
 
@@ -96,7 +96,7 @@ const DashboardLayout = ({ children }) => {
                     </nav>
                 </div>
                 <div id="userMenu" className="absolute right-0 mt-2 w-48 bg-gray-800 shadow-xl rounded-lg py-2 border border-gray-700 opacity-0 invisible transition-all duration-300 group-hover:opacity-100 group-hover:visible">
-                    <a href="profile.html" className="block px-4 py-2 text-gray-300 hover:bg-gray-700/50">Профиль</a>
+                    <Link href="/profile" className="block px-4 py-2 text-gray-300 hover:bg-gray-700/50">Профиль</Link>
                     <Link href="/login" className="block px-4 py-2 text-red-400 hover:bg-gray-700/50">Выйти</Link>
                 </div>
 
@@ -169,7 +169,7 @@ const DashboardLayout = ({ children }) => {
                                 <span class="text-gray-300">aston17</span>
                             </button>
                             <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-gray-800 shadow-xl rounded-lg py-2 border border-gray-700 opacity-0 invisible transition-all duration-300 group-hover:opacity-100 group-hover:visible">
-                                <a href="profile.html" class="block px-4 py-2 text-gray-300 hover:bg-gray-700/50">Профиль</a>
+                                <Link href="/profile" class="block px-4 py-2 text-gray-300 hover:bg-gray-700/50">Профиль</Link>
                                 <Link href="/login" class="block px-4 py-2 text-red-400 hover:bg-gray-700/50">Выйти</Link>
                             </div>
                         </div>

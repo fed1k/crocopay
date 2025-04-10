@@ -9,7 +9,7 @@ export default function Home() {
 
   useEffect(() => {
     if (sessionStorage.getItem("user")) {
-      router.push("/home")
+      router.push("/index")
     } else {
       router.push("/login")
     }
