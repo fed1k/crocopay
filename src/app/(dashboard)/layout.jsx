@@ -117,60 +117,60 @@ const DashboardLayout = ({ children }) => {
                 <header className="bg-gray-900 shadow-lg sticky top-0 z-40 border-b border-gray-800">
 
 
-                    <div class="flex items-center justify-between p-4">
+                    <div className="flex items-center justify-between p-4">
                         {/* <!-- Кнопка гамбургера --> */}
-                        <button id="sidebarToggle" class="md:hidden p-2 text-gray-400 hover:text-teal-400">
-                            <i class="fas fa-bars hamburger-icon"></i>
+                        <button id="sidebarToggle" className="md:hidden p-2 text-gray-400 hover:text-teal-400">
+                            <i className="fas fa-bars hamburger-icon"></i>
                         </button>
 
-                        <div class="flex items-center gap-6 ml-auto">
+                        <div className="flex items-center gap-6 ml-auto">
                             {/* <!-- Курсы валют --> */}
-                            <div class="flex gap-3 pr-6 border-r border-gray-800">
-                                <div class="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
-                                    <p class="text-xs text-teal-400 mb-1 font-mono">Курс покупки</p>
-                                    <div class="flex items-center gap-1.5">
-                                        <span id="buyRate" class="font-semibold text-lg bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent">85.67</span>
-                                        <span class="text-sm bg-gradient-to-r from-teal-400/80 to-blue-400/80 bg-clip-text text-transparent">RUB</span>
+                            <div className="flex gap-3 pr-6 border-r border-gray-800">
+                                <div className="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
+                                    <p className="text-xs text-teal-400 mb-1 font-mono">Курс покупки</p>
+                                    <div className="flex items-center gap-1.5">
+                                        <span id="buyRate" className="font-semibold text-lg bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent">85.67</span>
+                                        <span className="text-sm bg-gradient-to-r from-teal-400/80 to-blue-400/80 bg-clip-text text-transparent">RUB</span>
                                     </div>
                                 </div>
-                                <div class="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
-                                    <p class="text-xs text-pink-400 mb-1 font-mono">Курс продажи</p>
-                                    <div class="flex items-center gap-1.5">
-                                        <span id="sellRate" class="font-semibold text-lg bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">85.75</span>
-                                        <span class="text-sm bg-gradient-to-r from-pink-400/80 to-purple-400/80 bg-clip-text text-transparent">RUB</span>
+                                <div className="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
+                                    <p className="text-xs text-pink-400 mb-1 font-mono">Курс продажи</p>
+                                    <div className="flex items-center gap-1.5">
+                                        <span id="sellRate" className="font-semibold text-lg bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">85.75</span>
+                                        <span className="text-sm bg-gradient-to-r from-pink-400/80 to-purple-400/80 bg-clip-text text-transparent">RUB</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* <!-- Добавляем блоки для процентов --> */}
-                            <div class="flex gap-3 pr-6 border-r border-gray-800">
-                                <div class="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
-                                    <p class="text-xs text-teal-400 mb-1 font-mono">Pay In</p>
-                                    <div class="flex items-center gap-1.5">
-                                        <span id="payInRate" class="font-semibold text-lg bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent">8.5</span>
-                                        <span class="text-sm bg-gradient-to-r from-teal-400/80 to-blue-400/80 bg-clip-text text-transparent">%</span>
+                            <div className="flex gap-3 pr-6 border-r border-gray-800">
+                                <div className="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
+                                    <p className="text-xs text-teal-400 mb-1 font-mono">Pay In</p>
+                                    <div className="flex items-center gap-1.5">
+                                        <span id="payInRate" className="font-semibold text-lg bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent">8.5</span>
+                                        <span className="text-sm bg-gradient-to-r from-teal-400/80 to-blue-400/80 bg-clip-text text-transparent">%</span>
                                     </div>
                                 </div>
-                                <div class="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
-                                    <p class="text-xs text-pink-400 mb-1 font-mono">Pay Out</p>
-                                    <div class="flex items-center gap-1.5">
-                                        <span id="payOutRate" class="font-semibold text-lg bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">3.5</span>
-                                        <span class="text-sm bg-gradient-to-r from-pink-400/80 to-purple-400/80 bg-clip-text text-transparent">%</span>
+                                <div className="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
+                                    <p className="text-xs text-pink-400 mb-1 font-mono">Pay Out</p>
+                                    <div className="flex items-center gap-1.5">
+                                        <span id="payOutRate" className="font-semibold text-lg bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">3.5</span>
+                                        <span className="text-sm bg-gradient-to-r from-pink-400/80 to-purple-400/80 bg-clip-text text-transparent">%</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         {/* <!-- Меню пользователя --> */}
-                        <div class="relative group">
-                            <button id="userMenuButton" class="flex items-center gap-2 bg-gray-800/50 p-2 rounded-lg hover:bg-gray-800 transition-colors">
-                                {/* <i class="fa-solid fa-circle-user text-2xl text-teal-400"></i> */}
+                        <div className="relative group">
+                            <button id="userMenuButton" className="flex items-center gap-2 bg-gray-800/50 p-2 rounded-lg hover:bg-gray-800 transition-colors">
+                                {/* <i className="fa-solid fa-circle-user text-2xl text-teal-400"></i> */}
                                 <FaUserCircle className="text-2xl text-teal-400" />
-                                <span class="text-gray-300">aston17</span>
+                                <span className="text-gray-300">aston17</span>
                             </button>
-                            <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-gray-800 shadow-xl rounded-lg py-2 border border-gray-700 opacity-0 invisible transition-all duration-300 group-hover:opacity-100 group-hover:visible">
-                                <Link href="/profile" class="block px-4 py-2 text-gray-300 hover:bg-gray-700/50">Профиль</Link>
-                                <Link href="/login" class="block px-4 py-2 text-red-400 hover:bg-gray-700/50">Выйти</Link>
+                            <div id="userMenu" className="absolute right-0 mt-2 w-48 bg-gray-800 shadow-xl rounded-lg py-2 border border-gray-700 opacity-0 invisible transition-all duration-300 group-hover:opacity-100 group-hover:visible">
+                                <Link href="/profile" className="block px-4 py-2 text-gray-300 hover:bg-gray-700/50">Профиль</Link>
+                                <Link href="/login" className="block px-4 py-2 text-red-400 hover:bg-gray-700/50">Выйти</Link>
                             </div>
                         </div>
                     </div>
