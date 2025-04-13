@@ -15,7 +15,7 @@ const DashboardLayout = ({ children }) => {
             <aside id="sidebar" className=" min-w-64 bg-gray-900 text-white shadow-2xl sticky top-0 h-screen z-50 sidebar-transition hidden md:flex flex-col">
                 <div className="p-5 border-b border-gray-800 flex items-center gap-3">
                     <div>
-                        <h1 className="font-bold text-xl bg-gradient-to-r from-teal-400 to-blue-500 bg-clip-text text-transparent">CrocoPay</h1>
+                        <h1 className="font-bold text-xl bg-gradient-to-r from-teal-400 to-blue-500 bg-clip-text text-transparent">Kredo</h1>
                         <p className="text-xs text-gray-400">Payment Ecosystem</p>
                     </div>
                 </div>

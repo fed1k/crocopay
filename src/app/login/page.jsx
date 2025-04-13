@@ -15,7 +15,7 @@ const Login = () => {
         <div className="from-gray-800 relative bg-gradient-to-b min-h-screen flex justify-center items-center to-gray-900">
             <div>
                 <div>
-                    <h3 className="text-3xl text-center font-bold text-transparent bg-clip-text to-blue-500 from-teal-400 bg-gradient-to-r">CrocoPay</h3>
+                    <h3 className="text-3xl text-center font-bold text-transparent bg-clip-text to-blue-500 from-teal-400 bg-gradient-to-r">Kredo</h3>
                     <p className="text-gray-400 text-center text-sm mt-1">Payment Ecosystem</p>
                 </div>
                 <div className="border w-[280px] sm:w-[500px] rounded-2xl mt-8 p-8 shadow-2xl backdrop-blur-lg bg-gray-800\/90 bg-[rgb(31_41_55_0.9)] border-gray-700">

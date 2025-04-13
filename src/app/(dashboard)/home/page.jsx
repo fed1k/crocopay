@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { FaArrowDown, FaArrowUp, FaChartLine, FaChartPie, FaCheckCircle, FaClock, FaHistory, FaLock, FaMoneyBillWave, FaShieldAlt, FaUsers, FaWallet } from "react-icons/fa"
 
 const Profile = () => {
@@ -24,9 +25,9 @@ const Profile = () => {
                                         <p className="text-sm text-gray-400">Необходимо для активации</p>
                                         <p className="text-2xl font-bold text-white"><span id="requiredAmount">1500.00</span> USDT</p>
                                     </div>
-                                    <a href="#" className="px-6 py-3 bg-gradient-to-r from-teal-400 to-blue-400 text-white rounded-lg hover:opacity-90 transition-all duration-300 transform hover:scale-105">
+                                    <Link href="/wallet" className="px-6 py-3 bg-gradient-to-r from-teal-400 to-blue-400 text-white rounded-lg hover:opacity-90 transition-all duration-300 transform hover:scale-105">
                                         Активировать
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
