@@ -11,7 +11,7 @@ import { FaArrowRight, FaBolt, FaCopy, FaWallet } from "react-icons/fa6";
 import Swal from "sweetalert2";
 const Wallet = () => {
   const [openModal, setOpenModal] = useState(false);
-  const [withdrawalModalOpen, setWithdrawalModalOpen] = useState(false)
+  const [withdrawalModalOpen, setWithdrawalModalOpen] = useState(false);
   const openDepositModal = () => {
     setOpenModal(true);
   };
@@ -36,6 +36,17 @@ const Wallet = () => {
           position: "top-end",
         });
       });
+  };
+
+  const [value, setValue] = useState("");
+
+  const handleChange = (e) => {
+    const newValue = e.target.value;
+
+    // Regex: Allow only numbers and one optional dot
+    if (/^\d*\.?\d*$/.test(newValue)) {
+      setValue(newValue);
+    }
   };
 
   return (
@@ -67,10 +78,15 @@ const Wallet = () => {
             <div className="flex items-end justify-between mb-6">
               <div>
                 <div className="flex items-baseline gap-2">
-                  <span id="userBalance" className="text-5xl font-bold text-white">
+                  <span
+                    id="userBalance"
+                    className="text-5xl font-bold text-white"
+                  >
                     0.00
                   </span>
-                  <span className="text-xl font-medium text-teal-400">USDT</span>
+                  <span className="text-xl font-medium text-teal-400">
+                    USDT
+                  </span>
                 </div>
                 <p id="mainBalanceRub" className="text-sm text-gray-400 mt-2">
                   ≈ 0.00 RUB
@@ -119,12 +135,20 @@ const Wallet = () => {
             <div className="flex items-end justify-between mb-6">
               <div>
                 <div className="flex items-baseline gap-2">
-                  <p id="workingBalance" className="text-5xl font-bold text-white">
+                  <p
+                    id="workingBalance"
+                    className="text-5xl font-bold text-white"
+                  >
                     0.00
                   </p>
-                  <span className="text-xl font-medium text-pink-400">USDT</span>
+                  <span className="text-xl font-medium text-pink-400">
+                    USDT
+                  </span>
                 </div>
-                <p id="workingBalanceRub" className="text-sm text-gray-400 mt-2">
+                <p
+                  id="workingBalanceRub"
+                  className="text-sm text-gray-400 mt-2"
+                >
                   ≈ 0.00 RUB
                 </p>
               </div>
@@ -146,11 +170,12 @@ const Wallet = () => {
 
         <div
           id="depositModal"
+          onClick={closeDepositModal}
           className={`fixed overflow-y-scroll pt-46 inset-0 bg-black/80 ${
             openModal ? "flex" : "hidden"
           } items-center justify-center z-50`}
         >
-          <div className="bg-gray-900 rounded-2xl w-full max-w-lg p-6 border border-gray-700 shadow-2xl relative">
+          <div onClick={(e) => e.stopPropagation()} className="bg-gray-900 rounded-2xl w-full max-w-lg p-6 border border-gray-700 shadow-2xl relative">
             {/* <!-- Декоративный фоновый элемент --> */}
             <div className="absolute -right-20 -top-20 w-60 h-60 bg-gradient-to-br from-teal-500/20 to-blue-500/20 blur-3xl rounded-full"></div>
             <div className="absolute -left-20 -bottom-20 w-60 h-60 bg-gradient-to-tr from-purple-500/20 to-pink-500/20 blur-3xl rounded-full"></div>
@@ -231,7 +256,9 @@ const Wallet = () => {
                     </div>
                     <div>
                       <h3 className="text-white font-semibold">Мгновенно</h3>
-                      <p className="text-sm text-gray-400">Быстрое зачисление</p>
+                      <p className="text-sm text-gray-400">
+                        Быстрое зачисление
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -279,10 +306,13 @@ const Wallet = () => {
 
       <div
         id="withdrawModal"
-        className={`fixed inset-0 bg-black/80 backdrop-blur-sm ${withdrawalModalOpen ? "flex" : "hidden"} items-center justify-center z-50`}
+        onClick={() => setWithdrawalModalOpen(false)}
+        className={`fixed inset-0 bg-black/80 backdrop-blur-sm ${
+          withdrawalModalOpen ? "flex" : "hidden"
+        } items-center justify-center z-50`}
         // style="display: flex;"
       >
-        <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 w-full max-w-md mx-4 border border-gray-700 shadow-2xl">
+        <div onClick={(e) => e.stopPropagation()} className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 w-full max-w-md mx-4 border border-gray-700 shadow-2xl">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-xl font-bold text-white">Новый вывод</h3>
             <button
@@ -299,9 +329,12 @@ const Wallet = () => {
               </label>
               <div className="relative">
                 <input
-                  type="number"
+                  type="text"
+                  inputMode="decimal" // Brings up numeric keyboard on mobile
                   className="w-full bg-gray-700 rounded-lg px-3 py-2 text-gray-200 outline-none border border-gray-600"
                   placeholder="0.00"
+                  value={value}
+                  onChange={handleChange}
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                   USDT

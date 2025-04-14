@@ -126,9 +126,10 @@ const Devices = () => {
 
       <div
         id="addDeviceModal"
+        onClick={() => setModalOpen(false)}
         className={`fixed inset-0 bg-black/50 items-center justify-center z-50 backdrop-blur-sm ${modalOpen ? "flex" : "hidden"} `}
       >
-        <div className="bg-gray-800 rounded-2xl p-8 w-full max-w-lg mx-4 border border-gray-700 shadow-2xl">
+        <div onClick={(e) => e.stopPropagation()} className="bg-gray-800 rounded-2xl p-8 w-full max-w-lg mx-4 border border-gray-700 shadow-2xl">
           <div className="flex justify-between items-center mb-6">
             <div>
               <h3 className="text-xl font-bold text-white mb-1">

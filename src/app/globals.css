@@ -24,3 +24,15 @@ body {
   color: var(--foreground);
   font-family: sans-serif;
 }
+
+.bg-greenish {
+  background-color: #2dd4bfff;
+}
+
+.bg-grayish {
+  background-color: #374151ff;
+}
+
+.flatpickr-day.selected {
+  background-color: #FF5A5FFF !important; /* teal color or your choice */
+}
