@@ -11,8 +11,12 @@ import {
   FaTelegram,
 } from "react-icons/fa6";
 import Swal from "sweetalert2";
+import { useUserContext } from "../layout";
 
 const Profile = () => {
+
+  const { user } = useUserContext()
+
   const openAuthModal = () => {
     Swal.fire({
       title: "Активация недоступна",
@@ -137,7 +141,7 @@ const Profile = () => {
                         id="displayUsername"
                         className="text-xl font-bold text-white mb-1"
                       >
-                        Username
+                        {user?.name}
                       </h3>
                       <button onClick={() => handleEdit("Имя пользователя")} className="text-teal-400 cursor-pointer hover:text-teal-300">
                         {/* <i className="fas fa-pen text-sm"></i> */}
@@ -155,7 +159,7 @@ const Profile = () => {
                       <p className="text-sm text-gray-400">Email</p>
                       <div className="flex items-center gap-2">
                         <p className="text-white" id="displayEmail">
-                          user@example.com
+                          {user?.email}
                         </p>
                         <button onClick={() => handleEdit("Email")} className="ml-auto cursor-pointer text-teal-400 hover:text-teal-300">
                           {/* <i className="fas fa-pen text-sm"></i> */}
@@ -171,7 +175,7 @@ const Profile = () => {
                       <p className="text-sm text-gray-400">Telegram</p>
                       <div className="flex items-center gap-2">
                         <p className="text-white" id="displayTelegram">
-                          @username
+                          {user?.telegram}
                         </p>
                         <button onClick={() => handleEdit("Telegram")} className="ml-auto cursor-pointer text-teal-400 hover:text-teal-300">
                           

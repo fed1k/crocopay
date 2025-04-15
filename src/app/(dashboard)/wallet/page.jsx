@@ -9,9 +9,13 @@ import {
 } from "react-icons/fa";
 import { FaArrowRight, FaBolt, FaCopy, FaWallet } from "react-icons/fa6";
 import Swal from "sweetalert2";
+import { useUserContext } from "../layout";
 const Wallet = () => {
   const [openModal, setOpenModal] = useState(false);
   const [withdrawalModalOpen, setWithdrawalModalOpen] = useState(false);
+
+  const { user } = useUserContext()
+
   const openDepositModal = () => {
     setOpenModal(true);
   };
@@ -82,7 +86,7 @@ const Wallet = () => {
                     id="userBalance"
                     className="text-5xl font-bold text-white"
                   >
-                    0.00
+                    {user?.balance || 0.00} 
                   </span>
                   <span className="text-xl font-medium text-teal-400">
                     USDT
@@ -139,7 +143,7 @@ const Wallet = () => {
                     id="workingBalance"
                     className="text-5xl font-bold text-white"
                   >
-                    0.00
+                    {user?.balance || 0.00}
                   </p>
                   <span className="text-xl font-medium text-pink-400">
                     USDT
