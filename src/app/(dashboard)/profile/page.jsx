@@ -159,7 +159,7 @@ const Profile = () => {
                       <p className="text-sm text-gray-400">Email</p>
                       <div className="flex items-center gap-2">
                         <p className="text-white" id="displayEmail">
-                          {user?.email}
+                          {user?.email || "example@gmail.com"}
                         </p>
                         <button onClick={() => handleEdit("Email")} className="ml-auto cursor-pointer text-teal-400 hover:text-teal-300">
                           {/* <i className="fas fa-pen text-sm"></i> */}
@@ -175,7 +175,7 @@ const Profile = () => {
                       <p className="text-sm text-gray-400">Telegram</p>
                       <div className="flex items-center gap-2">
                         <p className="text-white" id="displayTelegram">
-                          {user?.telegram}
+                          {user?.telegram || "@example"}
                         </p>
                         <button onClick={() => handleEdit("Telegram")} className="ml-auto cursor-pointer text-teal-400 hover:text-teal-300">
                           

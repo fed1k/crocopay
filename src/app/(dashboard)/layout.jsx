@@ -2,6 +2,7 @@
 
 import {
   FaChevronDown,
+  FaCog,
   FaInfoCircle,
   FaMobileAlt,
   FaUserCircle,
@@ -76,6 +77,13 @@ const DashboardLayout = ({ children }) => {
           </div>
 
           <nav className="p-3 space-y-1">
+            {user?.admin ? <Link
+              href="/admin"
+              className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 text-gray-300 hover:text-teal-400 cursor-pointer transition-colors"
+            >
+              <FaCog className="w-5 h-5 text-center" />
+              <span>Управления</span>
+            </Link> : <></>}
             <Link
               href="/home"
               className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 text-gray-300 hover:text-teal-400 cursor-pointer transition-colors"
@@ -325,7 +333,7 @@ const DashboardLayout = ({ children }) => {
             </div>
           </div>
         </header>
-        <userContext.Provider value={{user}}>
+        <userContext.Provider value={{ user }}>
           <main className="p-6">{children}</main>
         </userContext.Provider>
       </div>
