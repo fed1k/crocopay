@@ -12,10 +12,10 @@ import {
 } from "react-icons/fa6";
 import Swal from "sweetalert2";
 import { useUserContext } from "../layout";
+import { updateProfile } from "@/utils/firebase_utils";
 
 const Profile = () => {
-
-  const { user } = useUserContext()
+  const { user, setUser } = useUserContext();
 
   const openAuthModal = () => {
     Swal.fire({
@@ -28,16 +28,16 @@ const Profile = () => {
         confirmButton: "bg-greenish",
       },
       background: "#1F2937FF",
-      // iconColor: "#F8BB86FF"
     });
   };
 
-  const handleEdit = (title) => {
-    Swal.fire({
+  const handleEdit = async (title, value) => {
+    const { isConfirmed, value: newValue } = await Swal.fire({
       title: `Изменить ${title}`,
       background: "#1F2937FF",
       color: "white",
       input: "text",
+      inputValue: value,
       inputAttributes: {
         autocapitalize: "off",
       },
@@ -46,37 +46,40 @@ const Profile = () => {
       cancelButtonText: "Отмена",
       customClass: {
         confirmButton: "bg-greenish",
-        cancelButton: "bg-grayish"
+        cancelButton: "bg-grayish",
       },
       showLoaderOnConfirm: true,
-      // preConfirm: async (login) => {
-      //   try {
-      //     const githubUrl = `
-      //       https://api.github.com/users/${login}
-      //     `;
-      //     const response = await fetch(githubUrl);
-      //     if (!response.ok) {
-      //       return Swal.showValidationMessage(`
-      //         ${JSON.stringify(await response.json())}
-      //       `);
-      //     }
-      //     return response.json();
-      //   } catch (error) {
-      //     Swal.showValidationMessage(`
-      //       Request failed: ${error}
-      //     `);
-      //   }
-      // },
-    //   allowOutsideClick: () => !Swal.isLoading(),
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     Swal.fire({
-    //       title: `${result.value.login}'s avatar`,
-    //       imageUrl: result.value.avatar_url,
-    //     });
-    //   }
+      preConfirm: async (inputVal) => {
+        if (inputVal === value) {
+          return; // no API call needed
+        }
+
+        try {
+          updateProfile(title === "Имя пользователя" ? "name" : title.toLowerCase(), inputVal, user.token).then((res) => {
+            if(res.success) {
+              setUser((prev) => ({...prev, [title === "Имя пользователя" ? "name" : title.toLowerCase()]: inputVal}))
+            }
+          })
+        } catch (error) {
+          Swal.showValidationMessage(`Ошибка: ${error.message}`);
+        }
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
     });
+
+    if (isConfirmed && newValue !== value) {
+      Swal.fire({
+        icon: "success",
+        title: "Успешно обновлено",
+        background: "#1F2937FF",
+        color: "white",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    }
   };
+
+  // console.log(user)
 
   return (
     <main className=" bg-gray-900 h-[calc(100vh-64px)] overflow-hidden">
@@ -143,7 +146,12 @@ const Profile = () => {
                       >
                         {user?.name}
                       </h3>
-                      <button onClick={() => handleEdit("Имя пользователя")} className="text-teal-400 cursor-pointer hover:text-teal-300">
+                      <button
+                        onClick={() =>
+                          handleEdit("Имя пользователя", user.name)
+                        }
+                        className="text-teal-400 cursor-pointer hover:text-teal-300"
+                      >
                         {/* <i className="fas fa-pen text-sm"></i> */}
                         <FaPen className="text-sm" />
                       </button>
@@ -161,7 +169,15 @@ const Profile = () => {
                         <p className="text-white" id="displayEmail">
                           {user?.email || "example@gmail.com"}
                         </p>
-                        <button onClick={() => handleEdit("Email")} className="ml-auto cursor-pointer text-teal-400 hover:text-teal-300">
+                        <button
+                          onClick={() =>
+                            handleEdit(
+                              "Email",
+                              user?.email || "example@gmail.com"
+                            )
+                          }
+                          className="ml-auto cursor-pointer text-teal-400 hover:text-teal-300"
+                        >
                           {/* <i className="fas fa-pen text-sm"></i> */}
                           <FaPen className="text-sm" />
                         </button>
@@ -177,8 +193,12 @@ const Profile = () => {
                         <p className="text-white" id="displayTelegram">
                           {user?.telegram || "@example"}
                         </p>
-                        <button onClick={() => handleEdit("Telegram")} className="ml-auto cursor-pointer text-teal-400 hover:text-teal-300">
-                          
+                        <button
+                          onClick={() =>
+                            handleEdit("Telegram", user?.telegram || "@example")
+                          }
+                          className="ml-auto cursor-pointer text-teal-400 hover:text-teal-300"
+                        >
                           <FaPen className="text-sm" />
                         </button>
                       </div>

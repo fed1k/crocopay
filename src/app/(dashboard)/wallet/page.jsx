@@ -10,17 +10,20 @@ import {
 import { FaArrowRight, FaBolt, FaCopy, FaWallet } from "react-icons/fa6";
 import Swal from "sweetalert2";
 import { useUserContext } from "../layout";
+import { createPayment } from "@/utils/firebase_utils";
 const Wallet = () => {
   const [openModal, setOpenModal] = useState(false);
   const [withdrawalModalOpen, setWithdrawalModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false)
 
-  const { user } = useUserContext()
+  const { user } = useUserContext();
 
   const openDepositModal = () => {
     setOpenModal(true);
   };
 
   const closeDepositModal = () => {
+    setValue("")
     setOpenModal(false);
   };
 
@@ -51,6 +54,25 @@ const Wallet = () => {
     if (/^\d*\.?\d*$/.test(newValue)) {
       setValue(newValue);
     }
+  };
+
+  const confirmPayment = async () => {
+    // console.log({amount: +value, user_id: user.token, name: user.name});
+    setLoading(true)
+    await createPayment({amount: +value, user_id: user.token, name: user.name})
+    setLoading(false)
+    Swal.fire({
+      icon: "success",
+      title: "Урааа!",
+      text: "Ваш платеж проверяется. После проверки он появится на вашем балансе",
+      timer: 4000,
+      showConfirmButton: false,
+      background: "#1F2937",
+      color: "#fff",
+      toast: true,
+      position: "top-end",
+    });
+    closeDepositModal();
   };
 
   return (
@@ -86,7 +108,7 @@ const Wallet = () => {
                     id="userBalance"
                     className="text-5xl font-bold text-white"
                   >
-                    {user?.balance || 0.00} 
+                    {user?.balance || 0.0}
                   </span>
                   <span className="text-xl font-medium text-teal-400">
                     USDT
@@ -143,7 +165,7 @@ const Wallet = () => {
                     id="workingBalance"
                     className="text-5xl font-bold text-white"
                   >
-                    {user?.balance || 0.00}
+                    {user?.balance || 0.0}
                   </p>
                   <span className="text-xl font-medium text-pink-400">
                     USDT
@@ -179,7 +201,10 @@ const Wallet = () => {
             openModal ? "flex" : "hidden"
           } items-center justify-center z-50`}
         >
-          <div onClick={(e) => e.stopPropagation()} className="bg-gray-900 rounded-2xl w-full max-w-lg p-6 border border-gray-700 shadow-2xl relative">
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-gray-900 rounded-2xl w-full max-w-lg p-6 border border-gray-700 shadow-2xl relative"
+          >
             {/* <!-- Декоративный фоновый элемент --> */}
             <div className="absolute -right-20 -top-20 w-60 h-60 bg-gradient-to-br from-teal-500/20 to-blue-500/20 blur-3xl rounded-full"></div>
             <div className="absolute -left-20 -bottom-20 w-60 h-60 bg-gradient-to-tr from-purple-500/20 to-pink-500/20 blur-3xl rounded-full"></div>
@@ -225,7 +250,25 @@ const Wallet = () => {
                 </div>
 
                 {/* <!-- Адрес кошелька --> */}
-                <div className="w-full space-y-2">
+                <div className="w-full pt-2 space-y-2">
+                  <div>
+                    <label className="text-sm text-gray-400">
+                      Сумма депосить (USDT)
+                    </label>
+                    <div className="relative pt-2">
+                      <input
+                        type="text"
+                        inputMode="decimal" // Brings up numeric keyboard on mobile
+                        className="w-full bg-gray-700 rounded-lg px-3 py-2 text-gray-200 outline-none border border-gray-600"
+                        placeholder="0.00"
+                        value={value}
+                        onChange={handleChange}
+                      />
+                      <span className="absolute right-3 top-[60%] -translate-y-1/2 text-gray-400">
+                        USDT
+                      </span>
+                    </div>
+                  </div>
                   <p className="text-sm text-gray-400">
                     Адрес для пополнения USDT (TRC20):
                   </p>
@@ -294,6 +337,14 @@ const Wallet = () => {
                   </div>
                 </div>
               </div>
+              <button
+                type="button"
+                disabled={loading}
+                onClick={confirmPayment}
+                className="w-full disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 bg-gradient-to-r from-teal-400 to-pink-400 text-white rounded-lg hover:opacity-90"
+              >
+                Подтвердить платеж
+              </button>
             </div>
 
             {/* <!-- Кнопка закрытия --> */}
@@ -316,7 +367,10 @@ const Wallet = () => {
         } items-center justify-center z-50`}
         // style="display: flex;"
       >
-        <div onClick={(e) => e.stopPropagation()} className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 w-full max-w-md mx-4 border border-gray-700 shadow-2xl">
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 w-full max-w-md mx-4 border border-gray-700 shadow-2xl"
+        >
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-xl font-bold text-white">Новый вывод</h3>
             <button

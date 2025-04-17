@@ -20,6 +20,7 @@ import {
 import Link from "next/link";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getMe } from "@/utils/firebase_utils";
 
 const userContext = createContext();
 export const useUserContext = () => useContext(userContext);
@@ -35,7 +36,10 @@ const DashboardLayout = ({ children }) => {
     if (!sessionStorage.getItem("user")) {
       router.push("/login");
     } else {
-      setUser(JSON.parse(sessionStorage.getItem("user")));
+      const usr = JSON.parse(sessionStorage.getItem("user"));
+      getMe(usr.token).then((data) => {
+        setUser(data)
+      })
     }
   }, []);
 
@@ -333,7 +337,7 @@ const DashboardLayout = ({ children }) => {
             </div>
           </div>
         </header>
-        <userContext.Provider value={{ user }}>
+        <userContext.Provider value={{ user, setUser }}>
           <main className="p-6">{children}</main>
         </userContext.Provider>
       </div>

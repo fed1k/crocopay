@@ -4,7 +4,13 @@ import { useEffect, useState } from "react";
 import { useUserContext } from "../layout";
 import { useRouter } from "next/navigation";
 import { FaCopy, FaFilter, FaInbox, FaPlus } from "react-icons/fa6";
-import { deleteUser, getAllUsers, registerUser } from "@/utils/firebase_utils";
+import {
+  deleteUser,
+  getAllPaymentsAdmin,
+  getAllUsers,
+  markPaymentAdmin,
+  registerUser,
+} from "@/utils/firebase_utils";
 import Swal from "sweetalert2";
 import { FaTrashAlt } from "react-icons/fa";
 
@@ -20,6 +26,8 @@ const Admin = () => {
   const [step, setStep] = useState(1);
   const [newUserToken, setNewUserToken] = useState("");
   const [users, setUsers] = useState([]);
+  const [payments, setPayments] = useState([]);
+  const [tab, setTab] = useState("users");
 
   const createUser = async () => {
     if (!name) {
@@ -71,16 +79,29 @@ const Admin = () => {
         confirmButton: "bg-greenish",
       },
       background: "#1F2937FF",
-      cancelButtonText: "НЕТ"
+      cancelButtonText: "НЕТ",
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         deleteUser(user_token).then(() => {
           Swal.fire("Удалено!", "", "success");
-          setUsers((prev) => ([...prev].filter((el) => el.token !== user_token)))
-        })
+          setUsers((prev) => [...prev].filter((el) => el.token !== user_token));
+        });
       }
     });
+  };
+
+  const markPayment = async (doc_id, status) => {
+    setLoading(true);
+    const response = await markPaymentAdmin(doc_id, status);
+    setLoading(false);
+    if (response.success) {
+      setPayments((prev) =>
+        prev.map((payment) =>
+          payment.id === doc_id ? { ...payment, status } : payment
+        )
+      );
+    }
   };
 
   useEffect(() => {
@@ -95,131 +116,207 @@ const Admin = () => {
         setUsers(data);
       }
     });
+
+    getAllPaymentsAdmin().then((data) => {
+      if (data?.length) {
+        setPayments(data);
+      }
+    });
   }, []);
+
+  // console.log(payments)
 
   return (
     <>
-      <div>
-        <div class="bg-gray-800/90 rounded-2xl shadow-2xl p-8 relative overflow-hidden backdrop-blur-lg border border-gray-700">
-          <div class="flex justify-between items-center mb-8">
-            <h2 class="text-2xl font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
-              Ползователы
-            </h2>
-            <div class="flex gap-3">
-              {/* <!-- Фильтры --> */}
-              <div class="relative">
-                <button
-                  id="addDeviceBtn"
-                  onClick={() => setModalOpen(true)}
-                  class="flex items-center cursor-pointer gap-2 px-4 py-2.5 bg-gradient-to-r from-teal-500 to-blue-500 rounded-xl text-white shadow-sm hover:opacity-90 transition-opacity"
-                >
-                  <FaPlus />
-                  <span>Добавить ползователь</span>
-                </button>
-                <div
-                  class="absolute right-0 mt-2 w-64 bg-gray-800 rounded-xl shadow-lg border border-gray-700 py-2 hidden z-50"
-                  id="filterMenu"
-                >
-                  <div class="px-4 py-2">
-                    <label class="block text-gray-300 text-sm mb-2">
-                      Статус
-                    </label>
-                    <select class="w-full bg-gray-700 rounded-lg px-3 py-2 text-gray-200 text-sm">
-                      <option value="">Все статусы</option>
-                      <option value="pending">В обработке</option>
-                      <option value="completed">Завершен</option>
-                      <option value="rejected">Отклонен</option>
-                    </select>
-                  </div>
-                  <div class="px-4 py-2">
-                    <label class="block text-gray-300 text-sm mb-2">
-                      Период
-                    </label>
-                    <select class="w-full bg-gray-700 rounded-lg px-3 py-2 text-gray-200 text-sm">
-                      <option value="today">Сегодня</option>
-                      <option value="week">Неделя</option>
-                      <option value="month">Месяц</option>
-                      <option value="custom">Другой период</option>
-                    </select>
-                  </div>
-                  <div class="border-t border-gray-700 mt-2 pt-2">
-                    <button class="w-full flex items-center gap-3 px-4 py-2 text-gray-300 hover:bg-gray-700/50">
-                      <i class="fas fa-trash-alt text-red-400"></i>
-                      <span>Сбросить фильтры</span>
-                    </button>
-                  </div>
+      <div className="flex gap-3 pb-4">
+        <p
+          onClick={() => setTab("users")}
+          className={`border-b ${
+            tab === "users" ? "" : "border-transparent"
+          } cursor-pointer`}
+        >
+          Ползователы
+        </p>
+        <p
+          onClick={() => setTab("payments")}
+          className={`border-b ${
+            tab === "payments" ? "" : "border-transparent"
+          } cursor-pointer`}
+        >
+          Платежы
+        </p>
+      </div>
+
+      {tab === "users" ? (
+        <div>
+          <div className="bg-gray-800/90 rounded-2xl shadow-2xl p-8 relative overflow-hidden backdrop-blur-lg border border-gray-700">
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
+                Ползователы
+              </h2>
+              <div className="flex gap-3">
+                {/* <!-- Фильтры --> */}
+                <div className="relative">
+                  <button
+                    id="addDeviceBtn"
+                    onClick={() => setModalOpen(true)}
+                    className="flex items-center cursor-pointer gap-2 px-4 py-2.5 bg-gradient-to-r from-teal-500 to-blue-500 rounded-xl text-white shadow-sm hover:opacity-90 transition-opacity"
+                  >
+                    <FaPlus />
+                    <span>Добавить ползователь</span>
+                  </button>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* <!-- Таблица --> */}
-          <div class="overflow-x-auto">
-            <table class="w-full">
-              <thead class="bg-gray-700/50">
-                <tr>
-                  <th class="px-6 py-4 text-left text-sm font-medium text-gray-300">
-                    Токен
-                  </th>
-                  <th class="px-6 py-4 text-left text-sm font-medium text-gray-300">
-                    Имя
-                  </th>
-                  <th class="px-6 py-4 text-left text-sm font-medium text-gray-300">
-                    Телеграм
-                  </th>
-                  <th class="px-6 py-4 text-left text-sm font-medium text-gray-300">
-                    Баланс
-                  </th>
-                  <th class="px-6 py-4 text-right text-sm font-medium text-gray-300">
-                    Удалить
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-700">
-                {/* <!-- Пустое состояние --> */}
-                {users?.length ? (
-                  users.map((usr) => (
+            {/* <!-- Таблица --> */}
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-700/50">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Токен
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Имя
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Телеграм
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Баланс
+                    </th>
+                    <th className="px-6 py-4 text-right text-sm font-medium text-gray-300">
+                      Удалить
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-700">
+                  {/* <!-- Пустое состояние --> */}
+                  {users?.length ? (
+                    users.map((usr, key) => (
+                      <tr key={key}>
+                        <td className="px-6 py-8 text-gray-400">
+                          <div>
+                            {usr.token}
+                            <button
+                              onClick={() => copyAddress(usr.token)}
+                              className="text-teal-400 cursor-pointer hover:text-teal-300 transition-colors p-2 hover:bg-gray-800 rounded-lg"
+                            >
+                              <FaCopy />
+                            </button>
+                          </div>{" "}
+                        </td>
+                        <td className="px-6 py-8 text-gray-400">{usr.name}</td>
+                        <td className="px-6 py-8 text-gray-400">
+                          {usr?.telegram || "@example"}
+                        </td>
+                        <td className="px-6 py-8 text-start text-gray-400">
+                          {usr.balance}
+                        </td>
+                        <td className="px-6 py-8 flex justify-end text-gray-400">
+                          <FaTrashAlt
+                            onClick={() => openDeleteConfirmation(usr.token)}
+                            className="text-red-400 cursor-pointer hover:opacity-70"
+                          />
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
                     <tr>
-                      <td class="px-6 py-8 text-gray-400">
-                        <div>
-                          {usr.token}
-                          <button
-                            onClick={() => copyAddress(usr.token)}
-                            className="text-teal-400 cursor-pointer hover:text-teal-300 transition-colors p-2 hover:bg-gray-800 rounded-lg"
-                          >
-                            <FaCopy />
-                          </button>
-                        </div>{" "}
-                      </td>
-                      <td class="px-6 py-8 text-gray-400">{usr.name}</td>
-                      <td class="px-6 py-8 text-gray-400">
-                        {usr?.telegram || "@example"}
-                      </td>
-                      <td class="px-6 py-8 text-start text-gray-400">
-                        {usr.balance}
-                      </td>
-                      <td class="px-6 py-8 flex justify-end text-gray-400">
-                        <FaTrashAlt onClick={() => openDeleteConfirmation(usr.token)} className="text-red-400 cursor-pointer hover:opacity-70" />
+                      <td
+                        colSpan="4"
+                        className="px-6 py-8 text-center text-gray-400"
+                      >
+                        <div className="flex flex-col items-center justify-center gap-4">
+                          <div className="w-16 h-16 rounded-full bg-gray-700/50 flex items-center justify-center">
+                            <FaInbox className="text-2xl text-gray-500" />
+                          </div>
+                          <p>Нет Ползователы</p>
+                        </div>
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colspan="4" class="px-6 py-8 text-center text-gray-400">
-                      <div class="flex flex-col items-center justify-center gap-4">
-                        <div class="w-16 h-16 rounded-full bg-gray-700/50 flex items-center justify-center">
-                          <FaInbox className="text-2xl text-gray-500" />
-                        </div>
-                        <p>Нет Ползователы</p>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
+
+      {tab === "payments" ? (
+        <div className="bg-gray-800/90 rounded-2xl shadow-2xl p-8 relative overflow-hidden backdrop-blur-lg border border-gray-700">
+          <h2 className="text-2xl mb-8 font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
+            Платежы
+          </h2>
+
+          <table className="w-full">
+            <thead className="bg-gray-700/50">
+              <tr>
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                  Статус
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                  Имя
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                  Дату
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                  Депосить
+                </th>
+                <th className="px-6 py-4 text-right text-sm font-medium text-gray-300">
+                  Подтверждение
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-700">
+              {payments?.length ? (
+                payments.map((payment, key) => (
+                  <tr key={key}>
+                    <td className="px-6 py-8 text-gray-400">
+                      {payment.status === "approved"
+                        ? "подтверждено"
+                        : payment.status === "rejected"
+                        ? "отклонено"
+                        : "ждеть"}
+                    </td>
+                    <td className="px-6 py-8 text-gray-400">{payment.name}</td>
+                    <td className="px-6 py-8 text-gray-400">{payment.date}</td>
+                    <td className="px-6 py-8 text-gray-400">
+                      {payment.amount} USDT
+                    </td>
+                    <td className="px-6 py-8 text-gray-400">
+                      <div className="flex gap-3 justify-end">
+                        <button
+                          disabled={loading || payment !== "pending"}
+                          onClick={() => markPayment(payment.id, "approved")}
+                          className="border disabled:opacity-50 disabled:cursor-not-allowed border-gray-700 rounded px-2 py-1 cursor-pointer"
+                        >
+                          Подтверждать
+                        </button>
+                        <button
+                          disabled={loading || payment !== "pending"}
+                          onClick={() => markPayment(payment.id, "rejected")}
+                          className="border border-gray-700 rounded disabled:opacity-50 disabled:cursor-not-allowed px-2 py-1 cursor-pointer"
+                        >
+                          Отклонить
+                        </button>
                       </div>
                     </td>
                   </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                ))
+              ) : (
+                <></>
+              )}
+            </tbody>
+          </table>
         </div>
-      </div>
+      ) : (
+        <></>
+      )}
 
       <div
         id="addDeviceModal"
@@ -243,7 +340,7 @@ const Admin = () => {
             </div>
             <button
               className="text-gray-400 hover:text-gray-200 transition-colors"
-              onclick="closeAddDeviceModal()"
+              // onClick="closeAddDeviceModal()"
             >
               <i className="fas fa-times text-xl"></i>
             </button>
@@ -285,7 +382,7 @@ const Admin = () => {
                   onClick={createUser}
                   className="flex-1 disabled:opacity-60 disabled:cursor-not-allowed px-4 py-2.5 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
                 >
-                  Добавить устройство
+                  Добавить ползователь
                 </button>
               </div>
             </form>
