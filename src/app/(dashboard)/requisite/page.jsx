@@ -1,12 +1,117 @@
 "use client";
 
-import { useState } from "react";
-import { FaCheckCircle, FaSearch, FaTimesCircle } from "react-icons/fa";
-import { FaInbox, FaPlus } from "react-icons/fa6";
+import { createReq, getUserReqs } from "@/utils/firebase_utils";
+import {
+  docIdToReadableNumber,
+  maskCardNumber,
+  maskPhoneNumber,
+} from "@/utils/helpers";
+import { useEffect, useState } from "react";
+import { FaCheckCircle, FaEdit, FaSearch, FaTimesCircle } from "react-icons/fa";
+import { FaInbox, FaPlus, FaTrash } from "react-icons/fa6";
+import Swal from "sweetalert2";
+import { useUserContext } from "../layout";
 
 const Requisite = () => {
+  const { user } = useUserContext();
 
-  const [modalOpen, setModalOpen] = useState(false)
+  // console.log(user)
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [paymentType, setPaymentType] = useState("card");
+  const [paymentValue, setPaymentValue] = useState("");
+  const [selectedBank, setSelectedBank] = useState("Сбербанк");
+  const [userReqs, setUserReqs] = useState([]);
+
+  const [minMaxm, setMinMax] = useState({ min: null, max: null });
+
+  const handlePaymentTypeChange = (value) => {
+    setPaymentValue("");
+    setPaymentType(value);
+  };
+
+  const handleMinMax = (label, value) => {
+    setMinMax((prev) => ({ ...prev, [label]: value }));
+  };
+
+  const handlePaymentChange = (e) => {
+    setPaymentValue(
+      paymentType === "card"
+        ? maskCardNumber(e.target.value)
+        : maskPhoneNumber(e.target.value)
+    );
+  };
+
+  const saveReq = async () => {
+    if (!paymentValue || !minMaxm.max || !minMaxm.min) {
+      Swal.fire({
+        icon: "error",
+        title: "Ошибка!",
+        text: "Заполните все поля!",
+        timer: 2000,
+        showConfirmButton: false,
+        background: "#1F2937",
+        color: "#fff",
+        toast: true,
+        position: "top-end",
+      });
+      return;
+    }
+
+    setLoading(true);
+    const response = await createReq({
+      paymentType,
+      req: paymentValue,
+      status: "active",
+      bank: selectedBank,
+      min: minMaxm.min,
+      max: minMaxm.max,
+      user_id: user?.token,
+    });
+    setLoading(false);
+    if (response) {
+      setUserReqs((prev) => [
+        ...prev,
+        {
+          paymentType,
+          req: paymentValue,
+          id: response,
+          status: "active",
+          bank: selectedBank,
+          min: minMaxm.min,
+          max: minMaxm.max,
+          user_id: user?.token,
+        },
+      ]);
+      setModalOpen(false);
+      Swal.fire({
+        icon: "success",
+        title: "Добавлено!",
+        text: "Добавлено устройства!",
+        timer: 2000,
+        showConfirmButton: false,
+        background: "#1F2937",
+        color: "#fff",
+        toast: true,
+        position: "top-end",
+      });
+    }
+  };
+
+  const handleSelectChange = (e) => {
+    // Get the selected option's text
+    const selectedOptionText = e.target.options[e.target.selectedIndex].text;
+    setSelectedBank(selectedOptionText); // Update the state with the selected bank text
+  };
+
+  useEffect(() => {
+    if (user) {
+      getUserReqs(user?.token).then((data) => {
+        setUserReqs(data);
+      });
+    }
+  }, [user]);
 
   return (
     <>
@@ -100,7 +205,6 @@ const Requisite = () => {
             onclick="toggleSelectedStatus('active')"
             class="px-4 py-2 bg-green-500/20 text-green-400 hover:bg-green-500/30 rounded-lg flex items-center gap-2"
           >
-            {/* <i class="fas fa-check-circle"></i> */}
             <FaCheckCircle />
             <span>Включить выбранные</span>
           </button>
@@ -108,7 +212,6 @@ const Requisite = () => {
             onclick="toggleSelectedStatus('inactive')"
             class="px-4 py-2 bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg flex items-center gap-2"
           >
-            {/* <i class="fas fa-times-circle"></i> */}
             <FaTimesCircle />
             <span>Отключить выбранные</span>
           </button>
@@ -151,31 +254,85 @@ const Requisite = () => {
               class="divide-y divide-gray-700 text-white"
               id="requisitesTableBody"
             >
-              {/* <!-- Пустое состояние будет показано только если нет реквизитов --> */}
-              <tr id="emptyRequisitesMessage">
-                <td colspan="8" class="px-6 py-8 text-center text-gray-400">
-                  <div class="flex flex-col items-center justify-center gap-4">
-                    <div class="w-16 h-16 rounded-full bg-gray-700/50 flex items-center justify-center">
-                      {/* <i class="fas fa-inbox text-2xl text-gray-500"></i> */}
-                      <FaInbox className="text-2xl text-gray-500" />
+              {userReqs?.length ? (
+                userReqs.map((req) => (
+                  <tr>
+                    <td className="px-3 py-3 ">
+                      <input type="checkbox" name="" id="" />
+                    </td>
+                    <td className="px-3 py-3 text-sm text-gray-400">
+                      #{docIdToReadableNumber(req.id)}
+                    </td>
+                    <td className="px-3 py-3 text-sm text-gray-400">
+                      {req.paymentType === "card" ? "Карта" : "СБП"}
+                    </td>
+                    <td className="px-3 py-3 text-sm text-gray-400">
+                      {req.bank}
+                    </td>
+                    <td className="px-3 py-3 ">
+                      <span
+                        class={`px-2 py-1 text-xs rounded-full ${
+                          req.status === "active"
+                            ? "bg-green-500/20 text-green-400"
+                            : "bg-red-500/20 text-red-400"
+                        } `}
+                      >
+                        {req.status === "active" ? "Активен" : "Неактивен"}
+                      </span>
+                    </td>
+                    <td className="px-3 py-3 text-sm text-gray-400">
+                      {req.paymentType === "card"
+                        ? "**** " + req.req.slice(-4)
+                        : req.req}
+                    </td>
+                    <td className="px-3 py-3 text-sm text-gray-400">
+                      {req.min} ₽ - {req.max} ₽
+                    </td>
+                    <td className="px-3 py-3 ">
+                      <div className="flex gap-2">
+                        <button className="p-1 cursor-pointer text-teal-400 hover:text-teal-300">
+                          <FaEdit />
+                        </button>
+                        <button className="p-1 text-red-400 cursor-pointer hover:text-red-300">
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr id="emptyRequisitesMessage">
+                  <td colspan="8" class="px-6 py-8 text-center text-gray-400">
+                    <div class="flex flex-col items-center justify-center gap-4">
+                      <div class="w-16 h-16 rounded-full bg-gray-700/50 flex items-center justify-center">
+                        {/* <i class="fas fa-inbox text-2xl text-gray-500"></i> */}
+                        <FaInbox className="text-2xl text-gray-500" />
+                      </div>
+                      <p>Нет добавленных реквизитов</p>
                     </div>
-                    <p>Нет добавленных реквизитов</p>
-                  </div>
-                </td>
-              </tr>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
       </div>
 
       <div
-      onClick={() => setModalOpen(false)}
+        onClick={() => setModalOpen(false)}
         id="addRequisiteModal"
-        className={`fixed inset-0 bg-black/50 backdrop-blur-sm items-center justify-center z-50 ${modalOpen ? "flex" : "hidden"} `}
+        className={`fixed inset-0 bg-black/50 backdrop-blur-sm items-center justify-center z-50 ${
+          modalOpen ? "flex" : "hidden"
+        } `}
       >
-        <div onClick={(e) => e.stopPropagation()} className="bg-gray-800 rounded-2xl p-6 w-full max-w-2xl shadow-xl border border-gray-700">
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="bg-gray-800 rounded-2xl p-6 w-full max-w-2xl shadow-xl border border-gray-700"
+        >
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-bold text-white">Добавление реквизита</h3>
+            <h3 className="text-xl font-bold text-white">
+              Добавление реквизита
+            </h3>
             <button
               onclick="closeModal()"
               className="text-gray-400 hover:text-gray-300"
@@ -192,6 +349,7 @@ const Requisite = () => {
                 </label>
                 <select
                   id="paymentType"
+                  onChange={(e) => handlePaymentTypeChange(e.target.value)}
                   className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-teal-400"
                 >
                   <option value="card">Банковская карта</option>
@@ -205,6 +363,7 @@ const Requisite = () => {
                 </label>
                 <select
                   id="bank"
+                  onChange={handleSelectChange}
                   className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-teal-400"
                 >
                   <optgroup label="Банки РФ">
@@ -255,13 +414,19 @@ const Requisite = () => {
 
               <div className="payment-card">
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Номер карты
+                  {paymentType === "card" ? "Номер карты" : "Номер телефон"}
                 </label>
                 <input
                   type="text"
                   id="cardNumber"
+                  value={paymentValue}
+                  onChange={handlePaymentChange}
                   className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-teal-400"
-                  placeholder="0000 0000 0000 0000"
+                  placeholder={
+                    paymentType === "card"
+                      ? "0000 0000 0000 0000"
+                      : "+7 (999) 999-99-99"
+                  }
                 />
               </div>
 
@@ -284,6 +449,8 @@ const Requisite = () => {
                 <input
                   type="number"
                   id="minAmount"
+                  value={minMaxm.min}
+                  onChange={(e) => handleMinMax("min", e.target.value)}
                   className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-teal-400"
                   required=""
                 />
@@ -296,6 +463,8 @@ const Requisite = () => {
                 <input
                   type="number"
                   id="maxAmount"
+                  value={minMaxm.max}
+                  onChange={(e) => handleMinMax("max", e.target.value)}
                   className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-teal-400"
                   required=""
                 />
@@ -306,13 +475,16 @@ const Requisite = () => {
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
-                className="px-6 py-3 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600"
+                disabled={loading}
+                className="px-6 disabled:opacity-50 disabled:cursor-not-allowed py-3 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600"
               >
                 Отмена
               </button>
               <button
                 type="button"
-                className="px-6 py-3 bg-gradient-to-r from-teal-400 to-pink-400 text-white rounded-lg hover:opacity-90"
+                disabled={loading}
+                onClick={saveReq}
+                className="px-6 py-3 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-teal-400 to-pink-400 text-white rounded-lg hover:opacity-90"
               >
                 Добавить
               </button>

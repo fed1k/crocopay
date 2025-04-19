@@ -6,7 +6,9 @@ import {
   doc,
   getDoc,
   getDocs,
+  query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 
 export const login = async (token) => {
@@ -41,11 +43,11 @@ export const registerUser = async (name) => {
 
 export const getMe = async (doc_id) => {
   try {
-    const userRef = doc(db, 'users', doc_id);
+    const userRef = doc(db, "users", doc_id);
     const userSnap = await getDoc(userRef);
 
     if (!userSnap.exists()) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
 
     return {
@@ -53,7 +55,7 @@ export const getMe = async (doc_id) => {
       ...userSnap.data(),
     };
   } catch (error) {
-    console.error('Error fetching user:', error);
+    console.error("Error fetching user:", error);
     throw error;
   }
 };
@@ -189,8 +191,45 @@ export const updateProfile = async (fieldName, value, doc_id) => {
   }
 };
 
-export const createReq = () => {
-  console.log("created requisite");
+export const createReq = async (data) => {
+  try {
+    const docRef = await addDoc(collection(db, "requisites"), data);
+    return docRef.id;
+  } catch (error) {
+    console.error("Error adding document:", error);
+    throw error;
+  }
+};
+
+export const getUserReqs = async (user_id) => {
+  console.log(user_id)
+  try {
+    // Reference to the 'requisites' collection
+    const requisitesCollection = collection(db, "requisites");
+
+    // Create a query to filter requisites by user_id
+    const q = query(requisitesCollection, where("user_id", "==", user_id));
+
+    // Execute the query and get the results
+    const querySnapshot = await getDocs(q);
+
+    // Create an array to hold the results
+    const requisites = [];
+
+    // Loop through the documents in the query snapshot
+    querySnapshot.forEach((doc) => {
+      requisites.push({
+        id: doc.id, // Document ID
+        ...doc.data(), // Document data
+      });
+    });
+
+    // Return the list of requisites
+    return requisites;
+  } catch (error) {
+    console.error("Error getting requisites:", error);
+    throw new Error("Failed to get requisites");
+  }
 };
 
 export const createDevice = () => {
