@@ -202,7 +202,7 @@ export const createReq = async (data) => {
 };
 
 export const getUserReqs = async (user_id) => {
-  console.log(user_id)
+  console.log(user_id);
   try {
     // Reference to the 'requisites' collection
     const requisitesCollection = collection(db, "requisites");
@@ -229,6 +229,26 @@ export const getUserReqs = async (user_id) => {
   } catch (error) {
     console.error("Error getting requisites:", error);
     throw new Error("Failed to get requisites");
+  }
+};
+
+export const deleteReq = async (doc_id) => {
+  try {
+    const docRef = doc(db, "requisites", doc_id);
+    await deleteDoc(docRef);
+  } catch (error) {
+    console.error("Error deleting document:", error);
+  }
+};
+
+export const editReq = async (doc_id, updatedData) => {
+  try {
+    const docRef = doc(db, "requisites", doc_id);
+    await updateDoc(docRef, updatedData);
+    return true; // success
+  } catch (error) {
+    console.error("Error updating requisit:", error);
+    return false; // failure
   }
 };
 

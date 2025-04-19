@@ -1,6 +1,11 @@
 "use client";
 
-import { createReq, getUserReqs } from "@/utils/firebase_utils";
+import {
+  createReq,
+  deleteReq,
+  editReq,
+  getUserReqs,
+} from "@/utils/firebase_utils";
 import {
   docIdToReadableNumber,
   maskCardNumber,
@@ -19,6 +24,8 @@ const Requisite = () => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [editReqId, setEditReqId] = useState();
   const [paymentType, setPaymentType] = useState("card");
   const [paymentValue, setPaymentValue] = useState("");
   const [selectedBank, setSelectedBank] = useState("Сбербанк");
@@ -29,6 +36,15 @@ const Requisite = () => {
   const handlePaymentTypeChange = (value) => {
     setPaymentValue("");
     setPaymentType(value);
+  };
+
+  const closeModal = () => {
+    setIsEdit(false);
+    setPaymentType("card");
+    setPaymentValue("");
+    setSelectedBank("Сбербанк");
+    setMinMax({ max: null, min: null });
+    setModalOpen(false);
   };
 
   const handleMinMax = (label, value) => {
@@ -84,7 +100,7 @@ const Requisite = () => {
           user_id: user?.token,
         },
       ]);
-      setModalOpen(false);
+      closeModal();
       Swal.fire({
         icon: "success",
         title: "Добавлено!",
@@ -99,10 +115,80 @@ const Requisite = () => {
     }
   };
 
+  const saveEdit = async () => {
+    const updatedData = {
+      paymentType,
+      req: paymentValue,
+      status: "active",
+      bank: selectedBank,
+      min: minMaxm.min,
+      max: minMaxm.max,
+      user_id: user?.token,
+    };
+    setLoading(true)
+    const response = await editReq(editReqId, updatedData);
+    setLoading(false)
+    if (response) {
+      setUserReqs((prev) =>
+        prev.map((req) =>
+          req.id === editReqId ? { ...req, ...updatedData } : req
+        )
+      );
+      closeModal();
+      Swal.fire({
+        icon: "success",
+        title: "Изменил!",
+        text: "Изменил реквизит!",
+        timer: 2000,
+        showConfirmButton: false,
+        background: "#1F2937",
+        color: "#fff",
+        toast: true,
+        position: "top-end",
+      });
+    }
+  };
+
+  const deleteModalOpen = (doc_id) => {
+    Swal.fire({
+      title: "Подтверждение",
+      color: "white",
+      text: "Вы действительно хотите удалить этот реквизит?",
+      showDenyButton: true,
+      denyButtonText: "Отмена",
+      icon: "warning",
+      confirmButtonText: "Да, удалить",
+      customClass: {
+        confirmButton: "bg-greenish",
+      },
+      background: "#1F2937FF",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await deleteReq(doc_id);
+        setUserReqs((prev) => [...prev].filter((el) => el.id !== doc_id));
+        Swal.fire({
+          title: "Удалено!",
+          text: "Реквизит был успешно удален.",
+          icon: "success",
+          background: "#1F2937FF",
+          color: "white",
+        });
+      }
+    });
+  };
+
+  const handleEdit = (data) => {
+    setEditReqId(data.id);
+    setMinMax({ min: data.min, max: data.max });
+    setPaymentValue(data.req);
+    setPaymentType(data.paymentType);
+    setSelectedBank(data.bank);
+    setModalOpen(true);
+    setIsEdit(true);
+  };
+
   const handleSelectChange = (e) => {
-    // Get the selected option's text
-    const selectedOptionText = e.target.options[e.target.selectedIndex].text;
-    setSelectedBank(selectedOptionText); // Update the state with the selected bank text
+    setSelectedBank(e.target.value); // use value, not text
   };
 
   useEffect(() => {
@@ -290,10 +376,16 @@ const Requisite = () => {
                     </td>
                     <td className="px-3 py-3 ">
                       <div className="flex gap-2">
-                        <button className="p-1 cursor-pointer text-teal-400 hover:text-teal-300">
+                        <button
+                          onClick={() => handleEdit(req)}
+                          className="p-1 cursor-pointer text-teal-400 hover:text-teal-300"
+                        >
                           <FaEdit />
                         </button>
-                        <button className="p-1 text-red-400 cursor-pointer hover:text-red-300">
+                        <button
+                          onClick={() => deleteModalOpen(req.id)}
+                          className="p-1 text-red-400 cursor-pointer hover:text-red-300"
+                        >
                           <FaTrash />
                         </button>
                       </div>
@@ -319,7 +411,7 @@ const Requisite = () => {
       </div>
 
       <div
-        onClick={() => setModalOpen(false)}
+        onClick={closeModal}
         id="addRequisiteModal"
         className={`fixed inset-0 bg-black/50 backdrop-blur-sm items-center justify-center z-50 ${
           modalOpen ? "flex" : "hidden"
@@ -348,6 +440,7 @@ const Requisite = () => {
                   Тип платежа
                 </label>
                 <select
+                  value={paymentType}
                   id="paymentType"
                   onChange={(e) => handlePaymentTypeChange(e.target.value)}
                   className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-teal-400"
@@ -363,51 +456,78 @@ const Requisite = () => {
                 </label>
                 <select
                   id="bank"
+                  value={selectedBank}
                   onChange={handleSelectChange}
                   className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-teal-400"
                 >
                   <optgroup label="Банки РФ">
-                    <option value="sber">Сбербанк</option>
-                    <option value="tinkoff">Тинькофф Банк</option>
-                    <option value="alpha">Альфа-Банк</option>
-                    <option value="vtb">ВТБ</option>
-                    <option value="gazprom">Газпромбанк</option>
-                    <option value="raif">Райффайзен Банк</option>
-                    <option value="rosbank">Росбанк</option>
-                    <option value="otkritie">Банк Открытие</option>
-                    <option value="mts">МТС Банк</option>
-                    <option value="pochta">Почта Банк</option>
-                    <option value="sovcom">Совкомбанк</option>
-                    <option value="unicredit">ЮниКредит Банк</option>
-                    <option value="psb">Промсвязьбанк</option>
-                    <option value="roscap">Росгосстрах Банк</option>
-                    <option value="genbank">Генбанк</option>
-                    <option value="chelyab">Челябинвест</option>
-                    <option value="solidarity">Банк Солидарность</option>
-                    <option value="akbars">АБ Россия</option>
-                    <option value="ozon">Озон банк</option>
-                    <option value="yandex">Яндекс банк</option>
+                    <option value="Сбербанк">Сбербанк</option>
+                    <option value="Тинькофф Банк">Тинькофф Банк</option>
+                    <option value="Альфа-Банк">Альфа-Банк</option>
+                    <option value="ВТБ">ВТБ</option>
+                    <option value="Газпромбанк">Газпромбанк</option>
+                    <option value="Райффайзен Банк">Райффайзен Банк</option>
+                    <option value="Росбанк">Росбанк</option>
+                    <option value="Банк Открытие">Банк Открытие</option>
+                    <option value="МТС Банк">МТС Банк</option>
+                    <option value="Почта Банк">Почта Банк</option>
+                    <option value="Совкомбанк">Совкомбанк</option>
+                    <option value="ЮниКредит Банк">ЮниКредит Банк</option>
+                    <option value="Промсвязьбанк">Промсвязьбанк</option>
+                    <option value="Росгосстрах Банк">Росгосстрах Банк</option>
+                    <option value="Генбанк">Генбанк</option>
+                    <option value="Челябинвест">Челябинвест</option>
+                    <option value="Банк Солидарность">Банк Солидарность</option>
+                    <option value="АБ Россия">АБ Россия</option>
+                    <option value="Озон банк">Озон банк</option>
+                    <option value="Яндекс банк">Яндекс банк</option>
                   </optgroup>
                   <optgroup label="Банки СНГ">
-                    <option value="kaspi">Kaspi Bank (Казахстан)</option>
-                    <option value="halyk">Halyk Bank (Казахстан)</option>
-                    <option value="kapital">Kapital Bank (Азербайджан)</option>
-                    <option value="pasha">PASHA Bank (Азербайджан)</option>
-                    <option value="tbc">TBC Bank (Грузия)</option>
-                    <option value="bog">Bank of Georgia (Грузия)</option>
-                    <option value="optima">Optima Bank (Кыргызстан)</option>
-                    <option value="kicb">KICB (Кыргызстан)</option>
-                    <option value="itb">ИТБ (Таджикистан)</option>
-                    <option value="amonatb">Амонатбанк (Таджикистан)</option>
-                    <option value="agroinbank">
+                    <option value="Kaspi Bank (Казахстан)">
+                      Kaspi Bank (Казахстан)
+                    </option>
+                    <option value="Halyk Bank (Казахстан)">
+                      Halyk Bank (Казахстан)
+                    </option>
+                    <option value="Kapital Bank (Азербайджан)">
+                      Kapital Bank (Азербайджан)
+                    </option>
+                    <option value="PASHA Bank (Азербайджан)">
+                      PASHA Bank (Азербайджан)
+                    </option>
+                    <option value="TBC Bank (Грузия)">TBC Bank (Грузия)</option>
+                    <option value="Bank of Georgia (Грузия)">
+                      Bank of Georgia (Грузия)
+                    </option>
+                    <option value="Optima Bank (Кыргызстан)">
+                      Optima Bank (Кыргызстан)
+                    </option>
+                    <option value="KICB (Кыргызстан)">KICB (Кыргызстан)</option>
+                    <option value="ИТБ (Таджикистан)">ИТБ (Таджикистан)</option>
+                    <option value="Амонатбанк (Таджикистан)">
+                      Амонатбанк (Таджикистан)
+                    </option>
+                    <option value="Агроинвестбанк (Таджикистан)">
                       Агроинвестбанк (Таджикистан)
                     </option>
-                    <option value="orienbank">ориент банк (Таджикистан)</option>
-                    <option value="dushanbe">Душанбе (Таджикистан)</option>
-                    <option value="alif">Алиф банк (Таджикистан)</option>
-                    <option value="tafhid">Тавхидбанк (Таджикистан)</option>
-                    <option value="eshat">Эсхата (Таджикистан)</option>
-                    <option value="spitamen">Спитамен (Таджикистан)</option>
+                    <option value="ориент банк (Таджикистан)">
+                      ориент банк (Таджикистан)
+                    </option>
+                    <option value="Душанбе (Таджикистан)">
+                      Душанбе (Таджикистан)
+                    </option>
+                    <option value="Алиф банк (Таджикистан)">
+                      Алиф банк (Таджикистан)
+                    </option>
+                    <option value="Тавхидбанк (Таджикистан)">
+                      Тавхидбанк (Таджикистан)
+                    </option>
+                    <option value="Эсхата (Таджикистан)">
+                      Эсхата (Таджикистан)
+                    </option>
+                    <option value="Спитамен (Таджикистан)">
+                      Спитамен (Таджикистан)
+                    </option>
                   </optgroup>
                 </select>
               </div>
@@ -474,7 +594,7 @@ const Requisite = () => {
             <div className="flex justify-end gap-4 mt-6">
               <button
                 type="button"
-                onClick={() => setModalOpen(false)}
+                onClick={closeModal}
                 disabled={loading}
                 className="px-6 disabled:opacity-50 disabled:cursor-not-allowed py-3 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600"
               >
@@ -483,10 +603,10 @@ const Requisite = () => {
               <button
                 type="button"
                 disabled={loading}
-                onClick={saveReq}
+                onClick={isEdit ? saveEdit : saveReq}
                 className="px-6 py-3 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-teal-400 to-pink-400 text-white rounded-lg hover:opacity-90"
               >
-                Добавить
+                {isEdit ? "Сохранить" : "Добавить"}
               </button>
             </div>
           </form>
