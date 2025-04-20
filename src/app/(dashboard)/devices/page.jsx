@@ -1,12 +1,50 @@
-"use client"
+"use client";
 
-import { useState } from "react";
-import { FaCog, FaSearch } from "react-icons/fa";
-import { FaPlus } from "react-icons/fa6";
+import { addDevice, getAllDevices } from "@/utils/firebase_utils";
+import { useEffect, useState } from "react";
+import { FaCog, FaEdit, FaSearch } from "react-icons/fa";
+import { FaPlus, FaTrash } from "react-icons/fa6";
+import { useUserContext } from "../layout";
+import { docIdToReadableNumber } from "@/utils/helpers";
 
 const Devices = () => {
+  const {user} = useUserContext()
 
-  const [modalOpen, setModalOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false)
+  const [newDev, setNewDev] = useState({name: "", model: "", imei: "", status: "active", user_id: user?.token})
+  const [devs, setDevs] = useState([]);
+
+  const handleChange = (label, value) => {
+    setNewDev((prev) => ({...prev, [label]: value}))
+  }
+
+  console.log(newDev)
+
+  const saveDev = async(e) => {
+    e.preventDefault()
+    
+    
+    setLoading(true)
+    const response = await addDevice(newDev);
+    setLoading(false)
+
+    if(response) {
+      setDevs((prev) => ([...prev, {...newDev, id: response}]))
+      setNewDev({model: "", imei: "", name: "", status: "active", user_id: user.token})
+      setModalOpen(false)
+    }
+  }
+
+  useEffect(() => {
+    if (user) {
+      setNewDev((prev) => ({...prev, user_id: user.token}))
+      getAllDevices(user?.token).then((res) => {
+        setDevs(res)
+      })
+    }
+    // console.log(user)
+  }, [user])
 
   return (
     <>
@@ -25,7 +63,6 @@ const Devices = () => {
               id="tableSettingsBtn"
               class="flex items-center gap-2 px-4 py-2.5 bg-gray-700/50 hover:bg-gray-700 rounded-xl text-gray-300 shadow-sm transition-colors"
             >
-              {/* <i class="fas fa-cog text-teal-400"></i> */}
               <FaCog className="text-teal-400" />
               <span>Настройки таблицы</span>
             </button>
@@ -34,7 +71,6 @@ const Devices = () => {
               onClick={() => setModalOpen(true)}
               class="flex items-center cursor-pointer gap-2 px-4 py-2.5 bg-gradient-to-r from-teal-500 to-blue-500 rounded-xl text-white shadow-sm hover:opacity-90 transition-opacity"
             >
-              {/* <i class="fas fa-plus"></i> */}
               <FaPlus />
               <span>Добавить устройство</span>
             </button>
@@ -73,7 +109,6 @@ const Devices = () => {
                       placeholder="ID..."
                       class="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
                     />
-                    {/* <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"></i> */}
                     <FaSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" />
                   </div>
                 </td>
@@ -84,7 +119,6 @@ const Devices = () => {
                       placeholder="Текст..."
                       class="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
                     />
-                    {/* <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"></i> */}
                     <FaSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" />
                   </div>
                 </td>
@@ -95,7 +129,6 @@ const Devices = () => {
                       placeholder="Текст..."
                       class="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
                     />
-                    {/* <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"></i> */}
                     <FaSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" />
                   </div>
                 </td>
@@ -106,7 +139,6 @@ const Devices = () => {
                       placeholder="Текст..."
                       class="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
                     />
-                    {/* <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"></i> */}
                     <FaSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" />
                   </div>
                 </td>
@@ -119,6 +151,54 @@ const Devices = () => {
                   </select>
                 </td>
               </tr>
+
+              {devs?.length ? (
+                devs.map((req) => (
+                  <tr>
+                    <td className="px-6 py-3 text-sm text-gray-400">
+                      #{docIdToReadableNumber(req.id)}
+                    </td>
+                    <td className="px-6 py-3 text-sm text-gray-400">
+                      {req.name}
+                    </td>
+                    <td className="px-6 py-3 text-sm text-gray-400">
+                      {req.model}
+                    </td>
+                    <td className="px-6 py-3 text-sm text-gray-400">
+                      {req.imei}
+                    </td>
+                    <td className="px-6 py-3 ">
+                      <span
+                        class={`px-2 py-1 text-xs rounded-full ${
+                          req.status === "active"
+                            ? "bg-green-500/20 text-green-400"
+                            : "bg-red-500/20 text-red-400"
+                        } `}
+                      >
+                        {req.status === "active" ? "Активен" : "Неактивен"}
+                      </span>
+                    </td>
+                    {/* <td className="px-3 py-3 ">
+                      <div className="flex gap-2">
+                        <button
+                          // onClick={() => handleEdit(req)}
+                          className="p-1 cursor-pointer text-teal-400 hover:text-teal-300"
+                        >
+                          <FaEdit />
+                        </button>
+                        <button
+                          // onClick={() => deleteModalOpen(req.id)}
+                          className="p-1 text-red-400 cursor-pointer hover:text-red-300"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </td> */}
+                  </tr>
+                ))
+              ) : (
+                <></>
+              )}
             </tbody>
           </table>
         </div>
@@ -127,9 +207,14 @@ const Devices = () => {
       <div
         id="addDeviceModal"
         onClick={() => setModalOpen(false)}
-        className={`fixed inset-0 bg-black/50 items-center justify-center z-50 backdrop-blur-sm ${modalOpen ? "flex" : "hidden"} `}
+        className={`fixed inset-0 bg-black/50 items-center justify-center z-50 backdrop-blur-sm ${
+          modalOpen ? "flex" : "hidden"
+        } `}
       >
-        <div onClick={(e) => e.stopPropagation()} className="bg-gray-800 rounded-2xl p-8 w-full max-w-lg mx-4 border border-gray-700 shadow-2xl">
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="bg-gray-800 rounded-2xl p-8 w-full max-w-lg mx-4 border border-gray-700 shadow-2xl"
+        >
           <div className="flex justify-between items-center mb-6">
             <div>
               <h3 className="text-xl font-bold text-white mb-1">
@@ -147,7 +232,7 @@ const Devices = () => {
             </button>
           </div>
 
-          <form id="addDeviceForm" className="space-y-6">
+          <form onSubmit={saveDev} id="addDeviceForm" className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-gray-300 mb-2 text-sm">
@@ -155,8 +240,9 @@ const Devices = () => {
                 </label>
                 <input
                   type="text"
+                  onChange={(e) => handleChange("name", e.target.value)}
                   name="deviceName"
-                  required=""
+                  required
                   className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
                   placeholder="Например: iPhone 13 Pro"
                 />
@@ -167,8 +253,9 @@ const Devices = () => {
                 </label>
                 <input
                   type="text"
+                  onChange={(e) => handleChange("model", e.target.value)}
                   name="deviceModel"
-                  required=""
+                  required
                   className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
                   placeholder="Например: A2638"
                 />
@@ -182,7 +269,8 @@ const Devices = () => {
               <input
                 type="text"
                 name="deviceImei"
-                required=""
+                onChange={(e) => handleChange("imei", e.target.value)}
+                required
                 pattern="\d{15}"
                 className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
                 placeholder="15 цифр"
@@ -195,14 +283,16 @@ const Devices = () => {
             <div className="flex gap-4 mt-8">
               <button
                 type="button"
+                disabled={loading}
                 onClick={() => setModalOpen(false)}
-                className="flex-1 px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors text-sm"
+                className="flex-1 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors text-sm"
               >
                 Отмена
               </button>
               <button
-                type="button"
-                className="flex-1 px-4 py-2.5 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+                type="submit"
+                disabled={loading}
+                className="flex-1 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2.5 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
               >
                 Добавить устройство
               </button>

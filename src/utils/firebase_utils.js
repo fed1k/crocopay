@@ -191,9 +191,9 @@ export const updateProfile = async (fieldName, value, doc_id) => {
   }
 };
 
-export const createReq = async (data) => {
+export const createReq = async (data, col = "requisites") => {
   try {
-    const docRef = await addDoc(collection(db, "requisites"), data);
+    const docRef = await addDoc(collection(db, col), data);
     return docRef.id;
   } catch (error) {
     console.error("Error adding document:", error);
@@ -201,11 +201,11 @@ export const createReq = async (data) => {
   }
 };
 
-export const getUserReqs = async (user_id) => {
+export const getUserReqs = async (user_id, col = "requisites") => {
   console.log(user_id);
   try {
     // Reference to the 'requisites' collection
-    const requisitesCollection = collection(db, "requisites");
+    const requisitesCollection = collection(db, col);
 
     // Create a query to filter requisites by user_id
     const q = query(requisitesCollection, where("user_id", "==", user_id));
@@ -232,18 +232,18 @@ export const getUserReqs = async (user_id) => {
   }
 };
 
-export const deleteReq = async (doc_id) => {
+export const deleteReq = async (doc_id, col = "requisites") => {
   try {
-    const docRef = doc(db, "requisites", doc_id);
+    const docRef = doc(db, col, doc_id);
     await deleteDoc(docRef);
   } catch (error) {
     console.error("Error deleting document:", error);
   }
 };
 
-export const editReq = async (doc_id, updatedData) => {
+export const editReq = async (doc_id, updatedData, col = "requisites") => {
   try {
-    const docRef = doc(db, "requisites", doc_id);
+    const docRef = doc(db, col, doc_id);
     await updateDoc(docRef, updatedData);
     return true; // success
   } catch (error) {
@@ -252,6 +252,28 @@ export const editReq = async (doc_id, updatedData) => {
   }
 };
 
-export const createDevice = () => {
-  console.log("created device");
+const devicesCollection = collection(db, 'devices');
+
+export const addDevice = async (deviceData) => {
+  const docRef = await addDoc(devicesCollection, deviceData);
+  return docRef.id;
+};
+
+// Edit a device
+export const editDevice = async (id, updateData) => {
+  const docRef = doc(devicesCollection.firestore, 'devices', id);
+  await updateDoc(docRef, updateData);
+};
+
+// Delete a device
+export const deleteDevice = async (id) => {
+  const docRef = doc(devicesCollection.firestore, 'devices', id);
+  await deleteDoc(docRef);
+};
+
+// Get all devices
+export const getAllDevices = async (userId) => {
+  const q = query(devicesCollection, where('user_id', '==', userId));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
