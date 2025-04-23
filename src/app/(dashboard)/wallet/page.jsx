@@ -16,7 +16,7 @@ const Wallet = () => {
   const [withdrawalModalOpen, setWithdrawalModalOpen] = useState(false);
   const [loading, setLoading] = useState(false)
 
-  const { user } = useUserContext();
+  const { user, rate } = useUserContext();
 
   const openDepositModal = () => {
     setOpenModal(true);
@@ -115,7 +115,7 @@ const Wallet = () => {
                   </span>
                 </div>
                 <p id="mainBalanceRub" className="text-sm text-gray-400 mt-2">
-                  ≈ 0.00 RUB
+                  ≈ {(rate * +user?.balance).toFixed(2)} RUB
                 </p>
               </div>
             </div>
@@ -123,7 +123,7 @@ const Wallet = () => {
             <div className="flex justify-center gap-4">
               <button
                 onClick={openDepositModal}
-                className="flex-1 px-6 py-4 bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-400 hover:to-blue-400 text-white rounded-xl flex items-center justify-center gap-3 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-teal-500/25"
+                className="flex-1 px-6 py-4 cursor-pointer bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-400 hover:to-blue-400 text-white rounded-xl flex items-center justify-center gap-3 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-teal-500/25"
               >
                 {/* <i className="fas fa-plus-circle text-xl"></i> */}
                 <FaPlusCircle className="text-xl" />
@@ -131,7 +131,7 @@ const Wallet = () => {
               </button>
               <button
                 onClick={() => setWithdrawalModalOpen(true)}
-                className="px-6 py-4 bg-gray-700 hover:bg-gray-600 text-white rounded-xl flex items-center gap-2 transition-all duration-300 hover:shadow-lg"
+                className="px-6 cursor-pointer py-4 bg-gray-700 hover:bg-gray-600 text-white rounded-xl flex items-center gap-2 transition-all duration-300 hover:shadow-lg"
               >
                 {/* <i className="fas fa-arrow-right"></i> */}
                 <FaArrowRight />
@@ -175,7 +175,7 @@ const Wallet = () => {
                   id="workingBalanceRub"
                   className="text-sm text-gray-400 mt-2"
                 >
-                  ≈ 0.00 RUB
+                  ≈ {(rate * +user?.balance).toFixed(2)} RUB
                 </p>
               </div>
             </div>
@@ -341,7 +341,7 @@ const Wallet = () => {
                 type="button"
                 disabled={loading}
                 onClick={confirmPayment}
-                className="w-full disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 bg-gradient-to-r from-teal-400 to-pink-400 text-white rounded-lg hover:opacity-90"
+                className="w-full cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 bg-gradient-to-r from-teal-400 to-pink-400 text-white rounded-lg hover:opacity-90"
               >
                 Подтвердить платеж
               </button>

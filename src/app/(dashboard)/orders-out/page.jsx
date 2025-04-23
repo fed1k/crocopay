@@ -111,7 +111,7 @@ const OrdersOut = () => {
         </div>
 
         {/* <!-- Кнопки --> */}
-        <button className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl text-teal-400 border border-gray-700 transition-colors">
+        <button className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl text-teal-400 border border-gray-700 transition-colors">
           {/* <i className="fas fa-file-export"></i> */}
           <FaFileExport />
           <span>Экспорт</span>
@@ -122,7 +122,7 @@ const OrdersOut = () => {
           <button
             ref={settingsBtnRef}
             onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl text-teal-400 border border-gray-700 transition-colors"
+            className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl text-teal-400 border border-gray-700 transition-colors"
             id="settingsDropdown"
           >
             <FaCog />
@@ -136,7 +136,7 @@ const OrdersOut = () => {
             }`}
             id="settingsMenu"
           >
-            <button className="w-full flex items-center gap-3 px-4 py-2 text-gray-300 hover:bg-gray-700/50 transition-colors">
+            <button className="w-full cursor-pointer flex items-center gap-3 px-4 py-2 text-gray-300 hover:bg-gray-700/50 transition-colors">
               <FaTrashAlt className="text-red-400" />
               <span>Сбросить фильтры</span>
             </button>

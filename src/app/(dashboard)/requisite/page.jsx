@@ -125,9 +125,9 @@ const Requisite = () => {
       max: minMaxm.max,
       user_id: user?.token,
     };
-    setLoading(true)
+    setLoading(true);
     const response = await editReq(editReqId, updatedData);
-    setLoading(false)
+    setLoading(false);
     if (response) {
       setUserReqs((prev) =>
         prev.map((req) =>
@@ -259,6 +259,27 @@ const Requisite = () => {
               <option value="ozon">Озон банк</option>
               <option value="yandex">Яндекс банк</option>
               <option value="kaspi">Kaspi Bank (Казахстан)</option>
+              <option value="AMERIA Bank (Армения)">
+                AMERIA Bank (Армения)
+              </option>
+              <option value="Ararat Bank (Армения)">
+                Ararat Bank (Армения)
+              </option>
+              <option value="Узнацбанк (Узбекистан)">
+                Узнацбанк (Узбекистан)
+              </option>
+              <option value="Узпромстройбанк (Узбекистан)">
+                Узпромстройбанк (Узбекистан)
+              </option>
+              <option value="Народный банк (Узбекистан)">
+                Народный банк (Узбекистан)
+              </option>
+              <option value="Капиталбанк (Узбекистан)">
+                Капиталбанк (Узбекистан)
+              </option>
+              <option value="Асакабанк (Узбекистан)">
+                Асакабанк (Узбекистан)
+              </option>
               <option value="halyk">Halyk Bank (Казахстан)</option>
               <option value="kapital">Kapital Bank (Азербайджан)</option>
               <option value="pasha">PASHA Bank (Азербайджан)</option>
@@ -485,6 +506,27 @@ const Requisite = () => {
                   <optgroup label="Банки СНГ">
                     <option value="Kaspi Bank (Казахстан)">
                       Kaspi Bank (Казахстан)
+                    </option>
+                    <option value="AMERIA Bank (Армения)">
+                      AMERIA Bank (Армения)
+                    </option>
+                    <option value="Ararat Bank (Армения)">
+                      Ararat Bank (Армения)
+                    </option>
+                    <option value="Узнацбанк (Узбекистан)">
+                      Узнацбанк (Узбекистан)
+                    </option>
+                    <option value="Узпромстройбанк (Узбекистан)">
+                      Узпромстройбанк (Узбекистан)
+                    </option>
+                    <option value="Народный банк (Узбекистан)">
+                      Народный банк (Узбекистан)
+                    </option>
+                    <option value="Капиталбанк (Узбекистан)">
+                      Капиталбанк (Узбекистан)
+                    </option>
+                    <option value="Асакабанк (Узбекистан)">
+                      Асакабанк (Узбекистан)
                     </option>
                     <option value="Halyk Bank (Казахстан)">
                       Halyk Bank (Казахстан)

@@ -29,7 +29,7 @@ const Login = () => {
     <div className="from-gray-800 relative bg-gradient-to-b min-h-screen flex justify-center items-center to-gray-900">
       <div>
         <div>
-          <h3 className="text-3xl text-center font-bold text-transparent bg-clip-text to-blue-500 from-teal-400 bg-gradient-to-r">
+          <h3 className="text-4xl arista-font text-center font-bold text-white">
             Kredo
           </h3>
           <p className="text-gray-400 text-center text-sm mt-1">

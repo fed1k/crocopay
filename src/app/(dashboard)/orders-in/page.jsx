@@ -110,7 +110,7 @@ const OrdersIn = () => {
           <FaCalendar className="text-gray-400 absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none" />
         </div>
 
-        <button className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl text-teal-400 border border-gray-700 transition-colors">
+        <button className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl text-teal-400 border border-gray-700 transition-colors">
           <FaFileExport />
           <span>Экспорт</span>
         </button>
@@ -119,7 +119,7 @@ const OrdersIn = () => {
           <button
             ref={settingsBtnRef}
             onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl text-teal-400 border border-gray-700 transition-colors"
+            className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl text-teal-400 border border-gray-700 transition-colors"
             id="settingsDropdown"
           >
             <FaCog />
@@ -133,7 +133,7 @@ const OrdersIn = () => {
             }`}
             id="settingsMenu"
           >
-            <button className="w-full flex items-center gap-3 px-4 py-2 text-gray-300 hover:bg-gray-700/50 transition-colors">
+            <button className="w-full cursor-pointer flex items-center gap-3 px-4 py-2 text-gray-300 hover:bg-gray-700/50 transition-colors">
               <FaTrashAlt className="text-red-400" />
               <span>Сбросить фильтры</span>
             </button>

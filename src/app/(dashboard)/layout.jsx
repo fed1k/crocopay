@@ -31,6 +31,7 @@ const DashboardLayout = ({ children }) => {
   const [orderHover, setOrderHover] = useState(false);
   const [reqHover, setReqHover] = useState(false);
   const [user, setUser] = useState();
+  const [coins, setCoins] = useState();
 
   useEffect(() => {
     if (!sessionStorage.getItem("user")) {
@@ -38,10 +39,40 @@ const DashboardLayout = ({ children }) => {
     } else {
       const usr = JSON.parse(sessionStorage.getItem("user"));
       getMe(usr.token).then((data) => {
-        setUser(data)
-      })
+        setUser(data);
+      });
     }
   }, []);
+
+  const [rate, setRate] = useState(null);
+
+  useEffect(() => {
+    let intervalId;
+
+    const fetchRate = async () => {
+      console.log("Working...")
+      try {
+        const response = await fetch('https://open.er-api.com/v6/latest/USD');
+        const data = await response.json();
+        const rubRate = data.rates?.RUB;
+        if (rubRate) {
+          setRate(rubRate);
+        } else {
+          console.warn('RUB rate not found in response:', data);
+        }
+      } catch (error) {
+        console.error('Error fetching USDT to RUB rate:', error);
+      }
+    };
+
+    fetchRate(); // Initial fetch
+    intervalId = setInterval(fetchRate, 5000); // Poll every 5 seconds
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
+  }, []);
+
+  // console.log(rate)
+
 
   return (
     <div className="flex">
@@ -51,9 +82,9 @@ const DashboardLayout = ({ children }) => {
       >
         <div className="p-5 border-b border-gray-800 flex items-center gap-3">
           <div>
-            <h1 className="font-bold text-xl bg-gradient-to-r from-teal-400 to-blue-500 bg-clip-text text-transparent">
-              Kredo
-            </h1>
+          <h3 className="text-4xl arista-font text-center font-bold text-white">
+            Kredo
+          </h3>
             <p className="text-xs text-gray-400">Payment Ecosystem</p>
           </div>
         </div>
@@ -68,26 +99,31 @@ const DashboardLayout = ({ children }) => {
 
                 <FaInfoCircle className="text-teal-400 hover:text-teal-300 cursor-pointer" />
               </div>
-              <div className="flex items-end justify-between">
+              <div className="flex mb-2 items-center justify-between">
                 <p
                   id="sidebarBalance"
                   className="text-2xl font-bold text-white"
                 >
-                  {user?.balance || 0.0}
+                  {user?.balance + ".00" || 0.00}
                 </p>
                 <span className="text-sm font-mono text-teal-400">USDT</span>
               </div>
+              <p className="text-sm">≈ {(rate * +user?.balance).toFixed(2)} RUB</p>
             </div>
           </div>
 
           <nav className="p-3 space-y-1">
-            {user?.admin ? <Link
-              href="/admin"
-              className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 text-gray-300 hover:text-teal-400 cursor-pointer transition-colors"
-            >
-              <FaCog className="w-5 h-5 text-center" />
-              <span>Управления</span>
-            </Link> : <></>}
+            {user?.admin ? (
+              <Link
+                href="/admin"
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 text-gray-300 hover:text-teal-400 cursor-pointer transition-colors"
+              >
+                <FaCog className="w-5 h-5 text-center" />
+                <span>Управления</span>
+              </Link>
+            ) : (
+              <></>
+            )}
             <Link
               href="/home"
               className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 text-gray-300 hover:text-teal-400 cursor-pointer transition-colors"
@@ -246,7 +282,7 @@ const DashboardLayout = ({ children }) => {
                       id="buyRate"
                       className="font-semibold text-lg bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent"
                     >
-                      85.67
+                      {rate?.toFixed(2)}
                     </span>
                     <span className="text-sm bg-gradient-to-r from-teal-400/80 to-blue-400/80 bg-clip-text text-transparent">
                       RUB
@@ -262,7 +298,7 @@ const DashboardLayout = ({ children }) => {
                       id="sellRate"
                       className="font-semibold text-lg bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent"
                     >
-                      85.75
+                      {rate?.toFixed(2)}
                     </span>
                     <span className="text-sm bg-gradient-to-r from-pink-400/80 to-purple-400/80 bg-clip-text text-transparent">
                       RUB
@@ -310,7 +346,7 @@ const DashboardLayout = ({ children }) => {
             <div className="relative group">
               <button
                 id="userMenuButton"
-                className="flex items-center gap-2 bg-gray-800/50 p-2 rounded-lg hover:bg-gray-800 transition-colors"
+                className="flex cursor-pointer items-center gap-2 bg-gray-800/50 p-2 rounded-lg hover:bg-gray-800 transition-colors"
               >
                 {/* <i className="fa-solid fa-circle-user text-2xl text-teal-400"></i> */}
                 <FaUserCircle className="text-2xl text-teal-400" />
@@ -337,7 +373,7 @@ const DashboardLayout = ({ children }) => {
             </div>
           </div>
         </header>
-        <userContext.Provider value={{ user, setUser }}>
+        <userContext.Provider value={{ user, setUser, rate }}>
           <main className="p-6">{children}</main>
         </userContext.Provider>
       </div>
