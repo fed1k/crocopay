@@ -16,6 +16,7 @@ import { FaCheckCircle, FaEdit, FaSearch, FaTimesCircle } from "react-icons/fa";
 import { FaInbox, FaPlus, FaTrash } from "react-icons/fa6";
 import Swal from "sweetalert2";
 import { useUserContext } from "../layout";
+import { bankCountryCodeMap } from "@/utils/constants";
 
 const Requisite = () => {
   const { user } = useUserContext();
@@ -55,7 +56,7 @@ const Requisite = () => {
     setPaymentValue(
       paymentType === "card"
         ? maskCardNumber(e.target.value)
-        : maskPhoneNumber(e.target.value)
+        : maskPhoneNumber(e.target.value, bankCountryCodeMap[selectedBank])
     );
   };
 
@@ -186,9 +187,14 @@ const Requisite = () => {
     setModalOpen(true);
     setIsEdit(true);
   };
-
+  const [placeholder, setPlaceholder] = useState("+7 (999) 999-99-99");
   const handleSelectChange = (e) => {
-    setSelectedBank(e.target.value); // use value, not text
+    const bank = e.target.value;
+    setSelectedBank(bank);
+  
+    const code = bankCountryCodeMap[bank] || "+7";
+    setPlaceholder(code + (bankCountryCodeMap[bank].length == 2 ? " (999) 999-99-99" : " (99) 999-99-99"));
+    setPaymentValue("")
   };
 
   useEffect(() => {
@@ -587,7 +593,7 @@ const Requisite = () => {
                   placeholder={
                     paymentType === "card"
                       ? "0000 0000 0000 0000"
-                      : "+7 (999) 999-99-99"
+                      : placeholder
                   }
                 />
               </div>

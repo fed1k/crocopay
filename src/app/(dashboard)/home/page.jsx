@@ -19,8 +19,11 @@ import {
   FaUsers,
   FaWallet,
 } from "react-icons/fa";
+import { useUserContext } from "../layout";
 
 const Profile = () => {
+  const {user} = useUserContext()
+
   const [activeMerchants, setActiveMerchants] = useState(8)
   const [operationsCount, setOpenrationsCount] = useState(240)
 
@@ -66,7 +69,7 @@ const Profile = () => {
                       Необходимо для активации
                     </p>
                     <p className="text-2xl font-bold text-white">
-                      <span id="requiredAmount">1500.00</span> USDT
+                      <span id="requiredAmount">{user?.activationAmount || 1500}.00</span> USDT
                     </p>
                   </div>
                   <Link

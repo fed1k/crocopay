@@ -21,6 +21,7 @@ const Admin = () => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [name, setName] = useState("");
+  const [activationAmount, setActivationAmount] = useState("")
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
@@ -36,7 +37,7 @@ const Admin = () => {
     }
 
     setLoading(true);
-    const response = await registerUser(name);
+    const response = await registerUser(name, activationAmount);
     setLoading(false);
     if (response) {
       setName("");
@@ -348,7 +349,7 @@ const Admin = () => {
 
           {step === 1 ? (
             <form id="addDeviceForm" className="space-y-6">
-              <div className="">
+              <div className=" space-y-2">
                 <div>
                   <label className="block text-gray-300 mb-2 text-sm">
                     Имя
@@ -363,6 +364,20 @@ const Admin = () => {
                     placeholder="Например: Григорий"
                   />
                 </div>
+                <div>
+                  <label className="block text-gray-300 mb-2 text-sm">
+                    Необходимый депозит
+                  </label>
+                  <input
+                    type="text"
+                    name="userName"
+                    value={activationAmount}
+                    onChange={(e) => setActivationAmount(e.target.value)}
+                    required
+                    className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+                    placeholder="Например: 1000 USDT"
+                  />
+                </div>
               </div>
 
               {error && <p className="text-red-400 mb-0">{error}</p>}
@@ -372,7 +387,7 @@ const Admin = () => {
                   type="button"
                   disabled={loading}
                   onClick={closeModal}
-                  className="flex-1 disabled:opacity-60 disabled:cursor-not-allowed px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors text-sm"
+                  className="flex-1 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors text-sm"
                 >
                   Отмена
                 </button>
@@ -380,7 +395,7 @@ const Admin = () => {
                   type="button"
                   disabled={loading}
                   onClick={createUser}
-                  className="flex-1 disabled:opacity-60 disabled:cursor-not-allowed px-4 py-2.5 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+                  className="flex-1 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed px-4 py-2.5 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
                 >
                   Добавить ползователь
                 </button>

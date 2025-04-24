@@ -21,6 +21,7 @@ import Link from "next/link";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getMe } from "@/utils/firebase_utils";
+import Swal from "sweetalert2";
 
 const userContext = createContext();
 export const useUserContext = () => useContext(userContext);
@@ -31,7 +32,20 @@ const DashboardLayout = ({ children }) => {
   const [orderHover, setOrderHover] = useState(false);
   const [reqHover, setReqHover] = useState(false);
   const [user, setUser] = useState();
-  const [coins, setCoins] = useState();
+
+  const handleInfoIcon = () => {
+    Swal.fire({
+      title: "Баланс инфо",
+      color: "white",
+      text: "Ваш страховой и рабочий баланс",
+      icon: "warning",
+      confirmButtonText: "Понятно",
+      customClass: {
+        confirmButton: "bg-greenish",
+      },
+      background: "#1F2937FF",
+    });
+  };
 
   useEffect(() => {
     if (!sessionStorage.getItem("user")) {
@@ -50,18 +64,18 @@ const DashboardLayout = ({ children }) => {
     let intervalId;
 
     const fetchRate = async () => {
-      console.log("Working...")
+      console.log("Working...");
       try {
-        const response = await fetch('https://open.er-api.com/v6/latest/USD');
+        const response = await fetch("https://open.er-api.com/v6/latest/USD");
         const data = await response.json();
         const rubRate = data.rates?.RUB;
         if (rubRate) {
-          setRate(rubRate);
+          setRate(rubRate + 2);
         } else {
-          console.warn('RUB rate not found in response:', data);
+          console.warn("RUB rate not found in response:", data);
         }
       } catch (error) {
-        console.error('Error fetching USDT to RUB rate:', error);
+        console.error("Error fetching USDT to RUB rate:", error);
       }
     };
 
@@ -71,9 +85,6 @@ const DashboardLayout = ({ children }) => {
     return () => clearInterval(intervalId); // Cleanup on unmount
   }, []);
 
-  // console.log(rate)
-
-
   return (
     <div className="flex">
       <aside
@@ -82,9 +93,9 @@ const DashboardLayout = ({ children }) => {
       >
         <div className="p-5 border-b border-gray-800 flex items-center gap-3">
           <div>
-          <h3 className="text-4xl arista-font text-center font-bold text-white">
-            Kredo
-          </h3>
+            <h3 className="text-4xl arista-font text-center font-bold text-white">
+              Kredo
+            </h3>
             <p className="text-xs text-gray-400">Payment Ecosystem</p>
           </div>
         </div>
@@ -97,18 +108,20 @@ const DashboardLayout = ({ children }) => {
                   Общий баланс
                 </h2>
 
-                <FaInfoCircle className="text-teal-400 hover:text-teal-300 cursor-pointer" />
+                <FaInfoCircle onClick={handleInfoIcon} className="text-teal-400 hover:text-teal-300 cursor-pointer" />
               </div>
               <div className="flex mb-2 items-center justify-between">
                 <p
                   id="sidebarBalance"
                   className="text-2xl font-bold text-white"
                 >
-                  {user?.balance + ".00" || 0.00}
+                  {user?.balance + ".00" || 0.0}
                 </p>
                 <span className="text-sm font-mono text-teal-400">USDT</span>
               </div>
-              <p className="text-sm">≈ {(rate * +user?.balance).toFixed(2)} RUB</p>
+              <p className="text-sm">
+                ≈ {(rate * +user?.balance).toFixed(2)} RUB
+              </p>
             </div>
           </div>
 

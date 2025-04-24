@@ -6,43 +6,42 @@ export function maskCardNumber(value) {
   return digits.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
 }
 
-export function maskPhoneNumber(value) {
-  // Strip all non-digit characters and limit to 11 digits
-  const digits = value.replace(/\D/g, "").slice(0, 11); // Remove non-digit chars, limit to 11 digits
+export function maskPhoneNumber(value, countryCode) {
+  const digits = value.replace(/\D/g, "");
 
-  // Apply the mask based on the number of digits entered
-  if (digits.length === 0) {
-    return "+7 ";
+  switch (countryCode) {
+    case "+7": // Russia, Kazakhstan
+      return `+7 (${digits.slice(1, 4)}${
+        digits.length > 3 ? ") " : ""
+      }${digits.slice(4, 7)}${digits.length > 6 ? "-" : ""}${digits.slice(
+        7,
+        9
+      )}${digits.length > 8 ? "-" : ""}${digits.slice(9, 11)}`;
+    case "+998": // Uzbekistan
+      return `+998 (${digits.slice(3, 5)}${
+        digits.length > 4 ? ") " : ""
+      }${digits.slice(5, 8)}${digits.length > 7 ? "-" : ""}${digits.slice(
+        8,
+        10
+      )}${digits.length > 9 ? "-" : ""}${digits.slice(10, 12)}`;
+    case "+374": // Armenia
+      return `+374 (${digits.slice(3, 5)}${
+        digits.length > 4 ? ") " : ""
+      }${digits.slice(5, 8)}${digits.length > 7 ? "-" : ""}${digits.slice(
+        8,
+        10
+      )}${digits.length > 9 ? "-" : ""}${digits.slice(10, 12)}`;
+    case "+992": // Tajikistan
+      return `+992 (${digits.slice(3, 5)}${
+        digits.length > 4 ? ") " : ""
+      }${digits.slice(5, 8)}${digits.length > 7 ? "-" : ""}${digits.slice(
+        8,
+        10
+      )}${digits.length > 9 ? "-" : ""}${digits.slice(10, 12)}`;
+    // Add more countries as needed
+    default:
+      return value; // fallback, no mask
   }
-  if (digits.length <= 1) {
-    return "+7 (" + digits;
-  }
-  if (digits.length <= 4) {
-    return "+7 (" + digits.slice(1, 4) + ")";
-  }
-  if (digits.length <= 7) {
-    return "+7 (" + digits.slice(1, 4) + ") " + digits.slice(4, 7);
-  }
-  if (digits.length <= 9) {
-    return (
-      "+7 (" +
-      digits.slice(1, 4) +
-      ") " +
-      digits.slice(4, 7) +
-      "-" +
-      digits.slice(7, 9)
-    );
-  }
-  return (
-    "+7 (" +
-    digits.slice(1, 4) +
-    ") " +
-    digits.slice(4, 7) +
-    "-" +
-    digits.slice(7, 9) +
-    "-" +
-    digits.slice(9, 11)
-  );
 }
 
 // Converts string (like a Firebase doc ID) to a numeric hash
@@ -67,4 +66,3 @@ export function docIdToReadableNumber(docId) {
   const numericHash = stringToNumber(docId);
   return formatThousands(numericHash);
 }
-

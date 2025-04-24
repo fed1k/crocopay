@@ -253,7 +253,7 @@ const Wallet = () => {
                 <div className="w-full pt-2 space-y-2">
                   <div>
                     <label className="text-sm text-gray-400">
-                      Сумма депосить (USDT)
+                      Сумма депозита (USDT)
                     </label>
                     <div className="relative pt-2">
                       <input

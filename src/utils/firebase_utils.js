@@ -27,11 +27,12 @@ export const login = async (token) => {
   }
 };
 
-export const registerUser = async (name) => {
+export const registerUser = async (name, activationAmount) => {
   try {
     const docRef = await addDoc(collection(db, "users"), {
       admin: false,
       name,
+      activationAmount,
       balance: 0,
     });
     return docRef.id;
