@@ -5,10 +5,13 @@ import flatpickr from "flatpickr";
 import { useEffect, useRef, useState } from "react";
 import { FaCog, FaTrashAlt } from "react-icons/fa";
 import { FaCalendar, FaFileExport, FaInbox } from "react-icons/fa6";
+import Swal from "sweetalert2";
 
 const OrdersOut = () => {
   const inputRefFrom = useRef(null);
   const inputRefTo = useRef(null);
+  const pickerFromRef = useRef(null);
+  const pickerToRef = useRef(null);
 
   const handleDateChange = (selectedDates, dateStr, instance) => {
     console.log("Selected date:", dateStr);
@@ -19,28 +22,27 @@ const OrdersOut = () => {
   const settingsMenuRef = useRef(null);
 
   useEffect(() => {
-    let pickerToInstance;
-
     const pickerFrom = flatpickr(inputRefFrom.current, {
       onChange: (selectedDates, dateStr) => {
         handleDateChange(selectedDates, dateStr);
-
-        // Update minDate of 'to' picker
-        if (pickerToInstance) {
-          pickerToInstance.set("minDate", selectedDates[0]);
+        if (pickerToRef.current) {
+          pickerToRef.current.set("minDate", selectedDates[0]);
         }
       },
       dateFormat: "d.m.Y",
     });
 
-    pickerToInstance = flatpickr(inputRefTo.current, {
+    const pickerTo = flatpickr(inputRefTo.current, {
       onChange: handleDateChange,
       dateFormat: "d.m.Y",
     });
 
+    pickerFromRef.current = pickerFrom;
+    pickerToRef.current = pickerTo;
+
     return () => {
       pickerFrom.destroy();
-      pickerToInstance.destroy();
+      pickerTo.destroy();
     };
   }, []);
 
@@ -63,9 +65,29 @@ const OrdersOut = () => {
     };
   }, []);
 
+  const handleExport = () => {
+    Swal.fire({
+      title: "Експорт",
+      color: "white",
+      text: "У вас пока не было заказов",
+      icon: "warning",
+      confirmButtonText: "Понятно",
+      customClass: {
+        confirmButton: "bg-greenish",
+      },
+      background: "#1F2937FF",
+    });
+  };
+
+  const handleResetFilters = () => {
+    pickerFromRef.current?.clear();
+    pickerToRef.current?.clear();
+    setIsSettingsOpen(false)
+  };
+
   return (
     <div className="bg-gray-800/90 rounded-2xl shadow-2xl p-6 h-full flex flex-col backdrop-blur-lg border border-gray-700">
-      {/* <!-- Заголовок --> */}
+      {/* Заголовок */}
       <div className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
@@ -74,7 +96,6 @@ const OrdersOut = () => {
           <p className="text-gray-400 mt-1">Pay out транзакции</p>
         </div>
 
-        {/* <!-- Переключатель активности --> */}
         <div className="flex items-center gap-4">
           <span className="text-gray-400">Статус работы:</span>
           <label className="relative inline-flex items-center cursor-pointer">
@@ -84,16 +105,15 @@ const OrdersOut = () => {
         </div>
       </div>
 
-      {/* <!-- Фильтры --> */}
+      {/* Фильтры */}
       <div className="flex gap-3">
         <div className="relative">
           <input
             type="text"
             ref={inputRefFrom}
-            id="dateFrom"
             placeholder="Создано от..."
-            className="px-4 py-2 bg-gray-800 rounded-xl text-gray-300 border border-gray-700 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50 transition-colors"
-            readOnly=""
+            className="px-4 py-2 bg-gray-800 rounded-xl text-gray-300 border border-gray-700 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50 transition-colors flatpickr-input"
+            readOnly
           />
           <FaCalendar className="text-gray-400 absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none" />
         </div>
@@ -102,22 +122,21 @@ const OrdersOut = () => {
           <input
             type="text"
             ref={inputRefTo}
-            id="dateTo"
             placeholder="Создано до..."
-            className="px-4 py-2 bg-gray-800 rounded-xl text-gray-300 border border-gray-700 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50 transition-colors"
-            readOnly=""
+            className="px-4 py-2 bg-gray-800 rounded-xl text-gray-300 border border-gray-700 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50 transition-colors flatpickr-input"
+            readOnly
           />
           <FaCalendar className="text-gray-400 absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none" />
         </div>
 
-        {/* <!-- Кнопки --> */}
-        <button className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl text-teal-400 border border-gray-700 transition-colors">
-          {/* <i className="fas fa-file-export"></i> */}
+        <button
+          onClick={handleExport}
+          className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl text-teal-400 border border-gray-700 transition-colors"
+        >
           <FaFileExport />
           <span>Экспорт</span>
         </button>
 
-        {/* <!-- Меню настроек --> */}
         <div className="relative">
           <button
             ref={settingsBtnRef}
@@ -136,7 +155,10 @@ const OrdersOut = () => {
             }`}
             id="settingsMenu"
           >
-            <button className="w-full cursor-pointer flex items-center gap-3 px-4 py-2 text-gray-300 hover:bg-gray-700/50 transition-colors">
+            <button
+              onClick={handleResetFilters}
+              className="w-full cursor-pointer flex items-center gap-3 px-4 py-2 text-gray-300 hover:bg-gray-700/50 transition-colors"
+            >
               <FaTrashAlt className="text-red-400" />
               <span>Сбросить фильтры</span>
             </button>
@@ -144,7 +166,7 @@ const OrdersOut = () => {
         </div>
       </div>
 
-      {/* <!-- Таблица --> */}
+      {/* Таблица */}
       <div className="mt-8 bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-700">
@@ -176,12 +198,10 @@ const OrdersOut = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-700">
-            {/* <!-- Сообщение о том, что нет активных заказов --> */}
             <tr>
               <td colSpan="8" className="px-6 py-8 text-center text-gray-400">
                 <div className="flex flex-col items-center justify-center gap-4">
                   <div className="w-16 h-16 rounded-full bg-gray-700/50 flex items-center justify-center">
-                    {/* <i className="fas fa-inbox text-2xl text-gray-500"></i> */}
                     <FaInbox className="text-2xl text-gray-500" />
                   </div>
                   <p>Нет активных заказов</p>

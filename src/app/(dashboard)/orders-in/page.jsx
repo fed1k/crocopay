@@ -1,15 +1,17 @@
 "use client";
 
 import "flatpickr/dist/flatpickr.min.css";
-
 import flatpickr from "flatpickr";
 import { useEffect, useRef, useState } from "react";
 import { FaCog, FaTrashAlt } from "react-icons/fa";
 import { FaCalendar, FaFileExport, FaInbox } from "react-icons/fa6";
+import Swal from "sweetalert2";
 
 const OrdersIn = () => {
   const inputRefFrom = useRef(null);
   const inputRefTo = useRef(null);
+  const pickerFromRef = useRef(null);
+  const pickerToRef = useRef(null);
 
   const handleDateChange = (selectedDates, dateStr, instance) => {
     console.log("Selected date:", dateStr);
@@ -20,28 +22,27 @@ const OrdersIn = () => {
   const settingsMenuRef = useRef(null);
 
   useEffect(() => {
-    let pickerToInstance;
-
     const pickerFrom = flatpickr(inputRefFrom.current, {
       onChange: (selectedDates, dateStr) => {
         handleDateChange(selectedDates, dateStr);
-
-        // Update minDate of 'to' picker
-        if (pickerToInstance) {
-          pickerToInstance.set("minDate", selectedDates[0]);
+        if (pickerToRef.current) {
+          pickerToRef.current.set("minDate", selectedDates[0]);
         }
       },
       dateFormat: "d.m.Y",
     });
 
-    pickerToInstance = flatpickr(inputRefTo.current, {
+    const pickerTo = flatpickr(inputRefTo.current, {
       onChange: handleDateChange,
       dateFormat: "d.m.Y",
     });
 
+    pickerFromRef.current = pickerFrom;
+    pickerToRef.current = pickerTo;
+
     return () => {
       pickerFrom.destroy();
-      pickerToInstance.destroy();
+      pickerTo.destroy();
     };
   }, []);
 
@@ -64,6 +65,25 @@ const OrdersIn = () => {
     };
   }, []);
 
+  const handleExport = () => {
+    Swal.fire({
+      title: "Експорт",
+      color: "white",
+      text: "У вас пока не было заказов",
+      icon: "warning",
+      confirmButtonText: "Понятно",
+      customClass: {
+        confirmButton: "bg-greenish",
+      },
+      background: "#1F2937FF",
+    });
+  };
+
+  const handleResetFilters = () => {
+    pickerFromRef.current?.clear();
+    pickerToRef.current?.clear();
+    setIsSettingsOpen(false)
+  };
 
   return (
     <div className="bg-gray-800/90 rounded-2xl shadow-2xl p-6 h-full flex flex-col backdrop-blur-lg border border-gray-700">
@@ -76,7 +96,6 @@ const OrdersIn = () => {
           <p className="text-gray-400 mt-1">Pay in транзакции</p>
         </div>
 
-        {/* Переключатель активности */}
         <div className="flex items-center gap-4">
           <span className="text-gray-400">Статус работы:</span>
           <label className="relative inline-flex items-center cursor-pointer">
@@ -110,7 +129,10 @@ const OrdersIn = () => {
           <FaCalendar className="text-gray-400 absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none" />
         </div>
 
-        <button className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl text-teal-400 border border-gray-700 transition-colors">
+        <button
+          onClick={handleExport}
+          className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl text-teal-400 border border-gray-700 transition-colors"
+        >
           <FaFileExport />
           <span>Экспорт</span>
         </button>
@@ -133,7 +155,10 @@ const OrdersIn = () => {
             }`}
             id="settingsMenu"
           >
-            <button className="w-full cursor-pointer flex items-center gap-3 px-4 py-2 text-gray-300 hover:bg-gray-700/50 transition-colors">
+            <button
+              onClick={handleResetFilters}
+              className="w-full cursor-pointer flex items-center gap-3 px-4 py-2 text-gray-300 hover:bg-gray-700/50 transition-colors"
+            >
               <FaTrashAlt className="text-red-400" />
               <span>Сбросить фильтры</span>
             </button>
