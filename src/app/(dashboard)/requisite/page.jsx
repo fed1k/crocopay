@@ -10,6 +10,7 @@ import {
   docIdToReadableNumber,
   maskCardNumber,
   maskPhoneNumber,
+  requisitePercentageCalculator,
 } from "@/utils/helpers";
 import { useEffect, useState } from "react";
 import { FaCheckCircle, FaEdit, FaSearch, FaTimesCircle } from "react-icons/fa";
@@ -21,7 +22,7 @@ import { bankCountryCodeMap } from "@/utils/constants";
 const Requisite = () => {
   const { user } = useUserContext();
 
-  // console.log(user)
+ 
 
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,8 +32,8 @@ const Requisite = () => {
   const [paymentValue, setPaymentValue] = useState("");
   const [selectedBank, setSelectedBank] = useState("Сбербанк");
   const [userReqs, setUserReqs] = useState([]);
-
   const [minMaxm, setMinMax] = useState({ min: null, max: null });
+  const [bid, setBid] = useState({payIn: "8.5%", payOut: "3.5%"})
 
   const handlePaymentTypeChange = (value) => {
     setPaymentValue("");
@@ -191,7 +192,7 @@ const Requisite = () => {
   const handleSelectChange = (e) => {
     const bank = e.target.value;
     setSelectedBank(bank);
-  
+    setBid(requisitePercentageCalculator(bank))
     const code = bankCountryCodeMap[bank] || "+7";
     setPlaceholder(code + (bankCountryCodeMap[bank].length == 2 ? " (999) 999-99-99" : " (99) 999-99-99"));
     setPaymentValue("")
@@ -636,6 +637,14 @@ const Requisite = () => {
                   className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-teal-400"
                   required=""
                 />
+              </div>
+
+              <div className="space-y-4">
+                <p>Ставка</p>
+                <div className="flex gap-4">
+                  <p>Pay in {bid.payIn}</p>
+                  <p>Pay out {bid.payOut}</p>
+                </div>
               </div>
             </div>
 

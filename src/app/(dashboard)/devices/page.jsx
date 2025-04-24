@@ -6,45 +6,71 @@ import { FaCog, FaEdit, FaSearch } from "react-icons/fa";
 import { FaPlus, FaTrash } from "react-icons/fa6";
 import { useUserContext } from "../layout";
 import { docIdToReadableNumber } from "@/utils/helpers";
+import Swal from "sweetalert2";
 
 const Devices = () => {
-  const {user} = useUserContext()
+  const { user } = useUserContext();
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false)
-  const [newDev, setNewDev] = useState({name: "", model: "", imei: "", status: "active", user_id: user?.token})
+  const [loading, setLoading] = useState(false);
+  const [newDev, setNewDev] = useState({
+    name: "",
+    model: "",
+    imei: "",
+    status: "active",
+    user_id: user?.token,
+  });
   const [devs, setDevs] = useState([]);
 
   const handleChange = (label, value) => {
-    setNewDev((prev) => ({...prev, [label]: value}))
-  }
+    setNewDev((prev) => ({ ...prev, [label]: value }));
+  };
 
-  console.log(newDev)
+  console.log(newDev);
 
-  const saveDev = async(e) => {
-    e.preventDefault()
-    
-    
-    setLoading(true)
+  const saveDev = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
     const response = await addDevice(newDev);
-    setLoading(false)
+    setLoading(false);
 
-    if(response) {
-      setDevs((prev) => ([...prev, {...newDev, id: response}]))
-      setNewDev({model: "", imei: "", name: "", status: "active", user_id: user.token})
-      setModalOpen(false)
+    if (response) {
+      setDevs((prev) => [...prev, { ...newDev, id: response }]);
+      setNewDev({
+        model: "",
+        imei: "",
+        name: "",
+        status: "active",
+        user_id: user.token,
+      });
+      setModalOpen(false);
     }
-  }
+  };
+
+  const handleTable = () => {
+    Swal.fire({
+      title: "Настройки таблицы",
+      color: "white",
+      text: "У вас пока не было устройств в работе",
+      icon: "warning",
+      confirmButtonText: "Понятно",
+      customClass: {
+        confirmButton: "bg-greenish",
+      },
+      background: "#1F2937FF",
+    });
+  };
 
   useEffect(() => {
     if (user) {
-      setNewDev((prev) => ({...prev, user_id: user.token}))
+      setNewDev((prev) => ({ ...prev, user_id: user.token }));
       getAllDevices(user?.token).then((res) => {
-        setDevs(res)
-      })
+        setDevs(res);
+      });
     }
     // console.log(user)
-  }, [user])
+  }, [user]);
 
   return (
     <>
@@ -60,8 +86,9 @@ const Devices = () => {
           </div>
           <div class="flex gap-3">
             <button
+              onClick={handleTable}
               id="tableSettingsBtn"
-              class="flex items-center gap-2 px-4 py-2.5 bg-gray-700/50 hover:bg-gray-700 rounded-xl text-gray-300 shadow-sm transition-colors"
+              class="flex cursor-pointer items-center gap-2 px-4 py-2.5 bg-gray-700/50 hover:bg-gray-700 rounded-xl text-gray-300 shadow-sm transition-colors"
             >
               <FaCog className="text-teal-400" />
               <span>Настройки таблицы</span>
@@ -285,14 +312,14 @@ const Devices = () => {
                 type="button"
                 disabled={loading}
                 onClick={() => setModalOpen(false)}
-                className="flex-1 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors text-sm"
+                className="flex-1 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors text-sm"
               >
                 Отмена
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2.5 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+                className="flex-1 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2.5 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
               >
                 Добавить устройство
               </button>

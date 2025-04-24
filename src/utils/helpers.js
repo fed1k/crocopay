@@ -10,39 +10,39 @@ export function maskPhoneNumber(value, countryCode) {
   const digits = value.replace(/\D/g, "");
 
   switch (countryCode) {
-    case "+7": // Russia, Kazakhstan
-      return `+7 (${digits.slice(1, 4)}${
-        digits.length > 3 ? ") " : ""
-      }${digits.slice(4, 7)}${digits.length > 6 ? "-" : ""}${digits.slice(
-        7,
-        9
-      )}${digits.length > 8 ? "-" : ""}${digits.slice(9, 11)}`;
-    case "+998": // Uzbekistan
-      return `+998 (${digits.slice(3, 5)}${
-        digits.length > 4 ? ") " : ""
-      }${digits.slice(5, 8)}${digits.length > 7 ? "-" : ""}${digits.slice(
-        8,
-        10
-      )}${digits.length > 9 ? "-" : ""}${digits.slice(10, 12)}`;
+    case "+7": { // Russia, Kazakhstan
+      const d = digits.slice(1); // exclude country code digit
+      let result = "+7";
+      if (d.length > 0) result += ` (${d.slice(0, 3)}`;
+      if (d.length >= 4) result += `) ${d.slice(3, 6)}`;
+      if (d.length >= 7) result += `-${d.slice(6, 8)}`;
+      if (d.length >= 9) result += `-${d.slice(8, 10)}`;
+      return result;
+    }
+    case "+998": { // Uzbekistan
+      const d = digits.slice(3); // exclude country code digits
+      let result = "+998";
+      if (d.length > 0) result += ` (${d.slice(0, 2)}`;
+      if (d.length >= 3) result += `) ${d.slice(2, 5)}`;
+      if (d.length >= 6) result += `-${d.slice(5, 7)}`;
+      if (d.length >= 8) result += `-${d.slice(7, 9)}`;
+      return result;
+    }
     case "+374": // Armenia
-      return `+374 (${digits.slice(3, 5)}${
-        digits.length > 4 ? ") " : ""
-      }${digits.slice(5, 8)}${digits.length > 7 ? "-" : ""}${digits.slice(
-        8,
-        10
-      )}${digits.length > 9 ? "-" : ""}${digits.slice(10, 12)}`;
-    case "+992": // Tajikistan
-      return `+992 (${digits.slice(3, 5)}${
-        digits.length > 4 ? ") " : ""
-      }${digits.slice(5, 8)}${digits.length > 7 ? "-" : ""}${digits.slice(
-        8,
-        10
-      )}${digits.length > 9 ? "-" : ""}${digits.slice(10, 12)}`;
-    // Add more countries as needed
+    case "+992": { // Tajikistan
+      const d = digits.slice(3); // exclude country code digits
+      let result = countryCode;
+      if (d.length > 0) result += ` (${d.slice(0, 2)}`;
+      if (d.length >= 3) result += `) ${d.slice(2, 5)}`;
+      if (d.length >= 6) result += `-${d.slice(5, 7)}`;
+      if (d.length >= 8) result += `-${d.slice(7, 9)}`;
+      return result;
+    }
     default:
       return value; // fallback, no mask
   }
 }
+
 
 // Converts string (like a Firebase doc ID) to a numeric hash
 function stringToNumber(str) {
@@ -66,3 +66,80 @@ export function docIdToReadableNumber(docId) {
   const numericHash = stringToNumber(docId);
   return formatThousands(numericHash);
 }
+
+export const requisitePercentageCalculator = (country) => {
+  const data = {
+    payIn: "",
+    payOut: "",
+  };
+
+  const targetBanks = [
+    "Сбербанк",
+    "Тинькофф Банк",
+    "Альфа-Банк",
+    "ВТБ",
+    "Газпромбанк",
+    "Райффайзен Банк",
+    "Росбанк",
+    "Банк Открытие",
+    "МТС Банк",
+    "Почта Банк",
+    "Совкомбанк",
+    "ЮниКредит Банк",
+    "Промсвязьбанк",
+    "Росгосстрах Банк",
+    "Генбанк",
+    "Челябинвест",
+    "Банк Солидарность",
+    "АБ Россия",
+    "Озон банк",
+    "Яндекс банк",
+    "Kaspi Bank (Казахстан)",
+    "Halyk Bank (Казахстан)",
+  ];
+
+  const azeb = ["Kapital Bank (Азербайджан)", "PASHA Bank (Азербайджан)", "AMERIA Bank (Армения)", "Ararat Bank (Армения)"];
+  const gruz = ["Bank of Georgia (Грузия)", "TBC Bank (Грузия)"];
+  const kryg = ["Optima Bank (Кыргызстан)", "KICB (Кыргызстан)"];
+  const tj = [
+    "ИТБ (Таджикистан)",
+    "Амонатбанк (Таджикистан)",
+    "Агроинвестбанк (Таджикистан)",
+    "ориент банк (Таджикистан)",
+    "Душанбе (Таджикистан)",
+    "Алиф банк (Таджикистан)",
+    "Тавхидбанк (Таджикистан)",
+    "Эсхата (Таджикистан)",
+    "Спитамен (Таджикистан)",
+  ];
+
+  const uz = [
+    "Узнацбанк (Узбекистан)",
+    "Узпромстройбанк (Узбекистан)",
+    "Народный банк (Узбекистан)",
+    "Капиталбанк (Узбекистан)",
+    "Асакабанк (Узбекистан)",
+  ];
+
+  if (targetBanks.includes(country)) {
+    data.payIn = "8.5%";
+    data.payOut = "3.5%";
+  } else if (azeb.includes(country)) {
+    data.payIn = "4%";
+    data.payOut = "1.5%";
+  } else if (gruz.includes(country)) {
+    data.payIn = "3%";
+    data.payOut = "1%";
+  } else if (kryg.includes(country)) {
+    data.payIn = "7%";
+    data.payOut = "2.5%";
+  } else if (tj.includes(country)) {
+    data.payIn = "6.5%";
+    data.payOut = "2%";
+  } else if (uz.includes(country)) {
+    data.payIn = "7%";
+    data.payOut = "2.5%";
+  }
+
+  return data;
+};

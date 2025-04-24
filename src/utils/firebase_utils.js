@@ -253,7 +253,7 @@ export const editReq = async (doc_id, updatedData, col = "requisites") => {
   }
 };
 
-const devicesCollection = collection(db, 'devices');
+const devicesCollection = collection(db, "devices");
 
 export const addDevice = async (deviceData) => {
   const docRef = await addDoc(devicesCollection, deviceData);
@@ -262,19 +262,19 @@ export const addDevice = async (deviceData) => {
 
 // Edit a device
 export const editDevice = async (id, updateData) => {
-  const docRef = doc(devicesCollection.firestore, 'devices', id);
+  const docRef = doc(devicesCollection.firestore, "devices", id);
   await updateDoc(docRef, updateData);
 };
 
 // Delete a device
 export const deleteDevice = async (id) => {
-  const docRef = doc(devicesCollection.firestore, 'devices', id);
+  const docRef = doc(devicesCollection.firestore, "devices", id);
   await deleteDoc(docRef);
 };
 
 // Get all devices
 export const getAllDevices = async (userId) => {
-  const q = query(devicesCollection, where('user_id', '==', userId));
+  const q = query(devicesCollection, where("user_id", "==", userId));
   const snapshot = await getDocs(q);
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 };

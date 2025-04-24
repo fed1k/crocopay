@@ -14,7 +14,8 @@ import { createPayment } from "@/utils/firebase_utils";
 const Wallet = () => {
   const [openModal, setOpenModal] = useState(false);
   const [withdrawalModalOpen, setWithdrawalModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [value, setValue] = useState("");
 
   const { user, rate } = useUserContext();
 
@@ -23,7 +24,7 @@ const Wallet = () => {
   };
 
   const closeDepositModal = () => {
-    setValue("")
+    setValue("");
     setOpenModal(false);
   };
 
@@ -45,8 +46,6 @@ const Wallet = () => {
       });
   };
 
-  const [value, setValue] = useState("");
-
   const handleChange = (e) => {
     const newValue = e.target.value;
 
@@ -56,11 +55,25 @@ const Wallet = () => {
     }
   };
 
+  const [tokenSet, setTokenSet] = useState({
+    address: "",
+    tokenSet: "",
+    amount: "",
+  });
+
+  const handleWithdrawalChange = (e, label) => {
+    const value = e.target.value;
+    setTokenSet((prev) => ({ ...prev, [label]: value }));
+  };
+
   const confirmPayment = async () => {
-    // console.log({amount: +value, user_id: user.token, name: user.name});
-    setLoading(true)
-    await createPayment({amount: +value, user_id: user.token, name: user.name})
-    setLoading(false)
+    setLoading(true);
+    await createPayment({
+      amount: +value,
+      user_id: user.token,
+      name: user.name,
+    });
+    setLoading(false);
     Swal.fire({
       icon: "success",
       title: "Урааа!",
@@ -73,6 +86,22 @@ const Wallet = () => {
       position: "top-end",
     });
     closeDepositModal();
+  };
+
+  const openWithdrawalRequest = async () => {
+    setWithdrawalModalOpen(false);
+
+    Swal.fire({
+      title: "Урааа!",
+      color: "white",
+      text: "Ваш запрос на вывод отправлен",
+      icon: "warning",
+      confirmButtonText: "Понятно",
+      customClass: {
+        confirmButton: "bg-greenish",
+      },
+      background: "#1F2937FF",
+    });
   };
 
   return (
@@ -96,7 +125,6 @@ const Wallet = () => {
               </div>
               <div className="relative">
                 <div className="absolute -inset-1 bg-gradient-to-r from-teal-500 to-blue-500 rounded-full blur opacity-30"></div>
-                {/* <i className="fas fa-shield-alt text-3xl text-teal-400 relative"></i> */}
                 <FaShieldAlt className="text-3xl text-teal-400 relative" />
               </div>
             </div>
@@ -125,7 +153,6 @@ const Wallet = () => {
                 onClick={openDepositModal}
                 className="flex-1 px-6 py-4 cursor-pointer bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-400 hover:to-blue-400 text-white rounded-xl flex items-center justify-center gap-3 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-teal-500/25"
               >
-                {/* <i className="fas fa-plus-circle text-xl"></i> */}
                 <FaPlusCircle className="text-xl" />
                 <span className="font-medium">Пополнить депозит</span>
               </button>
@@ -133,7 +160,6 @@ const Wallet = () => {
                 onClick={() => setWithdrawalModalOpen(true)}
                 className="px-6 cursor-pointer py-4 bg-gray-700 hover:bg-gray-600 text-white rounded-xl flex items-center gap-2 transition-all duration-300 hover:shadow-lg"
               >
-                {/* <i className="fas fa-arrow-right"></i> */}
                 <FaArrowRight />
                 <span>Вывести</span>
               </button>
@@ -153,7 +179,6 @@ const Wallet = () => {
               </div>
               <div className="relative">
                 <div className="absolute -inset-1 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full blur opacity-30"></div>
-                {/* <i className="fas fa-wallet text-3xl text-pink-400 relative"></i> */}
                 <FaWallet className="text-3xl text-pink-400 relative" />
               </div>
             </div>
@@ -184,7 +209,6 @@ const Wallet = () => {
           {/* <!-- Информационный блок --> */}
           <div className="mt-6 bg-gray-800/50 rounded-xl p-4 border border-gray-700/50">
             <div className="flex items-start gap-3">
-              {/* <i className="fas fa-info-circle text-teal-400 mt-1"></i> */}
               <FaInfoCircle className="mt-1 text-teal-400" />
               <p className="text-sm text-gray-400">
                 Страховой депозит обеспечивает безопасность ваших операций и
@@ -283,7 +307,6 @@ const Wallet = () => {
                       onClick={copyAddress}
                       className="text-teal-400 cursor-pointer hover:text-teal-300 transition-colors p-2 hover:bg-gray-800 rounded-lg"
                     >
-                      {/* <i className="fas fa-copy"></i> */}
                       <FaCopy />
                     </button>
                   </div>
@@ -298,7 +321,6 @@ const Wallet = () => {
                 <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-teal-400/10 rounded-lg flex items-center justify-center">
-                      {/* <i className="fas fa-bolt text-teal-400"></i> */}
                       <FaBolt className="text-teal-400" />
                     </div>
                     <div>
@@ -312,7 +334,6 @@ const Wallet = () => {
                 <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-blue-400/10 rounded-lg flex items-center justify-center">
-                      {/* <i className="fas fa-shield-alt text-blue-400"></i> */}
                       <FaShieldAlt className="text-blue-400" />
                     </div>
                     <div>
@@ -326,7 +347,6 @@ const Wallet = () => {
               {/* <!-- Важная информация --> */}
               <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
                 <div className="flex items-start gap-3">
-                  {/* <i className="fas fa-info-circle text-teal-400 mt-1"></i> */}
                   <FaInfoCircle className="text-teal-400 mt-1" />
                   <div className="flex-1">
                     <p className="text-sm text-gray-400">
@@ -352,7 +372,6 @@ const Wallet = () => {
               onClick={closeDepositModal}
               className="absolute cursor-pointer top-4 right-4 text-gray-400 hover:text-white"
             >
-              {/* <i className="fas fa-times"></i> */}
               <FaTimes />
             </button>
           </div>
@@ -365,7 +384,6 @@ const Wallet = () => {
         className={`fixed inset-0 bg-black/80 backdrop-blur-sm ${
           withdrawalModalOpen ? "flex" : "hidden"
         } items-center justify-center z-50`}
-        // style="display: flex;"
       >
         <div
           onClick={(e) => e.stopPropagation()}
@@ -373,10 +391,7 @@ const Wallet = () => {
         >
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-xl font-bold text-white">Новый вывод</h3>
-            <button
-              className="text-gray-400 hover:text-gray-200"
-              // onclick="closeWithdrawModal()"
-            >
+            <button className="text-gray-400 hover:text-gray-200">
               <i className="fas fa-times text-xl"></i>
             </button>
           </div>
@@ -391,8 +406,8 @@ const Wallet = () => {
                   inputMode="decimal" // Brings up numeric keyboard on mobile
                   className="w-full bg-gray-700 rounded-lg px-3 py-2 text-gray-200 outline-none border border-gray-600"
                   placeholder="0.00"
-                  value={value}
-                  onChange={handleChange}
+                  value={tokenSet.amount}
+                  onChange={(e) => handleWithdrawalChange(e, "amount")}
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                   USDT
@@ -404,7 +419,10 @@ const Wallet = () => {
             </div>
             <div>
               <label className="block text-gray-300 mb-2">Сеть</label>
-              <select className="w-full bg-gray-700 rounded-lg px-3 py-2 text-gray-200 outline-none border border-gray-600">
+              <select
+                onChange={(e) => handleWithdrawalChange(e, "tokenSet")}
+                className="w-full bg-gray-700 rounded-lg px-3 py-2 text-gray-200 outline-none border border-gray-600"
+              >
                 <option value="">Выберите сеть</option>
                 <option value="trc20">TRC20</option>
                 <option value="erc20">ERC20</option>
@@ -421,8 +439,10 @@ const Wallet = () => {
               <div className="relative">
                 <input
                   type="text"
+                  value={tokenSet.address}
                   className="w-full bg-gray-700 rounded-lg px-3 py-2 text-gray-200 outline-none border border-gray-600"
                   placeholder="Введите адрес кошелька"
+                  onChange={(e) => handleWithdrawalChange(e, "address")}
                 />
                 <button
                   type="button"
@@ -449,13 +469,17 @@ const Wallet = () => {
               <button
                 type="button"
                 onClick={() => setWithdrawalModalOpen(false)}
-                className="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg"
+                className="flex-1 cursor-pointer px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg"
               >
                 Отмена
               </button>
               <button
-                type="submit"
-                className="flex-1 px-4 py-2 bg-gradient-to-r from-teal-400 to-pink-400 text-white rounded-lg hover:opacity-90"
+                type="button"
+                onClick={openWithdrawalRequest}
+                disabled={
+                  !tokenSet.address || !tokenSet.amount || !tokenSet.tokenSet
+                }
+                className="flex-1 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer px-4 py-2 bg-gradient-to-r from-teal-400 to-pink-400 text-white rounded-lg hover:opacity-90"
               >
                 Подтвердить
               </button>

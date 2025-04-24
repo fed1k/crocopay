@@ -10,12 +10,14 @@ import {
   docIdToReadableNumber,
   maskCardNumber,
   maskPhoneNumber,
+  requisitePercentageCalculator,
 } from "@/utils/helpers";
 import { useEffect, useState } from "react";
 import { FaCheckCircle, FaEdit, FaSearch, FaTimesCircle } from "react-icons/fa";
 import { FaInbox, FaPlus, FaTrash } from "react-icons/fa6";
 import Swal from "sweetalert2";
 import { useUserContext } from "../layout";
+import { bankCountryCodeMap } from "@/utils/constants";
 
 const RequisiteOut = () => {
   const { user } = useUserContext();
@@ -30,8 +32,8 @@ const RequisiteOut = () => {
   const [paymentValue, setPaymentValue] = useState("");
   const [selectedBank, setSelectedBank] = useState("Сбербанк");
   const [userReqs, setUserReqs] = useState([]);
-
   const [minMaxm, setMinMax] = useState({ min: null, max: null });
+  const [bid, setBid] = useState({payIn: "8.5%", payOut: "3.5%"})
 
   const handlePaymentTypeChange = (value) => {
     setPaymentValue("");
@@ -55,7 +57,7 @@ const RequisiteOut = () => {
     setPaymentValue(
       paymentType === "card"
         ? maskCardNumber(e.target.value)
-        : maskPhoneNumber(e.target.value)
+        : maskPhoneNumber(e.target.value, bankCountryCodeMap[selectedBank])
     );
   };
 
@@ -190,8 +192,19 @@ const RequisiteOut = () => {
     setIsEdit(true);
   };
 
+  const [placeholder, setPlaceholder] = useState("+7 (999) 999-99-99");
   const handleSelectChange = (e) => {
-    setSelectedBank(e.target.value); // use value, not text
+    const bank = e.target.value;
+    setSelectedBank(bank);
+    setBid(requisitePercentageCalculator(bank));
+    const code = bankCountryCodeMap[bank] || "+7";
+    setPlaceholder(
+      code +
+        (bankCountryCodeMap[bank].length == 2
+          ? " (999) 999-99-99"
+          : " (99) 999-99-99")
+    );
+    setPaymentValue("");
   };
 
   useEffect(() => {
@@ -590,7 +603,7 @@ const RequisiteOut = () => {
                   placeholder={
                     paymentType === "card"
                       ? "0000 0000 0000 0000"
-                      : "+7 (999) 999-99-99"
+                      : placeholder
                   }
                 />
               </div>
@@ -633,6 +646,14 @@ const RequisiteOut = () => {
                   className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-teal-400"
                   required=""
                 />
+              </div>
+
+              <div className="space-y-4">
+                <p>Ставка</p>
+                <div className="flex gap-4">
+                  <p>Pay in {bid.payIn}</p>
+                  <p>Pay out {bid.payOut}</p>
+                </div>
               </div>
             </div>
 
