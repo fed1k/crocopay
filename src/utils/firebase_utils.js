@@ -264,6 +264,8 @@ export const addDevice = async (deviceData) => {
 export const editDevice = async (id, updateData) => {
   const docRef = doc(devicesCollection.firestore, "devices", id);
   await updateDoc(docRef, updateData);
+
+  return docRef.id
 };
 
 // Delete a device

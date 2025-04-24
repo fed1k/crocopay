@@ -22,8 +22,6 @@ import { bankCountryCodeMap } from "@/utils/constants";
 const Requisite = () => {
   const { user } = useUserContext();
 
- 
-
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -33,7 +31,7 @@ const Requisite = () => {
   const [selectedBank, setSelectedBank] = useState("Сбербанк");
   const [userReqs, setUserReqs] = useState([]);
   const [minMaxm, setMinMax] = useState({ min: null, max: null });
-  const [bid, setBid] = useState({payIn: "8.5%", payOut: "3.5%"})
+  const [bid, setBid] = useState({ payIn: "8.5%", payOut: "3.5%" });
 
   const handlePaymentTypeChange = (value) => {
     setPaymentValue("");
@@ -192,10 +190,42 @@ const Requisite = () => {
   const handleSelectChange = (e) => {
     const bank = e.target.value;
     setSelectedBank(bank);
-    setBid(requisitePercentageCalculator(bank))
+    setBid(requisitePercentageCalculator(bank));
     const code = bankCountryCodeMap[bank] || "+7";
-    setPlaceholder(code + (bankCountryCodeMap[bank].length == 2 ? " (999) 999-99-99" : " (99) 999-99-99"));
-    setPaymentValue("")
+    setPlaceholder(
+      code +
+        (bankCountryCodeMap[bank].length == 2
+          ? " (999) 999-99-99"
+          : " (99) 999-99-99")
+    );
+    setPaymentValue("");
+  };
+
+  const turnOnSelected = () => {
+    Swal.fire({
+      title: "Выключение статус",
+      color: "white",
+      text: "Требуется активация Личного кабинета",
+      icon: "warning",
+      confirmButtonText: "Понятно",
+      customClass: {
+        confirmButton: "bg-greenish",
+      },
+      background: "#1F2937FF",
+    });
+  };
+
+  const turnOffSelected = () => {
+    Swal.fire({
+      title: "Реквизиты отключены",
+      color: "white",
+      icon: "warning",
+      confirmButtonText: "Понятно",
+      customClass: {
+        confirmButton: "bg-greenish",
+      },
+      background: "#1F2937FF",
+    });
   };
 
   useEffect(() => {
@@ -316,15 +346,15 @@ const Requisite = () => {
 
         <div class="flex gap-4 mb-4">
           <button
-            onclick="toggleSelectedStatus('active')"
-            class="px-4 py-2 bg-green-500/20 text-green-400 hover:bg-green-500/30 rounded-lg flex items-center gap-2"
+            onClick={turnOnSelected}
+            class="px-4 cursor-pointer py-2 bg-green-500/20 text-green-400 hover:bg-green-500/30 rounded-lg flex items-center gap-2"
           >
             <FaCheckCircle />
             <span>Включить выбранные</span>
           </button>
           <button
-            onclick="toggleSelectedStatus('inactive')"
-            class="px-4 py-2 bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg flex items-center gap-2"
+            onClick={turnOffSelected}
+            class="px-4 cursor-pointer py-2 bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg flex items-center gap-2"
           >
             <FaTimesCircle />
             <span>Отключить выбранные</span>
@@ -386,12 +416,12 @@ const Requisite = () => {
                     <td className="px-3 py-3 ">
                       <span
                         class={`px-2 py-1 text-xs rounded-full ${
-                          req.status === "active"
+                          req.status !== "active"
                             ? "bg-green-500/20 text-green-400"
                             : "bg-red-500/20 text-red-400"
                         } `}
                       >
-                        {req.status === "active" ? "Активен" : "Неактивен"}
+                        {req.status !== "active" ? "Активен" : "Неактивен"}
                       </span>
                     </td>
                     <td className="px-3 py-3 text-sm text-gray-400">
@@ -592,9 +622,7 @@ const Requisite = () => {
                   onChange={handlePaymentChange}
                   className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-teal-400"
                   placeholder={
-                    paymentType === "card"
-                      ? "0000 0000 0000 0000"
-                      : placeholder
+                    paymentType === "card" ? "0000 0000 0000 0000" : placeholder
                   }
                 />
               </div>

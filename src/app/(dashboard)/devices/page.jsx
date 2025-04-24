@@ -1,6 +1,11 @@
 "use client";
 
-import { addDevice, getAllDevices } from "@/utils/firebase_utils";
+import {
+  addDevice,
+  deleteDevice,
+  editDevice,
+  getAllDevices,
+} from "@/utils/firebase_utils";
 import { useEffect, useState } from "react";
 import { FaCog, FaEdit, FaSearch } from "react-icons/fa";
 import { FaPlus, FaTrash } from "react-icons/fa6";
@@ -12,6 +17,7 @@ const Devices = () => {
   const { user } = useUserContext();
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpenEdit, setModalOpenEdit] = useState(false);
   const [loading, setLoading] = useState(false);
   const [newDev, setNewDev] = useState({
     name: "",
@@ -20,13 +26,29 @@ const Devices = () => {
     status: "active",
     user_id: user?.token,
   });
+
+  const [newDevEdit, setNewDevEdit] = useState({
+    name: "",
+    model: "",
+    imei: "",
+    status: "active",
+    user_id: user?.token,
+  });
+
   const [devs, setDevs] = useState([]);
 
   const handleChange = (label, value) => {
     setNewDev((prev) => ({ ...prev, [label]: value }));
   };
 
-  console.log(newDev);
+  const handleChangeEdit = (label, value) => {
+    setNewDevEdit((prev) => ({ ...prev, [label]: value }));
+  };
+
+  const openEditModal = (data) => {
+    setNewDevEdit(data);
+    setModalOpenEdit(true);
+  };
 
   const saveDev = async (e) => {
     e.preventDefault();
@@ -48,6 +70,23 @@ const Devices = () => {
     }
   };
 
+  const saveDevEdit = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+    const response = await editDevice(newDevEdit.id, newDevEdit);
+    setLoading(false);
+
+    if (response) {
+      setDevs((prevDevices) =>
+        prevDevices.map((device) =>
+          device.id === newDevEdit.id ? { ...device, ...newDevEdit } : device
+        )
+      );
+      setModalOpenEdit(false);
+    }
+  };
+
   const handleTable = () => {
     Swal.fire({
       title: "Настройки таблицы",
@@ -62,6 +101,34 @@ const Devices = () => {
     });
   };
 
+  const deleteModalOpen = (doc_id) => {
+    Swal.fire({
+      title: "Подтверждение",
+      color: "white",
+      text: "Вы действительно хотите удалить этот устройства?",
+      showDenyButton: true,
+      denyButtonText: "Отмена",
+      icon: "warning",
+      confirmButtonText: "Да, удалить",
+      customClass: {
+        confirmButton: "bg-greenish",
+      },
+      background: "#1F2937FF",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await deleteDevice(doc_id);
+        setDevs((prev) => [...prev].filter((el) => el.id !== doc_id));
+        Swal.fire({
+          title: "Удалено!",
+          text: "Устройства был успешно удален.",
+          icon: "success",
+          background: "#1F2937FF",
+          color: "white",
+        });
+      }
+    });
+  };
+
   useEffect(() => {
     if (user) {
       setNewDev((prev) => ({ ...prev, user_id: user.token }));
@@ -69,7 +136,6 @@ const Devices = () => {
         setDevs(res);
       });
     }
-    // console.log(user)
   }, [user]);
 
   return (
@@ -123,6 +189,9 @@ const Devices = () => {
                 </th>
                 <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 last:rounded-tr-xl">
                   Статус
+                </th>
+                <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 last:rounded-tr-xl">
+                  Действия
                 </th>
               </tr>
             </thead>
@@ -196,31 +265,32 @@ const Devices = () => {
                     </td>
                     <td className="px-6 py-3 ">
                       <span
-                        class={`px-2 py-1 text-xs rounded-full ${
-                          req.status === "active"
-                            ? "bg-green-500/20 text-green-400"
-                            : "bg-red-500/20 text-red-400"
-                        } `}
+                        class={`px-2 py-1 text-nowrap text-xs rounded-full bg-red-500/20 text-red-400`}
+                          // req.status === "active"
+                          //   ? "bg-green-500/20 text-green-400"
+                          //   : "bg-red-500/20 text-red-400"
+                        // } `}
                       >
-                        {req.status === "active" ? "Активен" : "Неактивен"}
+                        {/* {req.status === "active" ? "Активен" : "Неактивен"} */}
+                        Неактивен
                       </span>
                     </td>
-                    {/* <td className="px-3 py-3 ">
-                      <div className="flex gap-2">
+                    <td className="px-3 py-3 ">
+                      <div className="flex justify-center gap-2">
                         <button
-                          // onClick={() => handleEdit(req)}
+                          onClick={() => openEditModal(req)}
                           className="p-1 cursor-pointer text-teal-400 hover:text-teal-300"
                         >
                           <FaEdit />
                         </button>
                         <button
-                          // onClick={() => deleteModalOpen(req.id)}
+                          onClick={() => deleteModalOpen(req.id)}
                           className="p-1 text-red-400 cursor-pointer hover:text-red-300"
                         >
                           <FaTrash />
                         </button>
                       </div>
-                    </td> */}
+                    </td>
                   </tr>
                 ))
               ) : (
@@ -322,6 +392,104 @@ const Devices = () => {
                 className="flex-1 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2.5 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
               >
                 Добавить устройство
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div
+        id="addDeviceModal"
+        onClick={() => setModalOpenEdit(false)}
+        className={`fixed inset-0 bg-black/50 items-center justify-center z-50 backdrop-blur-sm ${
+          modalOpenEdit ? "flex" : "hidden"
+        } `}
+      >
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="bg-gray-800 rounded-2xl p-8 w-full max-w-lg mx-4 border border-gray-700 shadow-2xl"
+        >
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h3 className="text-xl font-bold text-white mb-1">
+                Редалтирование устройства
+              </h3>
+              <p className="text-gray-400 text-sm">Заполните информацию</p>
+            </div>
+            <button
+              className="text-gray-400 hover:text-gray-200 transition-colors"
+              onclick="closeAddDeviceModal()"
+            >
+              <i className="fas fa-times text-xl"></i>
+            </button>
+          </div>
+
+          <form onSubmit={saveDevEdit} id="addDeviceForm" className="space-y-6">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-300 mb-2 text-sm">
+                  Название устройства
+                </label>
+                <input
+                  type="text"
+                  onChange={(e) => handleChangeEdit("name", e.target.value)}
+                  name="deviceName"
+                  required
+                  value={newDevEdit.name}
+                  className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+                  placeholder="Например: iPhone 13 Pro"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-300 mb-2 text-sm">
+                  Модель устройства
+                </label>
+                <input
+                  type="text"
+                  onChange={(e) => handleChangeEdit("model", e.target.value)}
+                  name="deviceModel"
+                  required
+                  value={newDevEdit.model}
+                  className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+                  placeholder="Например: A2638"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-gray-300 mb-2 text-sm">
+                IMEI устройства
+              </label>
+              <input
+                type="text"
+                name="deviceImei"
+                onChange={(e) => handleChangeEdit("imei", e.target.value)}
+                required
+                value={newDevEdit.imei}
+                pattern="\d{15}"
+                className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+                placeholder="15 цифр"
+              />
+              <p className="text-xs text-gray-400 mt-1">
+                IMEI можно найти в настройках устройства или на коробке
+              </p>
+            </div>
+
+            <div className="flex gap-4 mt-8">
+              <button
+                type="button"
+                disabled={loading}
+                onClick={() => setModalOpenEdit(false)}
+                className="flex-1 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors text-sm"
+              >
+                Отмена
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex-1 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2.5 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+              >
+                Сохранить
               </button>
             </div>
           </form>
