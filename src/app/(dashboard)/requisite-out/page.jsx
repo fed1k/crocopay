@@ -673,9 +673,9 @@ const RequisiteOut = () => {
                 />
               </div>
 
-              <div className="space-y-4">
-                <p>Ставка</p>
-                <div className="flex gap-4">
+              <div className="space-y-2 text-white">
+                <p className="text-sm font-medium text-gray-300">Ставка</p>
+                <div className="flex justify-between px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg">
                   <p>Pay in {bid.payIn}</p>
                   <p>Pay out {bid.payOut}</p>
                 </div>
@@ -687,7 +687,7 @@ const RequisiteOut = () => {
                 type="button"
                 onClick={closeModal}
                 disabled={loading}
-                className="px-6 disabled:opacity-50 disabled:cursor-not-allowed py-3 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600"
+                className="px-6 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed py-3 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600"
               >
                 Отмена
               </button>
@@ -695,7 +695,7 @@ const RequisiteOut = () => {
                 type="button"
                 disabled={loading}
                 onClick={isEdit ? saveEdit : saveReq}
-                className="px-6 py-3 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-teal-400 to-pink-400 text-white rounded-lg hover:opacity-90"
+                className="px-6 cursor-pointer py-3 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-teal-400 to-pink-400 text-white rounded-lg hover:opacity-90"
               >
                 {isEdit ? "Сохранить" : "Добавить"}
               </button>

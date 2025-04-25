@@ -238,43 +238,43 @@ const Requisite = () => {
 
   return (
     <>
-      <div class="bg-gray-800/90 rounded-2xl shadow-2xl p-6 backdrop-blur-lg border border-gray-700">
-        <div class="flex justify-between items-center mb-6">
+      <div className="bg-gray-800/90 rounded-2xl shadow-2xl p-6 backdrop-blur-lg border border-gray-700">
+        <div className="flex justify-between items-center mb-6">
           <div>
-            <h2 class="text-2xl font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
               Реквизиты Pay in
             </h2>
-            <p class="text-gray-400 mt-1">Управление Pay in реквизитами</p>
+            <p className="text-gray-400 mt-1">Управление Pay in реквизитами</p>
           </div>
           <button
             type="button"
             onClick={() => setModalOpen(true)}
-            class="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg flex items-center gap-2 cursor-pointer"
+            className="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg flex items-center gap-2 cursor-pointer"
           >
             <FaPlus />
             <span>Добавить реквизит</span>
           </button>
         </div>
 
-        <div class="mb-6 flex flex-wrap gap-4">
-          <div class="relative">
+        <div className="mb-6 flex flex-wrap gap-4">
+          <div className="relative">
             <input
               type="text"
-              class="w-64 px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50 pl-10"
+              className="w-64 px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50 pl-10"
               placeholder="Поиск..."
             />
-            {/* <i class="fas fa-search text-gray-400 absolute left-3 top-3"></i> */}
+            {/* <i className="fas fa-search text-gray-400 absolute left-3 top-3"></i> */}
             <FaSearch className="text-gray-400 absolute left-3 top-3" />
           </div>
           <div>
-            <select class="px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50">
+            <select className="px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50">
               <option value="">Все типы</option>
               <option value="card">Карта</option>
               <option value="sbp">СБП</option>
             </select>
           </div>
           <div>
-            <select class="px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50">
+            <select className="px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50">
               <option value="sber">Сбербанк</option>
               <option value="tinkoff">Тинькофф Банк</option>
               <option value="alpha">Альфа-Банк</option>
@@ -336,7 +336,7 @@ const Requisite = () => {
             </select>
           </div>
           <div>
-            <select class="px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50">
+            <select className="px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50">
               <option value="">Все статусы</option>
               <option value="active">Активные</option>
               <option value="inactive">Неактивные</option>
@@ -344,58 +344,58 @@ const Requisite = () => {
           </div>
         </div>
 
-        <div class="flex gap-4 mb-4">
+        <div className="flex gap-4 mb-4">
           <button
             onClick={turnOnSelected}
-            class="px-4 cursor-pointer py-2 bg-green-500/20 text-green-400 hover:bg-green-500/30 rounded-lg flex items-center gap-2"
+            className="px-4 cursor-pointer py-2 bg-green-500/20 text-green-400 hover:bg-green-500/30 rounded-lg flex items-center gap-2"
           >
             <FaCheckCircle />
             <span>Включить выбранные</span>
           </button>
           <button
             onClick={turnOffSelected}
-            class="px-4 cursor-pointer py-2 bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg flex items-center gap-2"
+            className="px-4 cursor-pointer py-2 bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg flex items-center gap-2"
           >
             <FaTimesCircle />
             <span>Отключить выбранные</span>
           </button>
         </div>
 
-        <div class="bg-gray-700 rounded-xl overflow-hidden">
-          <table class="w-full">
-            <thead class="bg-gray-800 text-gray-300">
+        <div className="bg-gray-700 rounded-xl overflow-hidden">
+          <table className="w-full">
+            <thead className="bg-gray-800 text-gray-300">
               <tr>
-                <th class="px-3 py-3 text-left">
+                <th className="px-3 py-3 text-left">
                   <input
                     type="checkbox"
-                    class="rounded border-gray-600 bg-gray-700"
+                    className="rounded border-gray-600 bg-gray-700"
                   />
                 </th>
-                <th class="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   ID
                 </th>
-                <th class="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Тип
                 </th>
-                <th class="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Банк
                 </th>
-                <th class="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Статус
                 </th>
-                <th class="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Реквизит
                 </th>
-                <th class="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Лимиты
                 </th>
-                <th class="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Действия
                 </th>
               </tr>
             </thead>
             <tbody
-              class="divide-y divide-gray-700 text-white"
+              className="divide-y divide-gray-700 text-white"
               id="requisitesTableBody"
             >
               {userReqs?.length ? (
@@ -415,7 +415,7 @@ const Requisite = () => {
                     </td>
                     <td className="px-3 py-3 ">
                       <span
-                        class={`px-2 py-1 text-xs rounded-full ${
+                        className={`px-2 py-1 text-xs rounded-full ${
                           req.status !== "active"
                             ? "bg-green-500/20 text-green-400"
                             : "bg-red-500/20 text-red-400"
@@ -452,10 +452,10 @@ const Requisite = () => {
                 ))
               ) : (
                 <tr id="emptyRequisitesMessage">
-                  <td colspan="8" class="px-6 py-8 text-center text-gray-400">
-                    <div class="flex flex-col items-center justify-center gap-4">
-                      <div class="w-16 h-16 rounded-full bg-gray-700/50 flex items-center justify-center">
-                        {/* <i class="fas fa-inbox text-2xl text-gray-500"></i> */}
+                  <td colSpan="8" className="px-6 py-8 text-center text-gray-400">
+                    <div className="flex flex-col items-center justify-center gap-4">
+                      <div className="w-16 h-16 rounded-full bg-gray-700/50 flex items-center justify-center">
+                        {/* <i className="fas fa-inbox text-2xl text-gray-500"></i> */}
                         <FaInbox className="text-2xl text-gray-500" />
                       </div>
                       <p>Нет добавленных реквизитов</p>
@@ -667,9 +667,9 @@ const Requisite = () => {
                 />
               </div>
 
-              <div className="space-y-4">
-                <p>Ставка</p>
-                <div className="flex gap-4">
+              <div className="space-y-2 text-white">
+                <p className="text-sm font-medium text-gray-300">Ставка</p>
+                <div className="flex justify-between px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg">
                   <p>Pay in {bid.payIn}</p>
                   <p>Pay out {bid.payOut}</p>
                 </div>
@@ -681,7 +681,7 @@ const Requisite = () => {
                 type="button"
                 onClick={closeModal}
                 disabled={loading}
-                className="px-6 disabled:opacity-50 disabled:cursor-not-allowed py-3 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600"
+                className="px-6 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed py-3 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600"
               >
                 Отмена
               </button>
@@ -689,7 +689,7 @@ const Requisite = () => {
                 type="button"
                 disabled={loading}
                 onClick={isEdit ? saveEdit : saveReq}
-                className="px-6 py-3 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-teal-400 to-pink-400 text-white rounded-lg hover:opacity-90"
+                className="px-6 cursor-pointer py-3 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-teal-400 to-pink-400 text-white rounded-lg hover:opacity-90"
               >
                 {isEdit ? "Сохранить" : "Добавить"}
               </button>

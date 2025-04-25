@@ -61,28 +61,22 @@ const DashboardLayout = ({ children }) => {
   const [rate, setRate] = useState(null);
 
   useEffect(() => {
-    let intervalId;
-
-    const fetchRate = async () => {
-      console.log("Working...");
+    const fetchPrice = async () => {
       try {
-        const response = await fetch("https://open.er-api.com/v6/latest/USD");
-        const data = await response.json();
-        const rubRate = data.rates?.RUB;
-        if (rubRate) {
-          setRate(rubRate + 2);
-        } else {
-          console.warn("RUB rate not found in response:", data);
-        }
-      } catch (error) {
-        console.error("Error fetching USDT to RUB rate:", error);
+        const res = await fetch("/api/price");
+        const data = await res.json();
+        if (data.price) {
+          const numeric = parseFloat(data.price.replace(",", "."));
+          setRate(numeric);
+        } else setRate("N/A");
+      } catch {
+        setRate("Error");
       }
     };
 
-    fetchRate(); // Initial fetch
-    intervalId = setInterval(fetchRate, 5000); // Poll every 5 seconds
-
-    return () => clearInterval(intervalId); // Cleanup on unmount
+    fetchPrice(); // Initial load
+    const interval = setInterval(fetchPrice, 3000); // Every 3 seconds
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -108,7 +102,10 @@ const DashboardLayout = ({ children }) => {
                   Общий баланс
                 </h2>
 
-                <FaInfoCircle onClick={handleInfoIcon} className="text-teal-400 hover:text-teal-300 cursor-pointer" />
+                <FaInfoCircle
+                  onClick={handleInfoIcon}
+                  className="text-teal-400 hover:text-teal-300 cursor-pointer"
+                />
               </div>
               <div className="flex mb-2 items-center justify-between">
                 <p
@@ -295,7 +292,7 @@ const DashboardLayout = ({ children }) => {
                       id="buyRate"
                       className="font-semibold text-lg bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent"
                     >
-                      {rate?.toFixed(2)}
+                      {rate != null ? (rate + 2).toFixed(2) : 'Loading...'}
                     </span>
                     <span className="text-sm bg-gradient-to-r from-teal-400/80 to-blue-400/80 bg-clip-text text-transparent">
                       RUB
@@ -311,7 +308,7 @@ const DashboardLayout = ({ children }) => {
                       id="sellRate"
                       className="font-semibold text-lg bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent"
                     >
-                      {rate?.toFixed(2)}
+                       {rate != null ? (rate + 3).toFixed(2) : 'Loading...'}
                     </span>
                     <span className="text-sm bg-gradient-to-r from-pink-400/80 to-purple-400/80 bg-clip-text text-transparent">
                       RUB
