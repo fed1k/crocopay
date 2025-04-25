@@ -58,7 +58,7 @@ const DashboardLayout = ({ children }) => {
     }
   }, []);
 
-  const [rate, setRate] = useState(null);
+  const [rate, setRate] = useState(0);
 
   useEffect(() => {
     const fetchPrice = async () => {
