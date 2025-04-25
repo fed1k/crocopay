@@ -125,8 +125,6 @@ const Admin = () => {
     });
   }, []);
 
-  // console.log(payments)
-
   return (
     <>
       <div className="flex gap-3 pb-4">
@@ -134,7 +132,7 @@ const Admin = () => {
           onClick={() => setTab("users")}
           className={`border-b ${
             tab === "users" ? "" : "border-transparent"
-          } cursor-pointer`}
+          } cursor-pointer text-white`}
         >
           Ползователы
         </p>
@@ -142,7 +140,7 @@ const Admin = () => {
           onClick={() => setTab("payments")}
           className={`border-b ${
             tab === "payments" ? "" : "border-transparent"
-          } cursor-pointer`}
+          } cursor-pointer text-white`}
         >
           Платежы
         </p>
@@ -292,16 +290,16 @@ const Admin = () => {
                     <td className="px-6 py-8 text-gray-400">
                       <div className="flex gap-3 justify-end">
                         <button
-                          disabled={loading || payment !== "pending"}
+                          disabled={loading || payment.status !== "pending"}
                           onClick={() => markPayment(payment.id, "approved")}
-                          className="border disabled:opacity-50 disabled:cursor-not-allowed border-gray-700 rounded px-2 py-1 cursor-pointer"
+                          className="border hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed border-gray-700 rounded px-2 py-1 cursor-pointer"
                         >
                           Подтверждать
                         </button>
                         <button
-                          disabled={loading || payment !== "pending"}
+                          disabled={loading || payment.status !== "pending"}
                           onClick={() => markPayment(payment.id, "rejected")}
-                          className="border border-gray-700 rounded disabled:opacity-50 disabled:cursor-not-allowed px-2 py-1 cursor-pointer"
+                          className="border hover:shadow-lg border-gray-700 rounded disabled:opacity-50 disabled:cursor-not-allowed px-2 py-1 cursor-pointer"
                         >
                           Отклонить
                         </button>

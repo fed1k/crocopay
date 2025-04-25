@@ -7,10 +7,15 @@
 
 @font-face {
   font-family: 'Arista Pro Bold';
-  src: url('/public/fonts/AristaProAlternateBoldtrial.ttf') format('truetype');
-  font-weight: normal;
+  src: url('/fonts/Arista-Pro-Alternate-Bold-trial.ttf') format('truetype');
+  font-weight: bold;
   font-style: normal;
 }
+
+.arista-font {
+  font-family: 'Arista Pro Bold', sans-serif;
+}
+
 
 @theme inline {
   --color-background: var(--background);
@@ -24,10 +29,6 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
-
-.arista-font {
-  font-family: 'Arista Pro Bold';
 }
 
 body {

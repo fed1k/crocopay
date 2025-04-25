@@ -203,7 +203,7 @@ const Requisite = () => {
 
   const turnOnSelected = () => {
     Swal.fire({
-      title: "Выключение статус",
+      title: "Включение статус",
       color: "white",
       text: "Требуется активация Личного кабинета",
       icon: "warning",

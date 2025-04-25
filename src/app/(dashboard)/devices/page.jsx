@@ -105,7 +105,7 @@ const Devices = () => {
     Swal.fire({
       title: "Подтверждение",
       color: "white",
-      text: "Вы действительно хотите удалить этот устройства?",
+      text: "Вы действительно хотите удалить это устройства?",
       showDenyButton: true,
       denyButtonText: "Отмена",
       icon: "warning",
