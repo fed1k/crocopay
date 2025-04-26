@@ -1,3 +1,4 @@
+import * as cheerio from 'cheerio';
 export function maskCardNumber(value) {
   // Strip all non-digit characters and limit to 16 digits
   const digits = value.replace(/\D/g, "").slice(0, 16);
@@ -143,3 +144,22 @@ export const requisitePercentageCalculator = (country) => {
 
   return data;
 };
+
+
+export async function scrapePrice() {
+  try {
+    const res = await fetch('https://ru.investing.com/crypto/tether/usdt-rub', {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+      },
+      cache: 'no-store',
+    });
+    const html = await res.text();
+    const $ = cheerio.load(html);
+    const raw = $('div[data-test="instrument-price-last"]').text().trim();
+    return parseFloat(raw.replace(',', '.'));
+  } catch {
+    return null;
+  }
+}
+

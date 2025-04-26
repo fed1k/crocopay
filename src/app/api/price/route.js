@@ -7,7 +7,6 @@ export async function GET() {
     const html = await res.text();
     const $ = cheerio.load(html);
     const price = $('div[data-test="instrument-price-last"]').text().trim();
-
     return NextResponse.json({ price });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch price' }, { status: 500 });
