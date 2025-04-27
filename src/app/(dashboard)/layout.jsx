@@ -366,7 +366,7 @@ const DashboardLayout = ({ children }) => {
 
                 <div
                   id="userMenu"
-                  className="absolute right-0 mt-2 w-48 bg-gray-800 shadow-xl rounded-lg py-2 border border-gray-700 opacity-0 invisible transition-all duration-300 group-hover:opacity-100 group-hover:visible"
+                  className="absolute z-20 right-0 mt-2 w-48 bg-gray-800 shadow-xl rounded-lg py-2 border border-gray-700 opacity-0 invisible transition-all duration-300 group-hover:opacity-100 group-hover:visible"
                 >
                   <Link
                     href="/profile"
@@ -391,7 +391,7 @@ const DashboardLayout = ({ children }) => {
                   height={40}
                   alt="Инструкция"
                 />
-                <p className="-translate-x-1 text-sm">Инструкция</p>
+                <p className="-translate-x-1 text-sm text-white">Инструкция</p>
               </a>
             </div>
           </div>
