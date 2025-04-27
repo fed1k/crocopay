@@ -87,7 +87,7 @@ const OrdersIn = () => {
 
   const showStatusModal = () => {
     Swal.fire({
-      title: "Вам пока не доступны Pay in заказы активируйте Личный кабинет",
+      title: "Вам пока не доступны Pay in заказы, активируйте личный кабинет",
       icon: "warning",
       color: "white",
       confirmButtonText: "Понятно",

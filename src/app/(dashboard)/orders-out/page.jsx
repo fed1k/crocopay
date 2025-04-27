@@ -87,7 +87,7 @@ const OrdersOut = () => {
 
   const showStatusModal = () => {
       Swal.fire({
-        title: "Вам пока не доступны Pay out заказы активируйте Личный кабинет",
+        title: "Вам пока не доступны Pay out заказы, активируйте личный кабинет",
         icon: "warning",
         color: "white",
         confirmButtonText: "Понятно",
