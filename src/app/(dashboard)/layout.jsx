@@ -68,7 +68,7 @@ const DashboardLayout = ({ children }) => {
         if (data.price) {
           const numeric = parseFloat(data.price.replace(",", "."));
           setRate(numeric);
-        } else setRate("N/A");
+        }
       } catch {
         setRate("Error");
       }
@@ -292,7 +292,7 @@ const DashboardLayout = ({ children }) => {
                       id="buyRate"
                       className="font-semibold text-lg bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent"
                     >
-                      {rate != null ? rate + 2 : 'Loading...'}
+                      {rate != null ? rate + 2 : "Loading..."}
                     </span>
                     <span className="text-sm bg-gradient-to-r from-teal-400/80 to-blue-400/80 bg-clip-text text-transparent">
                       RUB
@@ -308,7 +308,7 @@ const DashboardLayout = ({ children }) => {
                       id="sellRate"
                       className="font-semibold text-lg bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent"
                     >
-                       {rate != null ? rate + 3 : 'Loading...'}
+                      {rate != null ? rate + 3 : "Loading..."}
                     </span>
                     <span className="text-sm bg-gradient-to-r from-pink-400/80 to-purple-400/80 bg-clip-text text-transparent">
                       RUB
