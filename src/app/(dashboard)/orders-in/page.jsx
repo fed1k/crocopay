@@ -85,6 +85,20 @@ const OrdersIn = () => {
     setIsSettingsOpen(false)
   };
 
+  const showStatusModal = () => {
+    Swal.fire({
+      title: "Вам пока не доступны Pay in заказы активируйте Личный кабинет",
+      icon: "warning",
+      color: "white",
+      confirmButtonText: "Понятно",
+      customClass: {
+        confirmButton: "bg-greenish",
+      },
+      background: "#1F2937FF",
+      showConfirmButton: true
+    })
+  }
+
   return (
     <div className="bg-gray-800/90 rounded-2xl shadow-2xl p-6 h-full flex flex-col backdrop-blur-lg border border-gray-700">
       {/* Заголовок */}
@@ -99,8 +113,8 @@ const OrdersIn = () => {
         <div className="flex items-center gap-4">
           <span className="text-gray-400">Статус работы:</span>
           <label className="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="workStatus" className="sr-only peer" />
-            <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+            <input onChange={showStatusModal} type="checkbox" id="workStatus" className="sr-only peer" />
+            <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer  after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all "></div>
           </label>
         </div>
       </div>
