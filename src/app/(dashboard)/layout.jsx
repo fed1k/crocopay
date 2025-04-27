@@ -22,6 +22,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getMe } from "@/utils/firebase_utils";
 import Swal from "sweetalert2";
+import Image from "next/image";
 
 const userContext = createContext();
 export const useUserContext = () => useContext(userContext);
@@ -353,33 +354,45 @@ const DashboardLayout = ({ children }) => {
             </div>
 
             {/* <!-- Меню пользователя --> */}
-            <div className="relative group">
-              <button
-                id="userMenuButton"
-                className="flex cursor-pointer items-center gap-2 bg-gray-800/50 p-2 rounded-lg hover:bg-gray-800 transition-colors"
-              >
-                {/* <i className="fa-solid fa-circle-user text-2xl text-teal-400"></i> */}
-                <FaUserCircle className="text-2xl text-teal-400" />
-                <span className="text-gray-300">{user?.name}</span>
-              </button>
-              <div
-                id="userMenu"
-                className="absolute right-0 mt-2 w-48 bg-gray-800 shadow-xl rounded-lg py-2 border border-gray-700 opacity-0 invisible transition-all duration-300 group-hover:opacity-100 group-hover:visible"
-              >
-                <Link
-                  href="/profile"
-                  className="block px-4 py-2 text-gray-300 hover:bg-gray-700/50"
+            <div className="relative">
+              <div className="group relative inline-block">
+                <button
+                  id="userMenuButton"
+                  className="flex cursor-pointer items-center gap-2 bg-gray-800/50 p-2 rounded-lg hover:bg-gray-800 transition-colors"
                 >
-                  Профиль
-                </Link>
-                <Link
-                  href="/login"
-                  onClick={() => sessionStorage.removeItem("user")}
-                  className="block px-4 py-2 text-red-400 hover:bg-gray-700/50"
+                  <FaUserCircle className="text-2xl text-teal-400" />
+                  <span className="text-gray-300">{user?.name}</span>
+                </button>
+
+                <div
+                  id="userMenu"
+                  className="absolute right-0 mt-2 w-48 bg-gray-800 shadow-xl rounded-lg py-2 border border-gray-700 opacity-0 invisible transition-all duration-300 group-hover:opacity-100 group-hover:visible"
                 >
-                  Выйти
-                </Link>
+                  <Link
+                    href="/profile"
+                    className="block px-4 py-2 text-gray-300 hover:bg-gray-700/50"
+                  >
+                    Профиль
+                  </Link>
+                  <Link
+                    href="/login"
+                    onClick={() => sessionStorage.removeItem("user")}
+                    className="block px-4 py-2 text-red-400 hover:bg-gray-700/50"
+                  >
+                    Выйти
+                  </Link>
+                </div>
               </div>
+
+              <a target="_blank" href="https://temporal-scribe-d5e.notion.site/Kredo-1e10b19b1ea480c1adcaebefe4431766" className="flex items-center mt-2 -translate-x-2">
+                <Image
+                  src="/guidance.png"
+                  width={40}
+                  height={40}
+                  alt="Инструкция"
+                />
+                <p className="-translate-x-1 text-sm">Инструкция</p>
+              </a>
             </div>
           </div>
         </header>
