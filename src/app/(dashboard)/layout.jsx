@@ -33,6 +33,11 @@ const DashboardLayout = ({ children }) => {
   const [orderHover, setOrderHover] = useState(false);
   const [reqHover, setReqHover] = useState(false);
   const [user, setUser] = useState();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   const handleInfoIcon = () => {
     Swal.fire({
@@ -86,14 +91,20 @@ const DashboardLayout = ({ children }) => {
     <div className="flex">
       <aside
         id="sidebar"
-        className=" min-w-64 bg-gray-900 text-white shadow-2xl sticky top-0 h-screen z-50 sidebar-transition hidden md:flex flex-col"
+        className={`min-w-64 bg-gray-900 text-white shadow-2xl fixed md:sticky top-0 h-screen z-50 sidebar-transition ${isSidebarOpen ? 'flex' : 'hidden'} md:flex flex-col`}
       >
-        <div className="p-5 border-b border-gray-800 flex items-center gap-3">
+        <div className="h-24 flex justify-between p-5 border-b border-gray-800 items-center gap-3">
           <div>
             <h3 className="text-4xl arista-font text-center font-bold text-white">
               Kredo
             </h3>
             <p className="text-xs text-gray-400">Payment Ecosystem</p>
+          </div>
+          <div 
+            className="md:hidden"
+            onClick={toggleSidebar}
+            >
+            close icon
           </div>
         </div>
 
@@ -273,19 +284,21 @@ const DashboardLayout = ({ children }) => {
       </aside>
 
       <div className="bg-gray-900 flex-1">
-        <header className="bg-gray-900 shadow-lg sticky top-0 z-40 border-b border-gray-800">
-          <div className="flex items-center justify-between p-4">
+        <header className="h-24 py-2 px-4 md:px-2 lg:px-0 bg-gray-900 shadow-lg sticky top-0 z-40 border-b border-gray-800">
+          <div className="flex items-center justify-between">
             {/* <!-- Кнопка гамбургера --> */}
             <button
               id="sidebarToggle"
-              className="md:hidden p-2 text-gray-400 hover:text-teal-400"
+              className={`${isSidebarOpen && 'hidden'} md:hidden p-2 text-gray-400 hover:text-teal-400`}
+              onClick={toggleSidebar}
             >
-              <i className="fas fa-bars hamburger-icon"></i>
+              icon
+              {/* <i className="fas fa-bars hamburger-icon"></i> */}
             </button>
 
-            <div className="flex items-center gap-6 ml-auto">
+            <div className="flex h-full items-center gap-2 lg:gap-6 ml-auto">
               {/* <!-- Курсы валют --> */}
-              <div className="flex gap-3 pr-6 border-r border-gray-800">
+              <div className="flex gap-3 pr-2 lg:pr-6 border-r border-gray-800">
                 <div className="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
                   <p className="text-xs text-teal-400 mb-1 font-mono">
                     Курс покупки
@@ -321,7 +334,7 @@ const DashboardLayout = ({ children }) => {
               </div>
 
               {/* <!-- Добавляем блоки для процентов --> */}
-              <div className="flex gap-3 pr-6 border-r border-gray-800">
+              <div className="flex gap-3 pr-2 lg:pr-6 border-r border-gray-800">
                 <div className="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
                   <p className="text-xs text-teal-400 mb-1 font-mono">Pay In</p>
                   <div className="flex items-center gap-1.5">
@@ -356,7 +369,7 @@ const DashboardLayout = ({ children }) => {
             </div>
 
             {/* <!-- Меню пользователя --> */}
-            <div className="relative">
+            <div className="relative lg:pl-6 space-y-1">
               <div className="group relative inline-block">
                 <button
                   id="userMenuButton"
@@ -386,7 +399,7 @@ const DashboardLayout = ({ children }) => {
                 </div>
               </div>
 
-              <a target="_blank" href="https://temporal-scribe-d5e.notion.site/Kredo-1e10b19b1ea480c1adcaebefe4431766" className="flex items-center mt-2 -translate-x-2">
+              <a target="_blank" href="https://temporal-scribe-d5e.notion.site/Kredo-1e10b19b1ea480c1adcaebefe4431766" className=" flex items-center -translate-x-2">
                 <Image
                   src="/guidance.png"
                   width={40}
