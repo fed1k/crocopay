@@ -83,7 +83,7 @@ const Profile = () => {
 
   return (
     <main className=" bg-gray-900 h-auto md:h-[calc(100vh-64px)]  overflow-hidden">
-      <div className="bg-gray-800/90 rounded-2xl shadow-2xl md:p-8 p-5 max-w-[320px] md:max-w-[850px] lg:max-w-[1240px] h-full flex flex-col relative backdrop-blur-lg border border-gray-700">
+      <div className="bg-gray-800/90 rounded-2xl shadow-2xl md:p-8 mx-auto p-5 max-w-[94%]  lg:max-w-[1240px] h-full flex flex-col relative backdrop-blur-lg border border-gray-700">
         {/* <!-- Декоративный фон --> */}
         <div className="absolute top-0 right-0 -z-10 opacity-5">
           <svg

@@ -244,7 +244,7 @@ const RequisiteOut = () => {
 
   return (
     <>
-      <div class="bg-gray-800/90 max-w-[330px] md:max-w-[800px] lg:max-w-[1200px] rounded-2xl shadow-2xl p-6 backdrop-blur-lg border border-gray-700">
+      <div class="bg-gray-800/90  rounded-2xl shadow-2xl p-6 backdrop-blur-lg border border-gray-700">
         <div class="md:flex block justify-between items-center mb-6">
           <div>
             <h2 class="md:text-2xl sm:text-md text-lg  font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
@@ -262,7 +262,7 @@ const RequisiteOut = () => {
           </button>
         </div>
 
-        <div class="mb-6 flex flex-wrap gap-4">
+        <div class="mb-6 flex flex-col md:flex-wrap gap-4">
           <div class="relative">
             <input
               type="text"
@@ -350,10 +350,10 @@ const RequisiteOut = () => {
           </div>
         </div>
 
-        <div class="flex gap-4 mb-4">
+        <div class="md:flex block gap-4 mb-4">
           <button
             onClick={turnOnSelected}
-            class="px-4 py-2 cursor-pointer bg-green-500/20 text-green-400 hover:bg-green-500/30 rounded-lg flex items-center gap-2"
+            class="px-4 py-2 cursor-pointer bg-green-500/20 text-green-400 hover:bg-green-500/30 rounded-lg flex items-center mb-4   md:mb-0 gap-2"
           >
             <FaCheckCircle />
             <span>Включить выбранные</span>

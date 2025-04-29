@@ -238,7 +238,7 @@ const Requisite = () => {
 
   return (
     <>
-      <div className="bg-gray-800/90 rounded-2xl max-w-[320px] md:max-w-[850px] lg:max-w-[1240px] shadow-2xl md:p-6 p-4 backdrop-blur-lg border border-gray-700">
+      <div className="bg-gray-800/90 rounded-2xl mx-auto shadow-2xl md:p-6 p-4 backdrop-blur-lg border border-gray-700">
         <div className="md:flex block justify-between items-center mb-6">
           <div>
             <h2 className="md:text-2xl sm:text-md text-lg font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
@@ -256,8 +256,8 @@ const Requisite = () => {
           </button>
         </div>
 
-        <div className="mb-6 flex flex-wrap gap-4">
-          <div className="relative">
+        <div className="mb-6 flex flex-col md:flex-wrap gap-4">
+          <div className="relative ">
             <input
               type="text"
               className="w-64 px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50 pl-10"
@@ -344,10 +344,10 @@ const Requisite = () => {
           </div>
         </div>
 
-        <div className="flex gap-4 mb-4">
+        <div className="md:flex block gap-4 mb-4">
           <button
             onClick={turnOnSelected}
-            className="md:px-4 px-2.5 cursor-pointer py-2 bg-green-500/20 text-green-400 hover:bg-green-500/30 rounded-lg flex items-center gap-2"
+            className="md:px-4 px-2.5 cursor-pointer py-2 bg-green-500/20 text-green-400 hover:bg-green-500/30 mb-4 md:mb-0 rounded-lg flex items-center gap-2"
           >
             <FaCheckCircle />
             <span>Включить выбранные</span>

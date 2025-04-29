@@ -108,7 +108,7 @@ const Wallet = () => {
     <>
       <div className="mb-8">
         {/* <!-- Объединенная карточка депозитов --> */}
-        <div className="bg-gradient-to-br max-w-[330px] md:max-w-[800px] lg:max-w-[1200px]  from-gray-800 via-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700/50 shadow-xl hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
+        <div className="bg-gradient-to-br from-gray-800 via-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700/50 shadow-xl hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
           {/* <!-- Декоративный фоновый элемент --> */}
           <div className="absolute -right-10 -top-10 w-40 h-40 bg-gradient-to-br from-teal-500/10 to-blue-500/10 blur-3xl rounded-full"></div>
 
@@ -148,10 +148,10 @@ const Wallet = () => {
               </div>
             </div>
 
-            <div className="flex justify-center gap-4">
+            <div className="md:flex block justify-center gap-4">
               <button
                 onClick={openDepositModal}
-                className="flex-1 md:px-6 px-4 md:py-4 py-2.5 cursor-pointer bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-400 hover:to-blue-400 text-white rounded-xl flex items-center justify-center gap-3 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-teal-500/25"
+                className="flex-1 md:px-6 px-4 md:py-4 py-2.5 cursor-pointer bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-400 hover:to-blue-400 text-white rounded-xl flex items-center justify-center gap-3 mb-4 md:mb-0 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-teal-500/25"
               >
                 <FaPlusCircle className="text-xl" />
                 <span className="font-medium">Пополнить депозит</span>

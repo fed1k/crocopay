@@ -100,7 +100,7 @@ const OrdersIn = () => {
   }
 
   return (
-    <div className="bg-gray-800/90 max-w-[330px] md:max-w-[800px] lg:max-w-[1200px] rounded-2xl shadow-2xl md:p-6 p-3 h-full flex flex-col backdrop-blur-lg border border-gray-700">
+    <div className="bg-gray-800/90 max-w-[330px] md:max-w-[800px] lg:max-w-[1240px] rounded-2xl shadow-2xl md:p-6 p-3 h-full flex flex-col backdrop-blur-lg border border-gray-700">
       {/* Заголовок */}
       <div className="flex justify-between items-center mb-6">
         <div>
