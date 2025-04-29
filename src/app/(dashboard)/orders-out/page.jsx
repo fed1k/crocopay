@@ -100,14 +100,14 @@ const OrdersOut = () => {
     }
 
   return (
-    <div className="bg-gray-800/90 rounded-2xl shadow-2xl p-6 h-full flex flex-col backdrop-blur-lg border border-gray-700">
+    <div className="bg-gray-800/90 rounded-2xl max-w-[330px] md:max-w-[800px] lg:max-w-[1200px] shadow-2xl p-6 h-full flex flex-col backdrop-blur-lg border border-gray-700">
       {/* Заголовок */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
+          <h2 className="md:text-2xl text-md font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
             Pay out заказы
           </h2>
-          <p className="text-gray-400 mt-1">Pay out транзакции</p>
+          <p className="text-gray-400 d:text-sm text-md mt-1">Pay out транзакции</p>
         </div>
 
         <div className="flex items-center gap-4">
@@ -120,16 +120,16 @@ const OrdersOut = () => {
       </div>
 
       {/* Фильтры */}
-      <div className="flex gap-3">
+      <div className="md:flex block  gap-3">
         <div className="relative">
           <input
             type="text"
             ref={inputRefFrom}
             placeholder="Создано от..."
-            className="px-4 py-2 bg-gray-800 rounded-xl text-gray-300 border border-gray-700 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50 transition-colors flatpickr-input"
+            className="px-4 py-2 bg-gray-800 rounded-xl text-gray-300 border border-gray-700 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50  w-full mb-3 md:mb-0 transition-colors flatpickr-input"
             readOnly
           />
-          <FaCalendar className="text-gray-400 absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none" />
+          <FaCalendar className="text-gray-400 absolute right-3 top-1/2 transform  -translate-y-3/4 md:-translate-y-1/2  pointer-events-none" />
         </div>
 
         <div className="relative">
@@ -137,12 +137,13 @@ const OrdersOut = () => {
             type="text"
             ref={inputRefTo}
             placeholder="Создано до..."
-            className="px-4 py-2 bg-gray-800 rounded-xl text-gray-300 border border-gray-700 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50 transition-colors flatpickr-input"
+            className="px-4 py-2 bg-gray-800 rounded-xl text-gray-300 border border-gray-700 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50 transition-colors  w-full mb-3 md:mb-0 flatpickr-input"
             readOnly
           />
-          <FaCalendar className="text-gray-400 absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none" />
+          <FaCalendar className="text-gray-400 absolute right-3 top-1/2 transform  -translate-y-3/4 md:-translate-y-1/2  pointer-events-none" />
         </div>
 
+        <div className="flex items-center gap-3">
         <button
           onClick={handleExport}
           className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl text-teal-400 border border-gray-700 transition-colors"
@@ -177,6 +178,7 @@ const OrdersOut = () => {
               <span>Сбросить фильтры</span>
             </button>
           </div>
+        </div>
         </div>
       </div>
 

@@ -44,7 +44,7 @@ const Profile = () => {
 
   return (
     <div>
-      <div className="bg-gray-800/90 max-w-[360px] md:max-w-[960px] rounded-2xl shadow-2xl md:p-8 p-3 relative overflow-hidden backdrop-blur-lg border border-gray-700">
+      <div className="bg-gray-800/90 max-w-[320px] md:max-w-[960px] rounded-2xl shadow-2xl md:p-8 p-3 relative overflow-hidden backdrop-blur-lg border border-gray-700">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <div id="accountStatusBlock">
             <div className="bg-gray-900/50 rounded-xl md:p-6 p-3 border border-red-500/30">

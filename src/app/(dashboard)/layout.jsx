@@ -296,7 +296,7 @@ const DashboardLayout = ({ children }) => {
               {/* <i className="fas fa-bars hamburger-icon"></i> */}
             </button>
 
-            <div className="flex items-center gap-6 ml-auto">
+            <div className="md:flex block  items-center gap-6 ml-auto">
               {/* <!-- Курсы валют --> */}
               <div className="flex gap-3 pr-6 border-r border-gray-800">
                 <div className="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
@@ -335,7 +335,7 @@ const DashboardLayout = ({ children }) => {
 
               {/* <!-- Добавляем блоки для процентов --> */}
               <div className="flex gap-3 pr-6 border-r border-gray-800">
-                <div className="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
+                <div className="bg-gray-800/50 md:p-3 p-2 w-full rounded-lg hover:bg-gray-800 transition-colors">
                   <p className="text-xs text-teal-400 mb-1 font-mono">Pay In</p>
                   <div className="flex items-center gap-1.5">
                     <span

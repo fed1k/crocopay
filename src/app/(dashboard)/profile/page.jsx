@@ -249,7 +249,7 @@ const Profile = () => {
                       <FaExchangeAlt className="text-teal-400" />
                       <span className="text-gray-400">Всего транзакций</span>
                     </div>
-                    <p className="text-2xl font-bold text-white">0</p>
+                    <p className="md:text-2xl text-xl font-bold text-white">0</p>
                   </div>
                   <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
                     <div className="flex items-center gap-3 mb-2">
@@ -257,7 +257,7 @@ const Profile = () => {
                       <FaChartLine className="text-pink-400" />
                       <span className="text-gray-400">Общий оборот</span>
                     </div>
-                    <p className="text-2xl font-bold text-white">0.00 USDT</p>
+                    <p className="md:text-2xl text-xl font-bold text-white">0.00 USDT</p>
                   </div>
                   <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
                     <div className="flex items-center gap-3 mb-2">
@@ -265,7 +265,7 @@ const Profile = () => {
                       <FaArrowDown className="text-teal-400" />
                       <span className="text-gray-400">Всего получено</span>
                     </div>
-                    <p className="text-2xl font-bold text-white">0.00 USDT</p>
+                    <p className="md:text-2xl text-xl font-bold text-white">0.00 USDT</p>
                   </div>
                   <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
                     <div className="flex items-center gap-3 mb-2">
@@ -273,7 +273,7 @@ const Profile = () => {
                       <FaArrowUp className="text-pink-400" />
                       <span className="text-gray-400">Всего выведено</span>
                     </div>
-                    <p className="text-2xl font-bold text-white">0.00 USDT</p>
+                    <p className="md:text-2xl text-xl font-bold text-white">0.00 USDT</p>
                   </div>
                 </div>
               </div>
