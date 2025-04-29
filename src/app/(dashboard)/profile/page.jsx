@@ -82,8 +82,8 @@ const Profile = () => {
   // console.log(user)
 
   return (
-    <main className=" bg-gray-900 h-[calc(100vh-64px)] overflow-hidden">
-      <div className="bg-gray-800/90 rounded-2xl shadow-2xl p-8 h-full flex flex-col relative backdrop-blur-lg border border-gray-700">
+    <main className=" bg-gray-900 h-auto md:h-[calc(100vh-64px)]  overflow-hidden">
+      <div className="bg-gray-800/90 rounded-2xl shadow-2xl md:p-8 p-5 max-w-[320px] md:max-w-[850px] lg:max-w-[1240px] h-full flex flex-col relative backdrop-blur-lg border border-gray-700">
         {/* <!-- Декоративный фон --> */}
         <div className="absolute top-0 right-0 -z-10 opacity-5">
           <svg
@@ -111,8 +111,8 @@ const Profile = () => {
         </div>
 
         {/* <!-- Заголовок (фиксированный) --> */}
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
+        <div className="flex justify-between items-center mb-4 md:mb-8">
+          <h2 className="md:text-2xl text-xl font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
             Профиль
           </h2>
         </div>
@@ -142,7 +142,7 @@ const Profile = () => {
                     <div className="flex items-center gap-2">
                       <h3
                         id="displayUsername"
-                        className="text-xl font-bold text-white mb-1"
+                        className="md:text-xl text-md font-bold text-white mb-1"
                       >
                         {user?.name}
                       </h3>
@@ -156,7 +156,7 @@ const Profile = () => {
                         <FaPen className="text-sm" />
                       </button>
                     </div>
-                    <p className="text-gray-400">Пользователь</p>
+                    <p className="text-gray-400 text-sm md:text-lg">Пользователь</p>
                   </div>
                 </div>
                 <div className="grid gap-6">
@@ -213,20 +213,20 @@ const Profile = () => {
                   Безопасность
                 </h3>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg border border-gray-700">
+                  <div className="flex items-center justify-between md:p-4 p-2 bg-gray-800/50 rounded-lg border border-gray-700">
                     <div className="flex items-center gap-4">
                       {/* <i className="fas fa-shield-alt text-pink-400 text-lg w-6"></i> */}
-                      <FaShieldAlt className="text-pink-400 text-lg w-6" />
+                      <FaShieldAlt className="text-pink-400 md:text-lg text-sm  w-6" />
                       <div>
-                        <p className="text-white font-medium">
+                        <p className="text-white text-[12px] md:text-lg font-medium">
                           Двухфакторная аутентификация
                         </p>
-                        <p className="text-sm text-red-400">Отключена</p>
+                        <p className="text-[12px] md:text-md text-red-400">Отключена</p>
                       </div>
                     </div>
                     <button
                       onClick={openAuthModal}
-                      className="px-4 py-2 cursor-pointer bg-gray-800 hover:bg-gray-700 text-teal-400 rounded-lg text-sm transition-colors"
+                      className="md:px-4 px-2.5 py-2 cursor-pointer bg-gray-800 hover:bg-gray-700 text-teal-400 rounded-lg text-sm transition-colors"
                     >
                       Включить
                     </button>

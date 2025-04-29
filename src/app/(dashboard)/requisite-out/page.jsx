@@ -244,21 +244,21 @@ const RequisiteOut = () => {
 
   return (
     <>
-      <div class="bg-gray-800/90 rounded-2xl shadow-2xl p-6 backdrop-blur-lg border border-gray-700">
-        <div class="flex justify-between items-center mb-6">
+      <div class="bg-gray-800/90 max-w-[330px] md:max-w-[800px] lg:max-w-[1200px] rounded-2xl shadow-2xl p-6 backdrop-blur-lg border border-gray-700">
+        <div class="md:flex block justify-between items-center mb-6">
           <div>
-            <h2 class="text-2xl font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
+            <h2 class="md:text-2xl sm:text-md text-lg  font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
               Реквизиты Pay out
             </h2>
-            <p class="text-gray-400 mt-1">Управление Pay out реквизитами</p>
+            <p class="text-gray-400 md:text-lg text-sm md:mb-0 mb-3 mt-1">Управление Pay out реквизитами</p>
           </div>
           <button
             type="button"
             onClick={() => setModalOpen(true)}
             class="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg flex items-center gap-2 cursor-pointer"
           >
-            <FaPlus />
-            <span>Добавить реквизит</span>
+            <FaPlus className="text-sm md:text-lg"/>
+            <span className="text-sm md:text-lg">Добавить реквизит</span>
           </button>
         </div>
 

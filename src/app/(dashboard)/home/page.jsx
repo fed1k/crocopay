@@ -44,19 +44,19 @@ const Profile = () => {
 
   return (
     <div>
-      <div className="bg-gray-800/90 rounded-2xl shadow-2xl p-8 relative overflow-hidden backdrop-blur-lg border border-gray-700">
+      <div className="bg-gray-800/90 max-w-[360px] md:max-w-[960px] rounded-2xl shadow-2xl md:p-8 p-3 relative overflow-hidden backdrop-blur-lg border border-gray-700">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <div id="accountStatusBlock">
-            <div className="bg-gray-900/50 rounded-xl p-6 border border-red-500/30">
+            <div className="bg-gray-900/50 rounded-xl md:p-6 p-3 border border-red-500/30">
               <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 bg-red-500/10 rounded-full">
-                  <FaLock className="text-2xl text-red-400" />
+                <div className="md:p-3 p-2 bg-red-500/10 rounded-full">
+                  <FaLock className="md:text-2xl text-xl text-red-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-red-400">
+                  <h3 className="md:text-xl text-md font-semibold text-red-400">
                     Функции ограничены
                   </h3>
-                  <p className="text-gray-400">
+                  <p className="text-gray-400 md:text-md text-sm">
                     Пополните страховой депозит для активации личного кабинета и
                     доступа ко всем функциям
                   </p>
@@ -65,16 +65,16 @@ const Profile = () => {
               <div className="mt-4 p-4 bg-gray-800/50 rounded-lg">
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="text-sm text-gray-400">
+                    <p className="md:text-sm text-[12px] text-gray-400">
                       Необходимо для активации
                     </p>
-                    <p className="text-2xl font-bold text-white">
+                    <p className="md:text-2xl text-lg font-bold text-white">
                       <span id="requiredAmount">{user?.activationAmount || 1500}.00</span> USDT
                     </p>
                   </div>
                   <Link
                     href="/wallet"
-                    className="px-6 py-3 bg-gradient-to-r from-teal-400 to-blue-400 text-white rounded-lg hover:opacity-90 transition-all duration-300 transform hover:scale-105"
+                    className="md:px-6 px-3 md:py-3 text-[12px] md:text-xl py-1.5 bg-gradient-to-r from-teal-400 to-blue-400 text-white rounded-lg hover:opacity-90 transition-all duration-300 transform hover:scale-105"
                   >
                     Активировать
                   </Link>

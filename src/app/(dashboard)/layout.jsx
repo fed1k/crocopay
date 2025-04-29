@@ -296,9 +296,9 @@ const DashboardLayout = ({ children }) => {
               {/* <i className="fas fa-bars hamburger-icon"></i> */}
             </button>
 
-            <div className="flex h-full items-center gap-2 lg:gap-6 ml-auto">
+            <div className="flex items-center gap-6 ml-auto">
               {/* <!-- Курсы валют --> */}
-              <div className="flex gap-3 pr-2 lg:pr-6 border-r border-gray-800">
+              <div className="flex gap-3 pr-6 border-r border-gray-800">
                 <div className="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
                   <p className="text-xs text-teal-400 mb-1 font-mono">
                     Курс покупки
@@ -306,7 +306,7 @@ const DashboardLayout = ({ children }) => {
                   <div className="flex items-center gap-1.5">
                     <span
                       id="buyRate"
-                      className="font-semibold text-lg bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent"
+                      className="font-semibold text-sm md:text-lg bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent"
                     >
                       {rate != null ? rate + 2 : "Loading..."}
                     </span>
@@ -315,14 +315,14 @@ const DashboardLayout = ({ children }) => {
                     </span>
                   </div>
                 </div>
-                <div className="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
+                <div className="bg-gray-800/50 md:p-3 p-2 rounded-lg hover:bg-gray-800 transition-colors">
                   <p className="text-xs text-pink-400 mb-1 font-mono">
                     Курс продажи
                   </p>
                   <div className="flex items-center gap-1.5">
                     <span
                       id="sellRate"
-                      className="font-semibold text-lg bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent"
+                      className="font-semibold md:text-lg text-sm bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent"
                     >
                       {rate != null ? (rate + 3.15).toFixed(2) : "Loading..."}
                     </span>
@@ -334,7 +334,7 @@ const DashboardLayout = ({ children }) => {
               </div>
 
               {/* <!-- Добавляем блоки для процентов --> */}
-              <div className="flex gap-3 pr-2 lg:pr-6 border-r border-gray-800">
+              <div className="flex gap-3 pr-6 border-r border-gray-800">
                 <div className="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
                   <p className="text-xs text-teal-400 mb-1 font-mono">Pay In</p>
                   <div className="flex items-center gap-1.5">
@@ -349,7 +349,7 @@ const DashboardLayout = ({ children }) => {
                     </span>
                   </div>
                 </div>
-                <div className="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
+                <div className="bg-gray-800/50 md:p-3 p-2 w-full rounded-lg hover:bg-gray-800 transition-colors">
                   <p className="text-xs text-pink-400 mb-1 font-mono">
                     Pay Out
                   </p>
@@ -369,14 +369,14 @@ const DashboardLayout = ({ children }) => {
             </div>
 
             {/* <!-- Меню пользователя --> */}
-            <div className="relative lg:pl-6 space-y-1">
+            <div className="relative">
               <div className="group relative inline-block">
                 <button
                   id="userMenuButton"
-                  className="flex cursor-pointer items-center gap-2 bg-gray-800/50 p-2 rounded-lg hover:bg-gray-800 transition-colors"
+                  className="flex cursor-pointer items-center gap-2  bg-gray-800/50 p-2 rounded-lg hover:bg-gray-800 transition-colors"
                 >
-                  <FaUserCircle className="text-2xl text-teal-400" />
-                  <span className="text-gray-300">{user?.name}</span>
+                  <FaUserCircle className="md:text-2xl text-xl text-teal-400" />
+                  <span className="text-gray-300 text-sm md:text-md">{user?.name}</span>
                 </button>
 
                 <div
@@ -399,7 +399,7 @@ const DashboardLayout = ({ children }) => {
                 </div>
               </div>
 
-              <a target="_blank" href="https://temporal-scribe-d5e.notion.site/Kredo-1e10b19b1ea480c1adcaebefe4431766" className=" flex items-center -translate-x-2">
+              <a target="_blank" href="https://temporal-scribe-d5e.notion.site/Kredo-1e10b19b1ea480c1adcaebefe4431766" className="flex items-center mt-2 -translate-x-2">
                 <Image
                   src="/guidance.png"
                   width={40}
