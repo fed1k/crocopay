@@ -140,17 +140,17 @@ const Devices = () => {
 
   return (
     <>
-      <div class="bg-gray-800/90 rounded-2xl shadow-2xl p-8 relative overflow-hidden backdrop-blur-lg border border-gray-700">
-        <div class="flex justify-between items-center mb-8">
+      <div class="bg-gray-800/90 rounded-2xl shadow-2xl md:p-8 p-5 w-screen md:w-auto relative overflow-hidden backdrop-blur-lg border border-gray-700">
+        <div class="md:flex block justify-between items-center mb-8">
           <div>
-            <h2 class="text-2xl font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent mb-2">
+            <h2 class="md:text-2xl w-full text-xl font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent mb-2">
               Устройства
             </h2>
-            <p class="text-gray-400 text-sm">
+            <p class="text-gray-400 mb-3 md:mb-0 text-sm">
               Управление подключенными устройствами
             </p>
           </div>
-          <div class="flex gap-3">
+          <div class="flex gap-3 merchants-div">
             <button
               onClick={handleTable}
               id="tableSettingsBtn"
@@ -377,7 +377,7 @@ const Devices = () => {
               </p>
             </div>
 
-            <div className="flex gap-4 mt-8">
+            <div className="flex flex-col-reverse sm:flex-row gap-4 mt-8">
               <button
                 type="button"
                 disabled={loading}

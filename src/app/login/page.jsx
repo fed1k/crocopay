@@ -26,7 +26,7 @@ const Login = () => {
   };
 
   return (
-    <div className="from-gray-800 relative bg-gradient-to-b min-h-screen flex justify-center items-center to-gray-900">
+    <div className="from-gray-800   relative bg-gradient-to-b min-h-screen flex justify-center items-center to-gray-900">
       <div>
         <div>
           <h3 className="text-4xl arista-font text-center font-bold text-white">

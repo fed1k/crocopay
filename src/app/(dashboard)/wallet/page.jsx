@@ -116,16 +116,16 @@ const Wallet = () => {
           <div className="mb-8 pb-8 border-b border-gray-700">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent">
+                <h2 className="md:text-2xl sm:text-md text-lg font-bold bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent">
                   Страховой депозит
                 </h2>
-                <p className="text-sm text-gray-400">
+                <p className="md:text-lg text-sm text-gray-400">
                   Ваша надежная финансовая защита
                 </p>
               </div>
               <div className="relative">
                 <div className="absolute -inset-1 bg-gradient-to-r from-teal-500 to-blue-500 rounded-full blur opacity-30"></div>
-                <FaShieldAlt className="text-3xl text-teal-400 relative" />
+                <FaShieldAlt className="md:text-3xl text-2xl text-teal-400 relative" />
               </div>
             </div>
 
@@ -134,7 +134,7 @@ const Wallet = () => {
                 <div className="flex items-baseline gap-2">
                   <span
                     id="userBalance"
-                    className="text-5xl font-bold text-white"
+                    className="md:text-5xl text-3xl font-bold text-white"
                   >
                     {user?.balance || 0.0}
                   </span>
@@ -148,17 +148,17 @@ const Wallet = () => {
               </div>
             </div>
 
-            <div className="flex justify-center gap-4">
+            <div className="flex justify-center flex-col sm:flex-row gap-4">
               <button
                 onClick={openDepositModal}
-                className="flex-1 px-6 py-4 cursor-pointer bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-400 hover:to-blue-400 text-white rounded-xl flex items-center justify-center gap-3 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-teal-500/25"
+                className="flex-1 md:px-6 px-4 md:py-4 py-2.5 cursor-pointer bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-400 hover:to-blue-400 text-white rounded-xl flex items-center justify-center gap-3 mb-0 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-teal-500/25"
               >
                 <FaPlusCircle className="text-xl" />
                 <span className="font-medium">Пополнить депозит</span>
               </button>
               <button
                 onClick={() => setWithdrawalModalOpen(true)}
-                className="px-6 cursor-pointer py-4 bg-gray-700 hover:bg-gray-600 text-white rounded-xl flex items-center gap-2 transition-all duration-300 hover:shadow-lg"
+                className="md:px-6 px-4 md:py-4 py-2.5 cursor-pointer  bg-gray-700 hover:bg-gray-600 text-white rounded-xl flex justify-center items-center gap-2 transition-all duration-300 hover:shadow-lg"
               >
                 <FaArrowRight />
                 <span>Вывести</span>
@@ -170,7 +170,7 @@ const Wallet = () => {
           <div>
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+                <h2 className="md:text-2xl sm:text-md text-lg font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
                   Рабочий депозит
                 </h2>
                 <p className="text-sm text-gray-400">
@@ -179,7 +179,7 @@ const Wallet = () => {
               </div>
               <div className="relative">
                 <div className="absolute -inset-1 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full blur opacity-30"></div>
-                <FaWallet className="text-3xl text-pink-400 relative" />
+                <FaWallet className="md:text-3xl text-2xl  text-pink-400 relative" />
               </div>
             </div>
 
@@ -188,7 +188,7 @@ const Wallet = () => {
                 <div className="flex items-baseline gap-2">
                   <p
                     id="workingBalance"
-                    className="text-5xl font-bold text-white"
+                    className="md:text-5xl text-3xl font-bold text-white"
                   >
                     {user?.balance || 0.0}
                   </p>

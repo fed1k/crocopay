@@ -11,6 +11,7 @@ import { MdHome } from "react-icons/md";
 import {
   FaArrowDown,
   FaArrowUp,
+  FaBars,
   FaBitcoinSign,
   FaMicrochip,
   FaMoneyBillWave,
@@ -33,6 +34,11 @@ const DashboardLayout = ({ children }) => {
   const [orderHover, setOrderHover] = useState(false);
   const [reqHover, setReqHover] = useState(false);
   const [user, setUser] = useState();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   const handleInfoIcon = () => {
     Swal.fire({
@@ -86,14 +92,19 @@ const DashboardLayout = ({ children }) => {
     <div className="flex">
       <aside
         id="sidebar"
-        className=" min-w-64 bg-gray-900 text-white shadow-2xl sticky top-0 h-screen z-50 sidebar-transition hidden md:flex flex-col"
+        className={`min-w-64 bg-gray-900 text-white shadow-2xl fixed md:sticky top-0 h-screen z-50 sidebar-transition ${
+          isSidebarOpen ? "flex" : "hidden"
+        } md:flex flex-col`}
       >
-        <div className="p-5 border-b border-gray-800 flex items-center gap-3">
+        <div className="h-24 flex justify-between p-5 border-b border-gray-800 items-center gap-3">
           <div>
             <h3 className="text-4xl arista-font text-center font-bold text-white">
               Kredo
             </h3>
             <p className="text-xs text-gray-400">Payment Ecosystem</p>
+          </div>
+          <div className="md:hidden" onClick={toggleSidebar}>
+            close icon
           </div>
         </div>
 
@@ -129,6 +140,7 @@ const DashboardLayout = ({ children }) => {
             {user?.admin ? (
               <Link
                 href="/admin"
+                onClick={() => setIsSidebarOpen(false)}
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 text-gray-300 hover:text-teal-400 cursor-pointer transition-colors"
               >
                 <FaCog className="w-5 h-5 text-center" />
@@ -139,6 +151,7 @@ const DashboardLayout = ({ children }) => {
             )}
             <Link
               href="/home"
+              onClick={() => setIsSidebarOpen(false)}
               className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 text-gray-300 hover:text-teal-400 cursor-pointer transition-colors"
             >
               <MdHome className="w-5 h-5 text-center" />
@@ -163,6 +176,7 @@ const DashboardLayout = ({ children }) => {
               >
                 <Link
                   href="/orders-in"
+                  onClick={() => setIsSidebarOpen(false)}
                   className="px-3 py-2 flex items-center text-sm text-gray-400 hover:bg-gray-800/30 rounded-lg"
                 >
                   <FaArrowDown className="mr-2 text-teal-400" />{" "}
@@ -170,6 +184,7 @@ const DashboardLayout = ({ children }) => {
                 </Link>
                 <Link
                   href="/orders-out"
+                  onClick={() => setIsSidebarOpen(false)}
                   className="flex items-center px-3 py-2 text-sm text-gray-400 hover:bg-gray-800/30 rounded-lg"
                 >
                   <FaArrowUp className="text-red-400 mr-2" />{" "}
@@ -195,12 +210,14 @@ const DashboardLayout = ({ children }) => {
               >
                 <Link
                   href="/requisite"
+                  onClick={() => setIsSidebarOpen(false)}
                   className="flex items-center px-3 py-2 text-sm text-gray-400 hover:bg-gray-800/30 rounded-lg"
                 >
                   <FaArrowDown className="mr-2 text-teal-400" />
                   <span>Pay in</span>
                 </Link>
                 <Link
+                  onClick={() => setIsSidebarOpen(false)}
                   href="/requisite-out"
                   className="flex items-center px-3 py-2 text-sm text-gray-400 hover:bg-gray-800/30 rounded-lg"
                 >
@@ -211,6 +228,7 @@ const DashboardLayout = ({ children }) => {
             </div>
             <Link
               href="/devices"
+              onClick={() => setIsSidebarOpen(false)}
               className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 text-gray-300 hover:text-teal-400 cursor-pointer transition-colors"
             >
               <FaMobileAlt className="w-5 text-center" />
@@ -218,6 +236,7 @@ const DashboardLayout = ({ children }) => {
             </Link>
 
             <Link
+              onClick={() => setIsSidebarOpen(false)}
               href="/withdraw"
               className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 text-gray-300 hover:text-teal-400 cursor-pointer transition-colors"
             >
@@ -226,6 +245,7 @@ const DashboardLayout = ({ children }) => {
             </Link>
             <Link
               href="/wallet"
+              onClick={() => setIsSidebarOpen(false)}
               className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 text-gray-300 hover:text-teal-400 cursor-pointer transition-colors"
             >
               <FaMoneyBillWave className="w-5 text-center" />
@@ -233,6 +253,7 @@ const DashboardLayout = ({ children }) => {
             </Link>
             <Link
               href="profile"
+              onClick={() => setIsSidebarOpen(false)}
               className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 text-gray-300 hover:text-teal-400 cursor-pointer transition-colors"
             >
               <FaUser className="w-5 text-center" />
@@ -278,12 +299,15 @@ const DashboardLayout = ({ children }) => {
             {/* <!-- Кнопка гамбургера --> */}
             <button
               id="sidebarToggle"
+              onClick={toggleSidebar}
               className="md:hidden p-2 text-gray-400 hover:text-teal-400"
             >
-              <i className="fas fa-bars hamburger-icon"></i>
+              {/* <i className="fas fa-bars hamburger-icon"></i> */}
+              {/* <RxHamburgerMenu /> */}
+              <FaBars />
             </button>
 
-            <div className="flex items-center gap-6 ml-auto">
+            <div className="hidden sm:flex items-center gap-6 ml-auto">
               {/* <!-- Курсы валют --> */}
               <div className="flex gap-3 pr-6 border-r border-gray-800">
                 <div className="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
@@ -386,7 +410,11 @@ const DashboardLayout = ({ children }) => {
                 </div>
               </div>
 
-              <a target="_blank" href="https://temporal-scribe-d5e.notion.site/Kredo-1e10b19b1ea480c1adcaebefe4431766" className="flex items-center mt-2 -translate-x-2">
+              <a
+                target="_blank"
+                href="https://temporal-scribe-d5e.notion.site/Kredo-1e10b19b1ea480c1adcaebefe4431766"
+                className="flex items-center mt-2 -translate-x-2"
+              >
                 <Image
                   src="/guidance.png"
                   width={40}

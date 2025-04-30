@@ -19,9 +19,9 @@ const Withdraw = () => {
   };
 
   return (
-    <div className="bg-gray-800/90 rounded-2xl shadow-2xl p-8 relative overflow-hidden backdrop-blur-lg border border-gray-700">
+    <div className="bg-gray-800/90 rounded-2xl shadow-2xl p-8 relative w-screen sm:w-auto overflow-scroll md:overflow-hidden backdrop-blur-lg border border-gray-700">
       <div className="flex justify-between items-center mb-8">
-        <h2 className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
+        <h2 className="md:text-2xl text-sm font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
           История выводов
         </h2>
         <div className="flex gap-3">
@@ -70,8 +70,8 @@ const Withdraw = () => {
       </div>
 
       {/* <!-- Таблица --> */}
-      <div className="overflow-x-auto">
-        <table className="w-full">
+      <div className="overflow-x-scroll sm:overflow-hidden">
+        <table className="w-screen sm:w-full">
           <thead className="bg-gray-700/50">
             <tr>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">

@@ -244,21 +244,21 @@ const RequisiteOut = () => {
 
   return (
     <>
-      <div class="bg-gray-800/90 rounded-2xl shadow-2xl p-6 backdrop-blur-lg border border-gray-700">
-        <div class="flex justify-between items-center mb-6">
+      <div class="bg-gray-800/90 w-screen sm:w-auto rounded-2xl shadow-2xl p-6 backdrop-blur-lg border border-gray-700">
+        <div class="md:flex block justify-between items-center mb-6">
           <div>
-            <h2 class="text-2xl font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
+            <h2 class="md:text-2xl sm:text-md text-lg  font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
               Реквизиты Pay out
             </h2>
-            <p class="text-gray-400 mt-1">Управление Pay out реквизитами</p>
+            <p class="text-gray-400 md:text-lg text-sm md:mb-0 mb-3 mt-1">Управление Pay out реквизитами</p>
           </div>
           <button
             type="button"
             onClick={() => setModalOpen(true)}
             class="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg flex items-center gap-2 cursor-pointer"
           >
-            <FaPlus />
-            <span>Добавить реквизит</span>
+            <FaPlus className="text-sm md:text-lg"/>
+            <span className="text-sm md:text-lg">Добавить реквизит</span>
           </button>
         </div>
 
@@ -350,10 +350,10 @@ const RequisiteOut = () => {
           </div>
         </div>
 
-        <div class="flex gap-4 mb-4">
+        <div class="md:flex block gap-4 mb-4">
           <button
             onClick={turnOnSelected}
-            class="px-4 py-2 cursor-pointer bg-green-500/20 text-green-400 hover:bg-green-500/30 rounded-lg flex items-center gap-2"
+            class="px-4 py-2 cursor-pointer bg-green-500/20 text-green-400 hover:bg-green-500/30 rounded-lg flex items-center mb-4   md:mb-0 gap-2"
           >
             <FaCheckCircle />
             <span>Включить выбранные</span>
@@ -367,8 +367,8 @@ const RequisiteOut = () => {
           </button>
         </div>
 
-        <div class="bg-gray-700 rounded-xl overflow-hidden">
-          <table class="w-full">
+        <div class="bg-gray-700 rounded-xl overflow-scroll sm:overflow-hidden">
+          <table class="w-screen sm:w-full">
             <thead class="bg-gray-800 text-gray-300">
               <tr>
                 <th class="px-3 py-3 text-left">

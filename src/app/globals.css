@@ -48,3 +48,21 @@ body {
 .flatpickr-day.selected {
   background-color: #FF5A5FFF !important; /* teal color or your choice */
 }
+
+@media screen and (max-width: 500px) {
+  .merchants-div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .last-ops {
+    flex-direction: column;
+    gap: 8px;
+    align-items: start;
+  }
+
+  .small-btn {
+    display: none;
+  }
+}
+

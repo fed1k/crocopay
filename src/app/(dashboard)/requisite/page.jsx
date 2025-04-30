@@ -238,26 +238,26 @@ const Requisite = () => {
 
   return (
     <>
-      <div className="bg-gray-800/90 rounded-2xl shadow-2xl p-6 backdrop-blur-lg border border-gray-700">
-        <div className="flex justify-between items-center mb-6">
+      <div className="bg-gray-800/90 rounded-2xl w-screen sm:w-auto mx-auto shadow-2xl md:p-6 p-4 backdrop-blur-lg border border-gray-700">
+        <div className="md:flex block justify-between items-center mb-6">
           <div>
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
+            <h2 className="md:text-2xl sm:text-md text-lg font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
               Реквизиты Pay in
             </h2>
-            <p className="text-gray-400 mt-1">Управление Pay in реквизитами</p>
+            <p className="text-gray-400 md:text-lg text-sm md:mb-0 mb-3 mt-1">Управление Pay in реквизитами</p>
           </div>
           <button
             type="button"
             onClick={() => setModalOpen(true)}
-            className="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg flex items-center gap-2 cursor-pointer"
+            className="md:px-4 px-2.5 md:py-2 py-1.5 bg-teal-500 hover:bg-teal-600 text-white rounded-lg flex items-center gap-2 cursor-pointer"
           >
-            <FaPlus />
-            <span>Добавить реквизит</span>
+            <FaPlus className="text-sm md:text-lg"/>
+            <span className="text-sm md:text-lg">Добавить реквизит</span>
           </button>
         </div>
 
         <div className="mb-6 flex flex-wrap gap-4">
-          <div className="relative">
+          <div className="relative ">
             <input
               type="text"
               className="w-64 px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50 pl-10"
@@ -336,7 +336,7 @@ const Requisite = () => {
             </select>
           </div>
           <div>
-            <select className="px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50">
+            <select className="px-4 py-2  bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50">
               <option value="">Все статусы</option>
               <option value="active">Активные</option>
               <option value="inactive">Неактивные</option>
@@ -344,25 +344,25 @@ const Requisite = () => {
           </div>
         </div>
 
-        <div className="flex gap-4 mb-4">
+        <div className="md:flex block gap-4 mb-4">
           <button
             onClick={turnOnSelected}
-            className="px-4 cursor-pointer py-2 bg-green-500/20 text-green-400 hover:bg-green-500/30 rounded-lg flex items-center gap-2"
+            className="md:px-4 px-2.5 cursor-pointer py-2 bg-green-500/20 text-green-400 hover:bg-green-500/30 mb-4 md:mb-0 rounded-lg flex items-center gap-2"
           >
             <FaCheckCircle />
             <span>Включить выбранные</span>
           </button>
           <button
             onClick={turnOffSelected}
-            className="px-4 cursor-pointer py-2 bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg flex items-center gap-2"
+            className="md:px-4 px-2.5 cursor-pointer py-2 bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg flex items-center gap-2"
           >
             <FaTimesCircle />
             <span>Отключить выбранные</span>
           </button>
         </div>
 
-        <div className="bg-gray-700 rounded-xl overflow-hidden">
-          <table className="w-full">
+        <div className="bg-gray-700 rounded-xl overflow-scroll sm:overflow-hidden">
+          <table className="w-screen sm:w-full">
             <thead className="bg-gray-800 text-gray-300">
               <tr>
                 <th className="px-3 py-3 text-left">
