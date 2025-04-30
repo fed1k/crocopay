@@ -82,8 +82,8 @@ const Profile = () => {
   // console.log(user)
 
   return (
-    <main className=" bg-gray-900 h-auto md:h-[calc(100vh-64px)]  overflow-hidden">
-      <div className="bg-gray-800/90 rounded-2xl shadow-2xl md:p-8 mx-auto p-5 max-w-[94%]  lg:max-w-[1240px] h-full flex flex-col relative backdrop-blur-lg border border-gray-700">
+    <main className=" bg-gray-900 h-auto lg:h-[calc(100vh-64px)]  overflow-hidden">
+      <div className="bg-gray-800/90 rounded-2xl shadow-2xl lg:p-8 mx-auto p-5 max-w-[94%]  xl:max-w-[1240px] h-full flex flex-col relative backdrop-blur-lg border border-gray-700">
         {/* <!-- Декоративный фон --> */}
         <div className="absolute top-0 right-0 -z-10 opacity-5">
           <svg
@@ -111,8 +111,8 @@ const Profile = () => {
         </div>
 
         {/* <!-- Заголовок (фиксированный) --> */}
-        <div className="flex justify-between items-center mb-4 md:mb-8">
-          <h2 className="md:text-2xl text-xl font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
+        <div className="flex justify-between items-center mb-4 lg:mb-8">
+          <h2 className="lg:text-2xl text-xl font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
             Профиль
           </h2>
         </div>
@@ -120,7 +120,7 @@ const Profile = () => {
         {/* <!-- Прокручиваемый контент --> */}
         <div className="overflow-y-auto flex-1 -mr-4 pr-4">
           {/* <!-- Основной контент --> */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
             {/* <!-- Левая колонка --> */}
             <div className="space-y-6">
               {/* <!-- Основная информация --> */}
@@ -159,7 +159,7 @@ const Profile = () => {
                     <p className="text-gray-400 text-sm md:text-lg">Пользователь</p>
                   </div>
                 </div>
-                <div className="grid gap-6">
+                <div className="grid gap-6 ">
                   <div className="flex items-center gap-4 p-4 bg-gray-800/50 rounded-lg border border-gray-700">
                     {/* <i className="fas fa-envelope text-teal-400 text-lg w-6"></i> */}
                     <FaEnvelope className="text-teal-400 text-lg w-6" />

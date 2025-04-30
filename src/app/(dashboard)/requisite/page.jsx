@@ -238,7 +238,7 @@ const Requisite = () => {
 
   return (
     <>
-      <div className="bg-gray-800/90 rounded-2xl mx-auto shadow-2xl md:p-6 p-4 backdrop-blur-lg border border-gray-700">
+      <div className="bg-gray-800/90 rounded-2xl w-screen sm:w-auto mx-auto shadow-2xl md:p-6 p-4 backdrop-blur-lg border border-gray-700">
         <div className="md:flex block justify-between items-center mb-6">
           <div>
             <h2 className="md:text-2xl sm:text-md text-lg font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
@@ -256,7 +256,7 @@ const Requisite = () => {
           </button>
         </div>
 
-        <div className="mb-6 flex flex-col md:flex-wrap gap-4">
+        <div className="mb-6 flex flex-wrap gap-4">
           <div className="relative ">
             <input
               type="text"
@@ -361,8 +361,8 @@ const Requisite = () => {
           </button>
         </div>
 
-        <div className="bg-gray-700 rounded-xl overflow-hidden">
-          <table className="w-full">
+        <div className="bg-gray-700 rounded-xl overflow-scroll sm:overflow-hidden">
+          <table className="w-screen sm:w-full">
             <thead className="bg-gray-800 text-gray-300">
               <tr>
                 <th className="px-3 py-3 text-left">

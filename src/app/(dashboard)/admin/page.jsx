@@ -148,7 +148,7 @@ const Admin = () => {
 
       {tab === "users" ? (
         <div>
-          <div className="bg-gray-800/90 rounded-2xl shadow-2xl p-8 relative overflow-hidden backdrop-blur-lg border border-gray-700">
+          <div className="bg-gray-800/90 rounded-2xl w-screen sm:w-auto shadow-2xl p-8 relative overflow-hidden backdrop-blur-lg border border-gray-700">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
                 Ползователы
@@ -162,7 +162,7 @@ const Admin = () => {
                     className="flex items-center cursor-pointer gap-2 px-4 py-2.5 bg-gradient-to-r from-teal-500 to-blue-500 rounded-xl text-white shadow-sm hover:opacity-90 transition-opacity"
                   >
                     <FaPlus />
-                    <span>Добавить ползователь</span>
+                    <span className="small-btn">Добавить ползователь</span>
                   </button>
                 </div>
               </div>
@@ -246,12 +246,12 @@ const Admin = () => {
       )}
 
       {tab === "payments" ? (
-        <div className="bg-gray-800/90 rounded-2xl shadow-2xl p-8 relative overflow-hidden backdrop-blur-lg border border-gray-700">
+        <div className="bg-gray-800/90 w-screen sm:w-auto rounded-2xl shadow-2xl p-8 relative overflow-scroll md:overflow-hidden backdrop-blur-lg border border-gray-700">
           <h2 className="text-2xl mb-8 font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
             Платежы
           </h2>
 
-          <table className="w-full">
+          <table className="sm:w-full">
             <thead className="bg-gray-700/50">
               <tr>
                 <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
@@ -380,7 +380,7 @@ const Admin = () => {
 
               {error && <p className="text-red-400 mb-0">{error}</p>}
 
-              <div className="flex gap-4 mt-8">
+              <div className="flex flex-col-reverse sm:flex-row gap-4 mt-8">
                 <button
                   type="button"
                   disabled={loading}

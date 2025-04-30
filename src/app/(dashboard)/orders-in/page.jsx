@@ -100,7 +100,7 @@ const OrdersIn = () => {
   }
 
   return (
-    <div className="bg-gray-800/90 max-w-[330px] md:max-w-[800px] lg:max-w-[1240px] rounded-2xl shadow-2xl md:p-6 p-3 h-full flex flex-col backdrop-blur-lg border border-gray-700">
+    <div className="bg-gray-800/90 w-screen sm:w-auto rounded-2xl shadow-2xl md:p-6 p-3 h-full flex flex-col backdrop-blur-lg border border-gray-700">
       {/* Заголовок */}
       <div className="flex justify-between items-center mb-6">
         <div>
@@ -183,8 +183,8 @@ const OrdersIn = () => {
       </div>
 
       {/* Таблица */}
-      <div className="mt-8 bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
-        <table className="w-full">
+      <div className="mt-8 bg-gray-800 rounded-2xl overflow-scroll shadow-xl md:overflow-hidden">
+        <table className="w-screen sm:w-full">
           <thead className="bg-gray-700">
             <tr>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">

@@ -158,7 +158,7 @@ const Wallet = () => {
               </button>
               <button
                 onClick={() => setWithdrawalModalOpen(true)}
-                className="md:px-6 px-4 md:py-4 py-2.5 cursor-pointer  bg-gray-700 hover:bg-gray-600 text-white rounded-xl flex items-center gap-2 transition-all duration-300 hover:shadow-lg"
+                className="md:px-6 px-4 md:py-4 py-2.5 cursor-pointer  bg-gray-700 hover:bg-gray-600 text-white rounded-xl flex justify-center items-center gap-2 transition-all duration-300 hover:shadow-lg"
               >
                 <FaArrowRight />
                 <span>Вывести</span>

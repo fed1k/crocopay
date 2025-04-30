@@ -11,6 +11,7 @@ import { MdHome } from "react-icons/md";
 import {
   FaArrowDown,
   FaArrowUp,
+  FaBars,
   FaBitcoinSign,
   FaMicrochip,
   FaMoneyBillWave,
@@ -91,7 +92,9 @@ const DashboardLayout = ({ children }) => {
     <div className="flex">
       <aside
         id="sidebar"
-        className={`min-w-64 bg-gray-900 text-white shadow-2xl fixed md:sticky top-0 h-screen z-50 sidebar-transition ${isSidebarOpen ? 'flex' : 'hidden'} md:flex flex-col`}
+        className={`min-w-64 bg-gray-900 text-white shadow-2xl fixed md:sticky top-0 h-screen z-50 sidebar-transition ${
+          isSidebarOpen ? "flex" : "hidden"
+        } md:flex flex-col`}
       >
         <div className="h-24 flex justify-between p-5 border-b border-gray-800 items-center gap-3">
           <div>
@@ -100,10 +103,7 @@ const DashboardLayout = ({ children }) => {
             </h3>
             <p className="text-xs text-gray-400">Payment Ecosystem</p>
           </div>
-          <div 
-            className="md:hidden"
-            onClick={toggleSidebar}
-            >
+          <div className="md:hidden" onClick={toggleSidebar}>
             close icon
           </div>
         </div>
@@ -140,6 +140,7 @@ const DashboardLayout = ({ children }) => {
             {user?.admin ? (
               <Link
                 href="/admin"
+                onClick={() => setIsSidebarOpen(false)}
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 text-gray-300 hover:text-teal-400 cursor-pointer transition-colors"
               >
                 <FaCog className="w-5 h-5 text-center" />
@@ -150,6 +151,7 @@ const DashboardLayout = ({ children }) => {
             )}
             <Link
               href="/home"
+              onClick={() => setIsSidebarOpen(false)}
               className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 text-gray-300 hover:text-teal-400 cursor-pointer transition-colors"
             >
               <MdHome className="w-5 h-5 text-center" />
@@ -174,6 +176,7 @@ const DashboardLayout = ({ children }) => {
               >
                 <Link
                   href="/orders-in"
+                  onClick={() => setIsSidebarOpen(false)}
                   className="px-3 py-2 flex items-center text-sm text-gray-400 hover:bg-gray-800/30 rounded-lg"
                 >
                   <FaArrowDown className="mr-2 text-teal-400" />{" "}
@@ -181,6 +184,7 @@ const DashboardLayout = ({ children }) => {
                 </Link>
                 <Link
                   href="/orders-out"
+                  onClick={() => setIsSidebarOpen(false)}
                   className="flex items-center px-3 py-2 text-sm text-gray-400 hover:bg-gray-800/30 rounded-lg"
                 >
                   <FaArrowUp className="text-red-400 mr-2" />{" "}
@@ -206,12 +210,14 @@ const DashboardLayout = ({ children }) => {
               >
                 <Link
                   href="/requisite"
+                  onClick={() => setIsSidebarOpen(false)}
                   className="flex items-center px-3 py-2 text-sm text-gray-400 hover:bg-gray-800/30 rounded-lg"
                 >
                   <FaArrowDown className="mr-2 text-teal-400" />
                   <span>Pay in</span>
                 </Link>
                 <Link
+                  onClick={() => setIsSidebarOpen(false)}
                   href="/requisite-out"
                   className="flex items-center px-3 py-2 text-sm text-gray-400 hover:bg-gray-800/30 rounded-lg"
                 >
@@ -222,6 +228,7 @@ const DashboardLayout = ({ children }) => {
             </div>
             <Link
               href="/devices"
+              onClick={() => setIsSidebarOpen(false)}
               className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 text-gray-300 hover:text-teal-400 cursor-pointer transition-colors"
             >
               <FaMobileAlt className="w-5 text-center" />
@@ -229,6 +236,7 @@ const DashboardLayout = ({ children }) => {
             </Link>
 
             <Link
+              onClick={() => setIsSidebarOpen(false)}
               href="/withdraw"
               className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 text-gray-300 hover:text-teal-400 cursor-pointer transition-colors"
             >
@@ -237,6 +245,7 @@ const DashboardLayout = ({ children }) => {
             </Link>
             <Link
               href="/wallet"
+              onClick={() => setIsSidebarOpen(false)}
               className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 text-gray-300 hover:text-teal-400 cursor-pointer transition-colors"
             >
               <FaMoneyBillWave className="w-5 text-center" />
@@ -244,6 +253,7 @@ const DashboardLayout = ({ children }) => {
             </Link>
             <Link
               href="profile"
+              onClick={() => setIsSidebarOpen(false)}
               className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 text-gray-300 hover:text-teal-400 cursor-pointer transition-colors"
             >
               <FaUser className="w-5 text-center" />
@@ -284,19 +294,20 @@ const DashboardLayout = ({ children }) => {
       </aside>
 
       <div className="bg-gray-900 flex-1">
-        <header className="h-24 py-2 px-4 md:px-2 lg:px-0 bg-gray-900 shadow-lg sticky top-0 z-40 border-b border-gray-800">
-          <div className="flex items-center justify-between">
+        <header className="bg-gray-900 shadow-lg sticky top-0 z-40 border-b border-gray-800">
+          <div className="flex items-center justify-between p-4">
             {/* <!-- Кнопка гамбургера --> */}
             <button
               id="sidebarToggle"
-              className={`${isSidebarOpen && 'hidden'} md:hidden p-2 text-gray-400 hover:text-teal-400`}
               onClick={toggleSidebar}
+              className="md:hidden p-2 text-gray-400 hover:text-teal-400"
             >
-              icon
               {/* <i className="fas fa-bars hamburger-icon"></i> */}
+              {/* <RxHamburgerMenu /> */}
+              <FaBars />
             </button>
 
-            <div className="flex   items-center gap-6 ml-auto">
+            <div className="hidden sm:flex items-center gap-6 ml-auto">
               {/* <!-- Курсы валют --> */}
               <div className="flex gap-3 pr-6 border-r border-gray-800">
                 <div className="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
@@ -306,7 +317,7 @@ const DashboardLayout = ({ children }) => {
                   <div className="flex items-center gap-1.5">
                     <span
                       id="buyRate"
-                      className="font-semibold text-sm md:text-lg bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent"
+                      className="font-semibold text-lg bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent"
                     >
                       {rate != null ? rate + 2 : "Loading..."}
                     </span>
@@ -315,14 +326,14 @@ const DashboardLayout = ({ children }) => {
                     </span>
                   </div>
                 </div>
-                <div className="bg-gray-800/50 md:p-3 p-2 rounded-lg hover:bg-gray-800 transition-colors">
+                <div className="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
                   <p className="text-xs text-pink-400 mb-1 font-mono">
                     Курс продажи
                   </p>
                   <div className="flex items-center gap-1.5">
                     <span
                       id="sellRate"
-                      className="font-semibold md:text-lg text-sm bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent"
+                      className="font-semibold text-lg bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent"
                     >
                       {rate != null ? (rate + 3.15).toFixed(2) : "Loading..."}
                     </span>
@@ -334,8 +345,8 @@ const DashboardLayout = ({ children }) => {
               </div>
 
               {/* <!-- Добавляем блоки для процентов --> */}
-              <div className="flex gap-3  pr-6 border-r border-gray-800">
-                <div className="bg-gray-800/50 md:p-3 p-2 w-full rounded-lg hover:bg-gray-800 transition-colors">
+              <div className="flex gap-3 pr-6 border-r border-gray-800">
+                <div className="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
                   <p className="text-xs text-teal-400 mb-1 font-mono">Pay In</p>
                   <div className="flex items-center gap-1.5">
                     <span
@@ -349,7 +360,7 @@ const DashboardLayout = ({ children }) => {
                     </span>
                   </div>
                 </div>
-                <div className="bg-gray-800/50 md:p-3 p-2 w-full rounded-lg hover:bg-gray-800 transition-colors">
+                <div className="bg-gray-800/50 p-3 rounded-lg hover:bg-gray-800 transition-colors">
                   <p className="text-xs text-pink-400 mb-1 font-mono">
                     Pay Out
                   </p>
@@ -373,10 +384,10 @@ const DashboardLayout = ({ children }) => {
               <div className="group relative inline-block">
                 <button
                   id="userMenuButton"
-                  className="flex cursor-pointer items-center gap-2  bg-gray-800/50 p-2 rounded-lg hover:bg-gray-800 transition-colors"
+                  className="flex cursor-pointer items-center gap-2 bg-gray-800/50 p-2 rounded-lg hover:bg-gray-800 transition-colors"
                 >
-                  <FaUserCircle className="md:text-2xl text-xl text-teal-400" />
-                  <span className="text-gray-300 text-sm md:text-md">{user?.name}</span>
+                  <FaUserCircle className="text-2xl text-teal-400" />
+                  <span className="text-gray-300">{user?.name}</span>
                 </button>
 
                 <div
@@ -399,7 +410,11 @@ const DashboardLayout = ({ children }) => {
                 </div>
               </div>
 
-              <a target="_blank" href="https://temporal-scribe-d5e.notion.site/Kredo-1e10b19b1ea480c1adcaebefe4431766" className="flex items-center mt-2 -translate-x-2">
+              <a
+                target="_blank"
+                href="https://temporal-scribe-d5e.notion.site/Kredo-1e10b19b1ea480c1adcaebefe4431766"
+                className="flex items-center mt-2 -translate-x-2"
+              >
                 <Image
                   src="/guidance.png"
                   width={40}
