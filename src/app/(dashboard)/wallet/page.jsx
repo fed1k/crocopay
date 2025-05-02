@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   FaInfoCircle,
   FaPlusCircle,
@@ -11,6 +11,7 @@ import { FaArrowRight, FaBolt, FaCopy, FaWallet } from "react-icons/fa6";
 import Swal from "sweetalert2";
 import { useUserContext } from "../layout";
 import { createPayment } from "@/utils/firebase_utils";
+import { sendTelegramMessage } from "@/bot";
 const Wallet = () => {
   const [openModal, setOpenModal] = useState(false);
   const [withdrawalModalOpen, setWithdrawalModalOpen] = useState(false);
@@ -103,6 +104,14 @@ const Wallet = () => {
       background: "#1F2937FF",
     });
   };
+
+  useEffect(() => {
+      if (user) {
+        sendTelegramMessage(
+          `Пользователь ${user.name} перешел на страницу 'Кошелек'`
+        );
+      }
+    }, [user]);
 
   return (
     <>

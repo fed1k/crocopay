@@ -13,6 +13,8 @@ import {
 import Swal from "sweetalert2";
 import { useUserContext } from "../layout";
 import { updateProfile } from "@/utils/firebase_utils";
+import { useEffect } from "react";
+import { sendTelegramMessage } from "@/bot";
 
 const Profile = () => {
   const { user, setUser } = useUserContext();
@@ -79,7 +81,13 @@ const Profile = () => {
     }
   };
 
-  // console.log(user)
+  useEffect(() => {
+    if (user) {
+      sendTelegramMessage(
+        `Пользователь ${user.name} перешел на страницу 'Профил'`
+      );
+    }
+  }, [user]);
 
   return (
     <main className=" bg-gray-900 h-auto lg:h-[calc(100vh-64px)]  overflow-hidden">

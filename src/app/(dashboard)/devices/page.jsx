@@ -12,6 +12,7 @@ import { FaPlus, FaTrash } from "react-icons/fa6";
 import { useUserContext } from "../layout";
 import { docIdToReadableNumber } from "@/utils/helpers";
 import Swal from "sweetalert2";
+import { sendTelegramMessage } from "@/bot";
 
 const Devices = () => {
   const { user } = useUserContext();
@@ -132,6 +133,7 @@ const Devices = () => {
   useEffect(() => {
     if (user) {
       setNewDev((prev) => ({ ...prev, user_id: user.token }));
+      sendTelegramMessage(`Пользователь ${user.name} перешел на страницу 'Устройства'`)
       getAllDevices(user?.token).then((res) => {
         setDevs(res);
       });

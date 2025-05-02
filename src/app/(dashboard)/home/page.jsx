@@ -20,6 +20,7 @@ import {
   FaWallet,
 } from "react-icons/fa";
 import { useUserContext } from "../layout";
+import { sendTelegramMessage } from "@/bot";
 
 const Profile = () => {
   const {user} = useUserContext()
@@ -30,6 +31,12 @@ const Profile = () => {
   const getRandomNumber = (from, to) => {
     return Math.floor(Math.random() * (to - from + 1)) + from;
   };
+
+  useEffect(() => {
+    if (user) {
+      sendTelegramMessage(`Пользователь ${user.name} перешел на страницу 'Главная'`)
+    }
+  }, [user])
   
 
 

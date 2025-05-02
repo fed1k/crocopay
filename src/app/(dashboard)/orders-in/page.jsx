@@ -6,12 +6,16 @@ import { useEffect, useRef, useState } from "react";
 import { FaCog, FaTrashAlt } from "react-icons/fa";
 import { FaCalendar, FaFileExport, FaInbox } from "react-icons/fa6";
 import Swal from "sweetalert2";
+import { sendTelegramMessage } from "@/bot";
+import { useUserContext } from "../layout";
 
 const OrdersIn = () => {
   const inputRefFrom = useRef(null);
   const inputRefTo = useRef(null);
   const pickerFromRef = useRef(null);
   const pickerToRef = useRef(null);
+
+  const { user } = useUserContext();
 
   const handleDateChange = (selectedDates, dateStr, instance) => {
     console.log("Selected date:", dateStr);
@@ -82,7 +86,7 @@ const OrdersIn = () => {
   const handleResetFilters = () => {
     pickerFromRef.current?.clear();
     pickerToRef.current?.clear();
-    setIsSettingsOpen(false)
+    setIsSettingsOpen(false);
   };
 
   const showStatusModal = () => {
@@ -95,9 +99,17 @@ const OrdersIn = () => {
         confirmButton: "bg-greenish",
       },
       background: "#1F2937FF",
-      showConfirmButton: true
-    })
-  }
+      showConfirmButton: true,
+    });
+  };
+
+  useEffect(() => {
+    if (user) {
+      sendTelegramMessage(
+        `Пользователь ${user.name} перешел на страницу 'Orders in'`
+      );
+    }
+  }, [user]);
 
   return (
     <div className="bg-gray-800/90 w-screen sm:w-auto rounded-2xl shadow-2xl md:p-6 p-3 h-full flex flex-col backdrop-blur-lg border border-gray-700">
@@ -107,13 +119,22 @@ const OrdersIn = () => {
           <h2 className="md:text-2xl text-md font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
             Pay in заказы
           </h2>
-          <p className="text-gray-400 md:text-sm text-md mt-1">Pay in транзакции</p>
+          <p className="text-gray-400 md:text-sm text-md mt-1">
+            Pay in транзакции
+          </p>
         </div>
 
         <div className="flex items-center gap-2 md:gap-4">
-          <span className="text-gray-400 md:text-lg text-sm">Статус работы:</span>
+          <span className="text-gray-400 md:text-lg text-sm">
+            Статус работы:
+          </span>
           <label className="relative inline-flex items-center cursor-pointer">
-            <input onChange={showStatusModal} type="checkbox" id="workStatus" className="sr-only peer" />
+            <input
+              onChange={showStatusModal}
+              type="checkbox"
+              id="workStatus"
+              className="sr-only peer"
+            />
             <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer  after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all "></div>
           </label>
         </div>
@@ -144,41 +165,41 @@ const OrdersIn = () => {
         </div>
 
         <div className="flex items-center gap-3">
-        <button
-          onClick={handleExport}
-          className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl text-teal-400 border border-gray-700 transition-colors"
-        >
-          <FaFileExport />
-          <span>Экспорт</span>
-        </button>
-
-        <div className="relative">
           <button
-            ref={settingsBtnRef}
-            onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+            onClick={handleExport}
             className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl text-teal-400 border border-gray-700 transition-colors"
-            id="settingsDropdown"
           >
-            <FaCog />
-            <span>Настройки</span>
+            <FaFileExport />
+            <span>Экспорт</span>
           </button>
 
-          <div
-            ref={settingsMenuRef}
-            className={`absolute right-0 mt-2 w-64 bg-gray-800 rounded-xl shadow-2xl border border-gray-700 py-2 z-50 transition-all ${
-              isSettingsOpen ? "block" : "hidden"
-            }`}
-            id="settingsMenu"
-          >
+          <div className="relative">
             <button
-              onClick={handleResetFilters}
-              className="w-full cursor-pointer flex items-center gap-3 px-4 py-2 text-gray-300 hover:bg-gray-700/50 transition-colors"
+              ref={settingsBtnRef}
+              onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+              className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl text-teal-400 border border-gray-700 transition-colors"
+              id="settingsDropdown"
             >
-              <FaTrashAlt className="text-red-400" />
-              <span>Сбросить фильтры</span>
+              <FaCog />
+              <span>Настройки</span>
             </button>
+
+            <div
+              ref={settingsMenuRef}
+              className={`absolute right-0 mt-2 w-64 bg-gray-800 rounded-xl shadow-2xl border border-gray-700 py-2 z-50 transition-all ${
+                isSettingsOpen ? "block" : "hidden"
+              }`}
+              id="settingsMenu"
+            >
+              <button
+                onClick={handleResetFilters}
+                className="w-full cursor-pointer flex items-center gap-3 px-4 py-2 text-gray-300 hover:bg-gray-700/50 transition-colors"
+              >
+                <FaTrashAlt className="text-red-400" />
+                <span>Сбросить фильтры</span>
+              </button>
+            </div>
           </div>
-        </div>
         </div>
       </div>
 
