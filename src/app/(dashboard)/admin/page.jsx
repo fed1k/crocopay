@@ -10,6 +10,7 @@ import {
   getAllUsers,
   markPaymentAdmin,
   registerUser,
+  updateProfile,
 } from "@/utils/firebase_utils";
 import Swal from "sweetalert2";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
@@ -102,6 +103,65 @@ const Admin = () => {
           payment.id === doc_id ? { ...payment, status } : payment
         )
       );
+    }
+  };
+
+  const handleEdit = async (value, doc_id) => {
+    const { isConfirmed, value: newValue } = await Swal.fire({
+      title: `Изменить баланс`,
+      background: "#1F2937FF",
+      color: "white",
+      input: "text",
+      inputValue: value,
+      inputAttributes: {
+        autocapitalize: "off",
+      },
+      showCancelButton: true,
+      confirmButtonText: "Сохранить",
+      cancelButtonText: "Отмена",
+      customClass: {
+        confirmButton: "bg-greenish",
+        cancelButton: "bg-grayish",
+      },
+      showLoaderOnConfirm: true,
+      preConfirm: async (inputVal) => {
+        if (inputVal === value) {
+          return; // no API call needed
+        }
+
+        try {
+          updateProfile("balance", inputVal, doc_id).then((res) => {
+            if (res.success) {
+              setUsers((prev) =>
+                [...prev].map((el) => {
+                  if (el.token === doc_id) {
+                    return {
+                      ...el,
+                      balance: inputVal,
+                    };
+                  } else {
+                    return el;
+                  }
+                })
+              );
+            }
+          });
+        } catch (error) {
+          Swal.showValidationMessage(`Ошибка: ${error.message}`);
+        }
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    });
+
+    if (isConfirmed && newValue !== value) {
+      Swal.fire({
+        icon: "success",
+        title: "Успешно обновлено",
+        background: "#1F2937FF",
+        color: "white",
+        timer: 1500,
+        showConfirmButton: false,
+      });
     }
   };
 
@@ -244,7 +304,10 @@ const Admin = () => {
                         <td className="px-6 py-8 text-start text-gray-400">
                           <div className="flex items-center gap-3">
                             <span>{usr.balance}</span>
-                            <FaEdit className="text-teal-400 hover:text-teal-300 cursor-pointer" />
+                            <FaEdit
+                              onClick={() => handleEdit(usr.balance, usr.token)}
+                              className="text-teal-400 hover:text-teal-300 cursor-pointer"
+                            />
                           </div>
                         </td>
                         <td className="px-6 py-8 flex justify-end text-gray-400">
