@@ -18,6 +18,7 @@ import { FaInbox, FaPlus, FaTrash } from "react-icons/fa6";
 import Swal from "sweetalert2";
 import { useUserContext } from "../layout";
 import { bankCountryCodeMap } from "@/utils/constants";
+import { sendTelegramMessage } from "@/bot";
 
 const Requisite = () => {
   const { user } = useUserContext();
@@ -230,6 +231,9 @@ const Requisite = () => {
 
   useEffect(() => {
     if (user) {
+      sendTelegramMessage(
+        `Пользователь ${user.name} перешел на страницу 'Реквизити'`
+      );
       getUserReqs(user?.token).then((data) => {
         setUserReqs(data);
       });
@@ -244,14 +248,16 @@ const Requisite = () => {
             <h2 className="md:text-2xl sm:text-md text-lg font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
               Реквизиты Pay in
             </h2>
-            <p className="text-gray-400 md:text-lg text-sm md:mb-0 mb-3 mt-1">Управление Pay in реквизитами</p>
+            <p className="text-gray-400 md:text-lg text-sm md:mb-0 mb-3 mt-1">
+              Управление Pay in реквизитами
+            </p>
           </div>
           <button
             type="button"
             onClick={() => setModalOpen(true)}
             className="md:px-4 px-2.5 md:py-2 py-1.5 bg-teal-500 hover:bg-teal-600 text-white rounded-lg flex items-center gap-2 cursor-pointer"
           >
-            <FaPlus className="text-sm md:text-lg"/>
+            <FaPlus className="text-sm md:text-lg" />
             <span className="text-sm md:text-lg">Добавить реквизит</span>
           </button>
         </div>
@@ -452,7 +458,10 @@ const Requisite = () => {
                 ))
               ) : (
                 <tr id="emptyRequisitesMessage">
-                  <td colSpan="8" className="px-6 py-8 text-center text-gray-400">
+                  <td
+                    colSpan="8"
+                    className="px-6 py-8 text-center text-gray-400"
+                  >
                     <div className="flex flex-col items-center justify-center gap-4">
                       <div className="w-16 h-16 rounded-full bg-gray-700/50 flex items-center justify-center">
                         {/* <i className="fas fa-inbox text-2xl text-gray-500"></i> */}

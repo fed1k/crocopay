@@ -1,9 +1,15 @@
-"use client"
+"use client";
 
+import { useEffect } from "react";
 import { FaFilter, FaInbox } from "react-icons/fa6";
 import Swal from "sweetalert2";
+import { useUserContext } from "../layout";
+import { sendTelegramMessage } from "@/bot";
 
 const Withdraw = () => {
+
+  const { user } = useUserContext()
+
   const openFilter = () => {
     Swal.fire({
       title: "История выводов",
@@ -17,6 +23,14 @@ const Withdraw = () => {
       background: "#1F2937FF",
     });
   };
+
+  useEffect(() => {
+    if (user) {
+      sendTelegramMessage(
+        `Пользователь ${user.name} перешел на страницу 'Вывод'`
+      );
+    }
+  }, [user]);
 
   return (
     <div className="bg-gray-800/90 rounded-2xl shadow-2xl p-8 relative w-screen sm:w-auto overflow-scroll md:overflow-hidden backdrop-blur-lg border border-gray-700">
@@ -41,7 +55,9 @@ const Withdraw = () => {
               id="filterMenu"
             >
               <div className="px-4 py-2">
-                <label className="block text-gray-300 text-sm mb-2">Статус</label>
+                <label className="block text-gray-300 text-sm mb-2">
+                  Статус
+                </label>
                 <select className="w-full bg-gray-700 rounded-lg px-3 py-2 text-gray-200 text-sm">
                   <option value="">Все статусы</option>
                   <option value="pending">В обработке</option>
@@ -50,7 +66,9 @@ const Withdraw = () => {
                 </select>
               </div>
               <div className="px-4 py-2">
-                <label className="block text-gray-300 text-sm mb-2">Период</label>
+                <label className="block text-gray-300 text-sm mb-2">
+                  Период
+                </label>
                 <select className="w-full bg-gray-700 rounded-lg px-3 py-2 text-gray-200 text-sm">
                   <option value="today">Сегодня</option>
                   <option value="week">Неделя</option>

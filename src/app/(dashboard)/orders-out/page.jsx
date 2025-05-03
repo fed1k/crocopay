@@ -6,12 +6,15 @@ import { useEffect, useRef, useState } from "react";
 import { FaCog, FaTrashAlt } from "react-icons/fa";
 import { FaCalendar, FaFileExport, FaInbox } from "react-icons/fa6";
 import Swal from "sweetalert2";
+import { useUserContext } from "../layout";
 
 const OrdersOut = () => {
   const inputRefFrom = useRef(null);
   const inputRefTo = useRef(null);
   const pickerFromRef = useRef(null);
   const pickerToRef = useRef(null);
+
+   const { user } = useUserContext();
 
   const handleDateChange = (selectedDates, dateStr, instance) => {
     console.log("Selected date:", dateStr);
@@ -98,6 +101,14 @@ const OrdersOut = () => {
         showConfirmButton: true
       })
     }
+
+    useEffect(() => {
+        if (user) {
+          sendTelegramMessage(
+            `Пользователь ${user.name} перешел на страницу 'Orders out'`
+          );
+        }
+      }, [user]);
 
   return (
     <div className="bg-gray-800/90 rounded-2xl w-screen sm:w-auto shadow-2xl p-6 h-full flex flex-col backdrop-blur-lg border border-gray-700">
