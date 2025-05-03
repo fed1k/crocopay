@@ -18,6 +18,7 @@ import {
   FaUser,
   FaWallet,
 } from "react-icons/fa6";
+import {IoMdClose} from "react-icons/io"
 import Link from "next/link";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -104,7 +105,8 @@ const DashboardLayout = ({ children }) => {
             <p className="text-xs text-gray-400">Payment Ecosystem</p>
           </div>
           <div className="md:hidden" onClick={toggleSidebar}>
-            close icon
+          <IoMdClose />
+
           </div>
         </div>
 
@@ -284,9 +286,9 @@ const DashboardLayout = ({ children }) => {
           <div className="p-4">
             <div className="flex items-center justify-between text-sm">
               <span className="text-gray-400">Статус:</span>
-              <div className="flex items-center gap-1 text-red-400">
-                <div className="w-3 h-3 bg-red-400 rounded-full"></div>
-                <span>Неактивен</span>
+              <div className={`flex items-center gap-1 ${user?.activationAmount <= user?.balance ? "text-green-400" : "text-red-400"} `}>
+                <div className={`w-3 h-3 ${user?.activationAmount <= user?.balance ? "bg-green-400" : "bg-red-400"}  rounded-full`}></div>
+                <span>{user?.activationAmount <= user?.balance ? "Активен" : "Неактивен"}</span>
               </div>
             </div>
           </div>

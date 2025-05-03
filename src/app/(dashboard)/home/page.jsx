@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import LastOperations from "@/components/LastOperations";
 // import { lastOperations } from "@/utils/constants";
@@ -21,12 +21,13 @@ import {
 } from "react-icons/fa";
 import { useUserContext } from "../layout";
 import { sendTelegramMessage } from "@/bot";
+import { FaUnlock } from "react-icons/fa6";
 
 const Profile = () => {
-  const {user} = useUserContext()
+  const { user } = useUserContext();
 
-  const [activeMerchants, setActiveMerchants] = useState(8)
-  const [operationsCount, setOpenrationsCount] = useState(240)
+  const [activeMerchants, setActiveMerchants] = useState(8);
+  const [operationsCount, setOpenrationsCount] = useState(240);
 
   const getRandomNumber = (from, to) => {
     return Math.floor(Math.random() * (to - from + 1)) + from;
@@ -34,20 +35,20 @@ const Profile = () => {
 
   useEffect(() => {
     if (user) {
-      sendTelegramMessage(`Пользователь ${user.name} перешел на страницу 'Главная'`)
+      sendTelegramMessage(
+        `Пользователь ${user.name} перешел на страницу 'Главная'`
+      );
     }
-  }, [user])
-  
-
+  }, [user]);
 
   useEffect(() => {
     let interval = setInterval(() => {
-      setActiveMerchants(getRandomNumber(5,12))
-      setOpenrationsCount((prev) => (prev + 1))
-    }, 6000)
+      setActiveMerchants(getRandomNumber(5, 12));
+      setOpenrationsCount((prev) => prev + 1);
+    }, 6000);
 
-    return () => clearInterval(interval)
-  }, [])
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div>
@@ -56,16 +57,28 @@ const Profile = () => {
           <div id="accountStatusBlock">
             <div className="bg-gray-900/50 rounded-xl md:p-6 p-3 border border-red-500/30">
               <div className="flex items-center gap-4 mb-4">
-                <div className="md:p-3 p-2 bg-red-500/10 rounded-full">
-                  <FaLock className="md:text-2xl text-xl text-red-400" />
+                <div className={`md:p-3 p-2 ${user?.activationAmount <= user?.balance ? "bg-green-500/10" : "bg-red-500/10"}  rounded-full`}>
+                  {user?.activationAmount <= user?.balance ? (
+                    <FaUnlock className="transform -scale-x-100 text-xl md:text-2xl text-green-400" />
+                  ) : (
+                    <FaLock className="md:text-2xl text-xl text-red-400" />
+                  )}
                 </div>
                 <div>
-                  <h3 className="md:text-xl text-md font-semibold text-red-400">
-                    Функции ограничены
+                  <h3
+                    className={`md:text-xl text-md font-semibold ${
+                      user?.activationAmount <= user?.balance
+                        ? "text-green-400"
+                        : "text-red-400"
+                    } `}
+                  >
+                    Функции{" "}
+                    {user?.activationAmount <= user?.balance
+                      ? "доступны"
+                      : "ограничены"}
                   </h3>
                   <p className="text-gray-400 md:text-md text-sm">
-                    Пополните страховой депозит для активации личного кабинета и
-                    доступа ко всем функциям
+                    {user?.activationAmount <= user?.balance ? "Ваш страховой депозит для активации личного кабинета и доступа ко всем функциям внесен!" : "Пополните страховой депозит для активации личного кабинета и доступа ко всем функциям"}
                   </p>
                 </div>
               </div>
@@ -76,14 +89,17 @@ const Profile = () => {
                       Необходимо для активации
                     </p>
                     <p className="md:text-2xl text-lg font-bold text-white">
-                      <span id="requiredAmount">{user?.activationAmount || 1500}.00</span> USDT
+                      <span id="requiredAmount">
+                        {user?.activationAmount || 1500}.00
+                      </span>{" "}
+                      USDT
                     </p>
                   </div>
                   <a
                     href="/wallet"
                     className="md:px-6 px-3 md:py-3 text-[12px] md:text-xl py-1.5 bg-gradient-to-r from-teal-400 to-blue-400 text-white rounded-lg hover:opacity-90 transition-all duration-300 transform hover:scale-105"
                   >
-                    Активировать
+                    {user?.activationAmount <= user?.balance ? "Активировано" : "Активировать"}
                   </a>
                 </div>
               </div>
