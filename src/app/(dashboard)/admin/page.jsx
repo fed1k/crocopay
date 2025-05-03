@@ -12,7 +12,7 @@ import {
   registerUser,
 } from "@/utils/firebase_utils";
 import Swal from "sweetalert2";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
 
 const Admin = () => {
   const { user } = useUserContext();
@@ -21,7 +21,7 @@ const Admin = () => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [name, setName] = useState("");
-  const [activationAmount, setActivationAmount] = useState("")
+  const [activationAmount, setActivationAmount] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
@@ -177,6 +177,12 @@ const Admin = () => {
                       Токен
                     </th>
                     <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Для активации
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Статус
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
                       Имя
                     </th>
                     <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
@@ -206,12 +212,40 @@ const Admin = () => {
                             </button>
                           </div>{" "}
                         </td>
+                        <td className="px-6 py-8 text-gray-400">
+                          {usr.activationAmount || 1500}
+                        </td>
+                        <td className="px-6 py-8 text-gray-400">
+                          <div
+                            className={`flex items-center gap-1 ${
+                              usr?.activationAmount <= usr?.balance
+                                ? "text-green-400"
+                                : "text-red-400"
+                            } `}
+                          >
+                            <div
+                              className={`w-3 h-3 ${
+                                usr?.activationAmount <= usr?.balance
+                                  ? "bg-green-400"
+                                  : "bg-red-400"
+                              }  rounded-full`}
+                            ></div>
+                            <span>
+                              {usr?.activationAmount <= usr?.balance
+                                ? "Активен"
+                                : "Неактивен"}
+                            </span>
+                          </div>
+                        </td>
                         <td className="px-6 py-8 text-gray-400">{usr.name}</td>
                         <td className="px-6 py-8 text-gray-400">
                           {usr?.telegram || "@example"}
                         </td>
                         <td className="px-6 py-8 text-start text-gray-400">
-                          {usr.balance}
+                          <div className="flex items-center gap-3">
+                            <span>{usr.balance}</span>
+                            <FaEdit className="text-teal-400 hover:text-teal-300 cursor-pointer" />
+                          </div>
                         </td>
                         <td className="px-6 py-8 flex justify-end text-gray-400">
                           <FaTrashAlt
