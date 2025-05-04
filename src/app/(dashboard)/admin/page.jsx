@@ -29,7 +29,9 @@ const Admin = () => {
   const [newUserToken, setNewUserToken] = useState("");
   const [users, setUsers] = useState([]);
   const [payments, setPayments] = useState([]);
+  const [payouts, setPayouts] = useState([]);
   const [tab, setTab] = useState("users");
+  const [payoutModal, setPayoutModal] = useState(false);
 
   const createUser = async () => {
     if (!name) {
@@ -68,6 +70,10 @@ const Admin = () => {
     setName("");
     setNewUserToken("");
     setModalOpen(false);
+  };
+
+  const payoutModalClose = () => {
+    setPayoutModal(false);
   };
 
   const openDeleteConfirmation = (user_token) => {
@@ -196,6 +202,7 @@ const Admin = () => {
         >
           Ползователы
         </p>
+
         <p
           onClick={() => setTab("payments")}
           className={`border-b ${
@@ -203,6 +210,14 @@ const Admin = () => {
           } cursor-pointer text-white`}
         >
           Платежы
+        </p>
+        <p
+          onClick={() => setTab("payouts")}
+          className={`border-b ${
+            tab === "payouts" ? "" : "border-transparent"
+          } cursor-pointer text-white`}
+        >
+          Pay out
         </p>
       </div>
 
@@ -414,6 +429,157 @@ const Admin = () => {
         <></>
       )}
 
+      {tab === "payouts" ? (
+        <div>
+          <div className="bg-gray-800/90 rounded-2xl w-screen sm:w-auto shadow-2xl p-8 relative overflow-hidden backdrop-blur-lg border border-gray-700">
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-pink-400 bg-clip-text text-transparent">
+                Pay out заказы
+              </h2>
+              <div className="flex gap-3">
+                {/* <!-- Фильтры --> */}
+                <div className="relative">
+                  <button
+                    id="addDeviceBtn"
+                    onClick={() => setPayoutModal(true)}
+                    className="flex items-center cursor-pointer gap-2 px-4 py-2.5 bg-gradient-to-r from-teal-500 to-blue-500 rounded-xl text-white shadow-sm hover:opacity-90 transition-opacity"
+                  >
+                    <FaPlus />
+                    <span className="small-btn">Добавить Pay out</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* <!-- Таблица --> */}
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-700/50">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      ID
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Имя
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Статус ЛК
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Баланс
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Время на оплату
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Банк
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Сумма
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Метод
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Статус
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Чек
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Действия
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      Удалить
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-700">
+                  {/* <!-- Пустое состояние --> */}
+                  {payouts?.length ? (
+                    payouts.map((usr, key) => (
+                      <tr key={key}>
+                        <td className="px-6 py-8 text-gray-400">
+                          <div>
+                            {usr.token}
+                            <button
+                              onClick={() => copyAddress(usr.token)}
+                              className="text-teal-400 cursor-pointer hover:text-teal-300 transition-colors p-2 hover:bg-gray-800 rounded-lg"
+                            >
+                              <FaCopy />
+                            </button>
+                          </div>{" "}
+                        </td>
+                        <td className="px-6 py-8 text-gray-400">
+                          {usr.activationAmount || 1500}
+                        </td>
+                        <td className="px-6 py-8 text-gray-400">
+                          <div
+                            className={`flex items-center gap-1 ${
+                              usr?.activationAmount <= usr?.balance
+                                ? "text-green-400"
+                                : "text-red-400"
+                            } `}
+                          >
+                            <div
+                              className={`w-3 h-3 ${
+                                usr?.activationAmount <= usr?.balance
+                                  ? "bg-green-400"
+                                  : "bg-red-400"
+                              }  rounded-full`}
+                            ></div>
+                            <span>
+                              {usr?.activationAmount <= usr?.balance
+                                ? "Активен"
+                                : "Неактивен"}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-8 text-gray-400">{usr.name}</td>
+                        <td className="px-6 py-8 text-gray-400">
+                          {usr?.telegram || "@example"}
+                        </td>
+                        <td className="px-6 py-8 text-start text-gray-400">
+                          <div className="flex items-center gap-3">
+                            <span>{usr.balance}</span>
+                            <FaEdit
+                              onClick={() => handleEdit(usr.balance, usr.token)}
+                              className="text-teal-400 hover:text-teal-300 cursor-pointer"
+                            />
+                          </div>
+                        </td>
+                        <td className="px-6 py-8 flex justify-end text-gray-400">
+                          <FaTrashAlt
+                            onClick={() => openDeleteConfirmation(usr.token)}
+                            className="text-red-400 cursor-pointer hover:opacity-70"
+                          />
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="4"
+                        className="px-6 py-8 translate-x-full text-center text-gray-400"
+                      >
+                        <div className="flex flex-col items-center justify-center gap-4">
+                          <div className="w-16 h-16 rounded-full bg-gray-700/50 flex items-center justify-center">
+                            <FaInbox className="text-2xl text-gray-500" />
+                          </div>
+                          <p>Нет Ползователы</p>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
+
       <div
         id="addDeviceModal"
         onClick={closeModal}
@@ -515,6 +681,81 @@ const Admin = () => {
               </div>
             </div>
           )}
+        </div>
+      </div>
+
+      <div
+        id="addDeviceModal"
+        onClick={payoutModalClose}
+        className={`fixed inset-0 bg-black/50 items-center justify-center z-50 backdrop-blur-sm ${
+          payoutModal ? "flex" : "hidden"
+        } `}
+      >
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="bg-gray-800 rounded-2xl p-8 w-full max-w-[80vw] mx-4 border border-gray-700 shadow-2xl"
+        >
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h3 className="text-xl font-bold text-white mb-1">
+                Добавление Pay out
+              </h3>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-10">
+            <div className="space-y-4">
+              <div className="flex gap-4">
+                <input
+                  className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+                  type="text"
+                  placeholder="Имя"
+                />
+                <input
+                  className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+                  type="text"
+                  placeholder="ID"
+                />
+              </div>
+              <input
+                className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+                type="text"
+                placeholder="Клиент"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <input
+                className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+                type="text"
+                placeholder="Сумма"
+              />
+              <input
+                className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+                type="text"
+                placeholder="Метод"
+              />
+              <input
+                className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+                type="text"
+                placeholder="Банк"
+              />
+              <input
+                className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+                type="text"
+                placeholder="Статус"
+              />
+
+              <button onClick={payoutModalClose} className="flex-1 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors text-sm">Отмена</button>
+              <button className="flex-1 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed px-4 py-2.5 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium">Сохранить</button>
+            </div>
+            <div>
+              <input
+                className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+                type="text"
+                placeholder="Время на оплату"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </>
