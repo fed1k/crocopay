@@ -280,3 +280,19 @@ export const getAllDevices = async (userId) => {
   const snapshot = await getDocs(q);
   return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 };
+
+export const addPayout = async (payoutData) => {
+  const payoutsCollection = collection(db, "payOuts");
+  const docRef = await addDoc(payoutsCollection, payoutData);
+  return docRef.id;
+};
+
+export const getAllPayouts = async () => {
+  const payoutsCollection = collection(db, "payOuts");
+  const q = query(payoutsCollection);
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => ({ ...doc.data() }));
+};
+
+
+

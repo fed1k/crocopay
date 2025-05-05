@@ -5,8 +5,10 @@ import { useUserContext } from "../layout";
 import { useRouter } from "next/navigation";
 import { FaCopy, FaFilter, FaInbox, FaPlus } from "react-icons/fa6";
 import {
+  addPayout,
   deleteUser,
   getAllPaymentsAdmin,
+  getAllPayouts,
   getAllUsers,
   markPaymentAdmin,
   registerUser,
@@ -14,6 +16,7 @@ import {
 } from "@/utils/firebase_utils";
 import Swal from "sweetalert2";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { generateSecureId } from "@/utils/helpers";
 
 const Admin = () => {
   const { user } = useUserContext();
@@ -32,6 +35,20 @@ const Admin = () => {
   const [payouts, setPayouts] = useState([]);
   const [tab, setTab] = useState("users");
   const [payoutModal, setPayoutModal] = useState(false);
+  const [nameDropdownOpen, setNameDropdownOpen] = useState(false);
+  const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
+  const [newPayout, setNewPayout] = useState({
+    name: "",
+    id: "",
+    amount: "",
+    bank: "",
+    method: "",
+    status: "",
+    paymentTime: "",
+    client: "",
+    user_id: "",
+  });
+  const [activeUsers, setActiveUsers] = useState([]);
 
   const createUser = async () => {
     if (!name) {
@@ -74,6 +91,40 @@ const Admin = () => {
 
   const payoutModalClose = () => {
     setPayoutModal(false);
+  };
+
+  const handleFocus = () => {
+    setNameDropdownOpen(true);
+  };
+
+  const handleBlur = () => {
+    setTimeout(() => {
+      setNameDropdownOpen(false);
+    }, 100);
+  };
+
+  const handleFocusStatus = () => {
+    setStatusDropdownOpen(true);
+  };
+
+  const handleBlurStatus = () => {
+    setTimeout(() => {
+      setStatusDropdownOpen(false);
+    }, 100);
+  };
+
+  const savePayout = async () => {
+    const response = await addPayout(newPayout);
+    if (response) {
+      setPayoutModal(false);
+    }
+  };
+
+  const selectUser = (name, user_id) => {
+    const id = "#" + Math.floor(100000 + Math.random() * 900000);
+    const client = generateSecureId();
+    setNewPayout((prev) => ({ ...prev, id, name, client, user_id }));
+    // setNewPayout((prev) => ({...prev, name: el}))
   };
 
   const openDeleteConfirmation = (user_token) => {
@@ -181,6 +232,10 @@ const Admin = () => {
     getAllUsers().then((data) => {
       if (data?.length) {
         setUsers(data);
+        const activeUsersTemp = data.filter(
+          (user) => user.activationAmount <= user.balance
+        );
+        setActiveUsers(activeUsersTemp);
       }
     });
 
@@ -189,6 +244,12 @@ const Admin = () => {
         setPayments(data);
       }
     });
+
+    getAllPayouts().then((data) => {
+      if (data?.length) {
+        setPayouts(data)
+      }
+    })
   }, []);
 
   return (
@@ -497,65 +558,76 @@ const Admin = () => {
                 <tbody className="divide-y divide-gray-700">
                   {/* <!-- Пустое состояние --> */}
                   {payouts?.length ? (
-                    payouts.map((usr, key) => (
-                      <tr key={key}>
-                        <td className="px-6 py-8 text-gray-400">
-                          <div>
-                            {usr.token}
-                            <button
-                              onClick={() => copyAddress(usr.token)}
-                              className="text-teal-400 cursor-pointer hover:text-teal-300 transition-colors p-2 hover:bg-gray-800 rounded-lg"
-                            >
-                              <FaCopy />
-                            </button>
-                          </div>{" "}
-                        </td>
-                        <td className="px-6 py-8 text-gray-400">
-                          {usr.activationAmount || 1500}
-                        </td>
-                        <td className="px-6 py-8 text-gray-400">
-                          <div
-                            className={`flex items-center gap-1 ${
-                              usr?.activationAmount <= usr?.balance
-                                ? "text-green-400"
-                                : "text-red-400"
-                            } `}
-                          >
+                    payouts.map((usr, key) => {
+                      const userTemp = users.find((el) => el.token === usr.user_id)
+                      const userStatus = userTemp.balance >= userTemp.activationAmount
+                      // console.log(userStatus)
+                      return (
+                        <tr key={key}>
+                          <td className="px-6 py-8 text-gray-400">{usr?.id}</td>
+                          <td className="px-6 py-8 text-gray-400">
+                            {usr.name}
+                          </td>
+                          <td className="px-6 py-8 text-gray-400">
                             <div
-                              className={`w-3 h-3 ${
-                                usr?.activationAmount <= usr?.balance
-                                  ? "bg-green-400"
-                                  : "bg-red-400"
-                              }  rounded-full`}
-                            ></div>
-                            <span>
-                              {usr?.activationAmount <= usr?.balance
-                                ? "Активен"
-                                : "Неактивен"}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-8 text-gray-400">{usr.name}</td>
-                        <td className="px-6 py-8 text-gray-400">
-                          {usr?.telegram || "@example"}
-                        </td>
-                        <td className="px-6 py-8 text-start text-gray-400">
-                          <div className="flex items-center gap-3">
-                            <span>{usr.balance}</span>
-                            <FaEdit
-                              onClick={() => handleEdit(usr.balance, usr.token)}
-                              className="text-teal-400 hover:text-teal-300 cursor-pointer"
+                              className={`flex items-center gap-1 ${
+                                userStatus
+                                  ? "text-green-400"
+                                  : "text-red-400"
+                              } `}
+                            >
+                              <div
+                                className={`w-3 h-3 ${
+                                  userStatus
+                                    ? "bg-green-400"
+                                    : "bg-red-400"
+                                }  rounded-full`}
+                              ></div>
+                              <span>
+                                {userStatus
+                                  ? "Активен"
+                                  : "Неактивен"}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-8 text-gray-400">
+                            {userTemp.balance}
+                          </td>
+                          <td className="px-6 py-8 text-gray-400">
+                            {usr.paymentTime}
+                          </td>
+                          <td className="px-6 py-8 text-gray-400">
+                            {usr.bank}
+                          </td>
+                          <td className="px-6 py-8 text-gray-400">
+                            {usr.amount}
+                          </td>
+                          <td className="px-6 py-8 text-gray-400">
+                            {usr.method}
+                          </td>
+                          <td className="px-6 py-8 text-gray-400">
+                            {usr.status}
+                          </td>
+                          {/* <td className="px-6 py-8 text-start text-gray-400">
+                            <div className="flex items-center gap-3">
+                              <span>{usr.balance}</span>
+                              <FaEdit
+                                onClick={() =>
+                                  handleEdit(usr.balance, usr.token)
+                                }
+                                className="text-teal-400 hover:text-teal-300 cursor-pointer"
+                              />
+                            </div>
+                          </td>
+                          <td className="px-6 py-8 flex justify-end text-gray-400">
+                            <FaTrashAlt
+                              onClick={() => openDeleteConfirmation(usr.token)}
+                              className="text-red-400 cursor-pointer hover:opacity-70"
                             />
-                          </div>
-                        </td>
-                        <td className="px-6 py-8 flex justify-end text-gray-400">
-                          <FaTrashAlt
-                            onClick={() => openDeleteConfirmation(usr.token)}
-                            className="text-red-400 cursor-pointer hover:opacity-70"
-                          />
-                        </td>
-                      </tr>
-                    ))
+                          </td> */}
+                        </tr>
+                      );
+                    })
                   ) : (
                     <tr>
                       <td
@@ -706,21 +778,49 @@ const Admin = () => {
           <div className="grid grid-cols-3 gap-10">
             <div className="space-y-4">
               <div className="flex gap-4">
-                <input
-                  className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
-                  type="text"
-                  placeholder="Имя"
-                />
+                <div className="w-full relative">
+                  <input
+                    className="w-full  bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+                    type="text"
+                    value={newPayout.name}
+                    // disabled
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    placeholder="Имя"
+                  />
+                  <ul
+                    className={`absolute  ${
+                      nameDropdownOpen ? "block" : "hidden"
+                    }  bg-gray-700 w-full rounded-lg shadow`}
+                  >
+                    {activeUsers.length ? (
+                      activeUsers.map((el) => (
+                        <li
+                          onClick={() => selectUser(el.name, el.token)}
+                          className="py-1 px-3 cursor-pointer hover:bg-gray-800"
+                        >
+                          {el?.name}
+                        </li>
+                      ))
+                    ) : (
+                      <p className="py-1 px-3">Нету активний ползователы</p>
+                    )}
+                  </ul>
+                </div>
                 <input
                   className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
                   type="text"
                   placeholder="ID"
+                  value={newPayout.id}
+                  disabled
                 />
               </div>
               <input
                 className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
                 type="text"
                 placeholder="Клиент"
+                disabled
+                value={newPayout.client}
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -728,31 +828,90 @@ const Admin = () => {
                 className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
                 type="text"
                 placeholder="Сумма"
+                onChange={(e) =>
+                  setNewPayout((prev) => ({ ...prev, amount: e.target.value }))
+                }
               />
               <input
                 className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
                 type="text"
                 placeholder="Метод"
+                onChange={(e) =>
+                  setNewPayout((prev) => ({ ...prev, method: e.target.value }))
+                }
               />
               <input
                 className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
                 type="text"
                 placeholder="Банк"
+                onChange={(e) =>
+                  setNewPayout((prev) => ({ ...prev, bank: e.target.value }))
+                }
               />
-              <input
-                className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
-                type="text"
-                placeholder="Статус"
-              />
-
-              <button onClick={payoutModalClose} className="flex-1 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors text-sm">Отмена</button>
-              <button className="flex-1 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed px-4 py-2.5 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium">Сохранить</button>
+              <div className="w-full relative">
+                <input
+                  className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+                  type="text"
+                  placeholder="Статус"
+                  onBlur={handleBlurStatus}
+                  onFocus={handleFocusStatus}
+                  value={newPayout.status}
+                />
+                <ul
+                  className={` absolute ${
+                    statusDropdownOpen ? "block" : "hidden"
+                  } bg-gray-700 w-full rounded-lg shadow`}
+                >
+                  <li
+                    className="py-1 px-3 cursor-pointer hover:bg-gray-800"
+                    onClick={() =>
+                      setNewPayout((prev) => ({ ...prev, status: "Ожидает" }))
+                    }
+                  >
+                    Ожидает
+                  </li>
+                  <li
+                    className="py-1 px-3 cursor-pointer hover:bg-gray-800"
+                    onClick={() =>
+                      setNewPayout((prev) => ({ ...prev, status: "Выполнено" }))
+                    }
+                  >
+                    Выполнено
+                  </li>
+                  <li
+                    className="py-1 px-3 cursor-pointer hover:bg-gray-800"
+                    onClick={() =>
+                      setNewPayout((prev) => ({ ...prev, status: "Откланено" }))
+                    }
+                  >
+                    Откланено
+                  </li>
+                </ul>
+              </div>
+              <button
+                onClick={payoutModalClose}
+                className="flex-1 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors text-sm"
+              >
+                Отмена
+              </button>
+              <button
+                onClick={savePayout}
+                className="flex-1 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed px-4 py-2.5 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+              >
+                Сохранить
+              </button>
             </div>
             <div>
               <input
                 className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
                 type="text"
                 placeholder="Время на оплату"
+                onChange={(e) =>
+                  setNewPayout((prev) => ({
+                    ...prev,
+                    paymentTime: e.target.value,
+                  }))
+                }
               />
             </div>
           </div>
