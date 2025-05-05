@@ -7,11 +7,14 @@ import { useState } from "react";
 const Login = () => {
   const [token, setToken] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
   const handleLogin = async () => {
+    setLoading(true)
     const response = await login(token);
+    setLoading(false)
     if (response.status === 200) {
       sessionStorage.setItem("user", JSON.stringify(response.user));
       router.push("/home");
@@ -65,7 +68,8 @@ const Login = () => {
             <button
               onClick={handleLogin}
               type="button"
-              className="text-white mt-6 cursor-pointer hover:opacity-90 to-blue-500 from-teal-400 bg-gradient-to-r rounded-lg py-3 w-full"
+              disabled={loading}
+              className="text-white disabled:opacity-50 disabled:cursor-not-allowed mt-6 cursor-pointer hover:opacity-90 to-blue-500 from-teal-400 bg-gradient-to-r rounded-lg py-3 w-full"
             >
               Войти
             </button>

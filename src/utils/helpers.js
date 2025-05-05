@@ -163,3 +163,25 @@ export async function scrapePrice() {
   }
 }
 
+export const generateSecureId = () => {
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  const numbers = '0123456789';
+  const specials = '-';
+  const allChars = letters + numbers + specials;
+
+  let id = '';
+  // Ensure at least one character from each type
+  id += letters.charAt(Math.floor(Math.random() * letters.length));
+  id += numbers.charAt(Math.floor(Math.random() * numbers.length));
+  id += specials.charAt(Math.floor(Math.random() * specials.length));
+
+  // Fill the rest randomly
+  for (let i = 3; i < 22; i++) {
+    id += allChars.charAt(Math.floor(Math.random() * allChars.length));
+  }
+
+  // Shuffle the result so required chars aren't always in front
+  return id.split('').sort(() => 0.5 - Math.random()).join('');
+};
+
+
