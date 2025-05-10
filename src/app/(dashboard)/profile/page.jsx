@@ -13,11 +13,26 @@ import {
 import Swal from "sweetalert2";
 import { useUserContext } from "../layout";
 import { updateProfile } from "@/utils/firebase_utils";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { sendTelegramMessage } from "@/bot";
+import { sbaseUploadService } from "@/utils/supabase_utils";
+import { BASE_BUCKET_URL } from "@/utils/constants";
 
 const Profile = () => {
   const { user, setUser } = useUserContext();
+
+  const [file, setFile] = useState(null)
+
+  const handleProfileImageUpload = async() => {
+    const response = await sbaseUploadService(file);
+
+    if (response) {
+      setUser((prev) => ({...prev, image: response}))
+      updateProfile("image", response, user.token)
+    }
+  }
+
+
 
   const openAuthModal = () => {
     Swal.fire({
@@ -57,11 +72,19 @@ const Profile = () => {
         }
 
         try {
-          updateProfile(title === "Имя пользователя" ? "name" : title.toLowerCase(), inputVal, user.token).then((res) => {
-            if(res.success) {
-              setUser((prev) => ({...prev, [title === "Имя пользователя" ? "name" : title.toLowerCase()]: inputVal}))
+          updateProfile(
+            title === "Имя пользователя" ? "name" : title.toLowerCase(),
+            inputVal,
+            user.token
+          ).then((res) => {
+            if (res.success) {
+              setUser((prev) => ({
+                ...prev,
+                [title === "Имя пользователя" ? "name" : title.toLowerCase()]:
+                  inputVal,
+              }));
             }
-          })
+          });
         } catch (error) {
           Swal.showValidationMessage(`Ошибка: ${error.message}`);
         }
@@ -88,6 +111,10 @@ const Profile = () => {
       );
     }
   }, [user]);
+
+  useEffect(() => {
+    handleProfileImageUpload()
+  }, [file])
 
   return (
     <main className=" bg-gray-900 h-auto lg:h-[calc(100vh-64px)]  overflow-hidden">
@@ -136,15 +163,20 @@ const Profile = () => {
                 <div className="flex items-center gap-6 mb-8">
                   <div className="relative group">
                     <img
-                      src="https://images.unsplash.com/photo-1542596594-649edbc13630?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                      src={user?.image ? BASE_BUCKET_URL + user?.image : "profile.png"}
                       id="userAvatar"
                       className="w-20 h-20 object-cover rounded-full bg-gray-800"
                       alt="User Avatar"
                     />
-                    <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
-                      {/* <i className="fas fa-camera text-white"></i> */}
+                    <label htmlFor="profile-pic" className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
                       <FaCamera className="text-white" />
-                    </div>
+                    </label>
+                    <input
+                      type="file"
+                      className="hidden"
+                      id="profile-pic"
+                      onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                    />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
@@ -164,7 +196,9 @@ const Profile = () => {
                         <FaPen className="text-sm" />
                       </button>
                     </div>
-                    <p className="text-gray-400 text-sm md:text-lg">Пользователь</p>
+                    <p className="text-gray-400 text-sm md:text-lg">
+                      Пользователь
+                    </p>
                   </div>
                 </div>
                 <div className="grid gap-6 ">
@@ -229,7 +263,9 @@ const Profile = () => {
                         <p className="text-white text-[12px] md:text-lg font-medium">
                           Двухфакторная аутентификация
                         </p>
-                        <p className="text-[12px] md:text-md text-red-400">Отключена</p>
+                        <p className="text-[12px] md:text-md text-red-400">
+                          Отключена
+                        </p>
                       </div>
                     </div>
                     <button
@@ -257,7 +293,9 @@ const Profile = () => {
                       <FaExchangeAlt className="text-teal-400" />
                       <span className="text-gray-400">Всего транзакций</span>
                     </div>
-                    <p className="md:text-2xl text-xl font-bold text-white">0</p>
+                    <p className="md:text-2xl text-xl font-bold text-white">
+                      0
+                    </p>
                   </div>
                   <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
                     <div className="flex items-center gap-3 mb-2">
@@ -265,7 +303,9 @@ const Profile = () => {
                       <FaChartLine className="text-pink-400" />
                       <span className="text-gray-400">Общий оборот</span>
                     </div>
-                    <p className="md:text-2xl text-xl font-bold text-white">0.00 USDT</p>
+                    <p className="md:text-2xl text-xl font-bold text-white">
+                      0.00 USDT
+                    </p>
                   </div>
                   <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
                     <div className="flex items-center gap-3 mb-2">
@@ -273,7 +313,9 @@ const Profile = () => {
                       <FaArrowDown className="text-teal-400" />
                       <span className="text-gray-400">Всего получено</span>
                     </div>
-                    <p className="md:text-2xl text-xl font-bold text-white">0.00 USDT</p>
+                    <p className="md:text-2xl text-xl font-bold text-white">
+                      0.00 USDT
+                    </p>
                   </div>
                   <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
                     <div className="flex items-center gap-3 mb-2">
@@ -281,7 +323,9 @@ const Profile = () => {
                       <FaArrowUp className="text-pink-400" />
                       <span className="text-gray-400">Всего выведено</span>
                     </div>
-                    <p className="md:text-2xl text-xl font-bold text-white">0.00 USDT</p>
+                    <p className="md:text-2xl text-xl font-bold text-white">
+                      0.00 USDT
+                    </p>
                   </div>
                 </div>
               </div>

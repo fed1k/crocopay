@@ -265,7 +265,7 @@ export const editDevice = async (id, updateData) => {
   const docRef = doc(devicesCollection.firestore, "devices", id);
   await updateDoc(docRef, updateData);
 
-  return docRef.id
+  return docRef.id;
 };
 
 // Delete a device
@@ -294,5 +294,29 @@ export const getAllPayouts = async () => {
   return snapshot.docs.map((doc) => ({ ...doc.data() }));
 };
 
+export const getUserPayouts = async (user_id) => {
+  const payOutsRef = collection(db, "payOuts");
+  const q = query(payOutsRef, where("user_id", "==", user_id));
 
+  const querySnapshot = await getDocs(q);
+  const payouts = querySnapshot.docs.map((doc) => ({
+    doc_id: doc.id,
+    ...doc.data(),
+  }));
 
+  return payouts;
+};
+
+export const updatePayout = async (fieldName, value, doc_id) => {
+  try {
+    const payoutRef = doc(db, "payOuts", doc_id);
+    await updateDoc(payoutRef, {
+      [fieldName]: value, // dynamic field update
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating payout:", error);
+    throw error;
+  }
+};
