@@ -18,13 +18,14 @@ import {
   FaUser,
   FaWallet,
 } from "react-icons/fa6";
-import {IoMdClose} from "react-icons/io"
+import { IoMdClose } from "react-icons/io";
 import Link from "next/link";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getMe } from "@/utils/firebase_utils";
 import Swal from "sweetalert2";
 import Image from "next/image";
+import { BASE_BUCKET_URL } from "@/utils/constants";
 
 const userContext = createContext();
 export const useUserContext = () => useContext(userContext);
@@ -105,8 +106,7 @@ const DashboardLayout = ({ children }) => {
             <p className="text-xs text-gray-400">Payment Ecosystem</p>
           </div>
           <div className="md:hidden" onClick={toggleSidebar}>
-          <IoMdClose />
-
+            <IoMdClose />
           </div>
         </div>
 
@@ -286,9 +286,25 @@ const DashboardLayout = ({ children }) => {
           <div className="p-4">
             <div className="flex items-center justify-between text-sm">
               <span className="text-gray-400">Статус:</span>
-              <div className={`flex items-center gap-1 ${user?.activationAmount <= user?.balance ? "text-green-400" : "text-red-400"} `}>
-                <div className={`w-3 h-3 ${user?.activationAmount <= user?.balance ? "bg-green-400" : "bg-red-400"}  rounded-full`}></div>
-                <span>{user?.activationAmount <= user?.balance ? "Активен" : "Неактивен"}</span>
+              <div
+                className={`flex items-center gap-1 ${
+                  user?.activationAmount <= user?.balance
+                    ? "text-green-400"
+                    : "text-red-400"
+                } `}
+              >
+                <div
+                  className={`w-3 h-3 ${
+                    user?.activationAmount <= user?.balance
+                      ? "bg-green-400"
+                      : "bg-red-400"
+                  }  rounded-full`}
+                ></div>
+                <span>
+                  {user?.activationAmount <= user?.balance
+                    ? "Активен"
+                    : "Неактивен"}
+                </span>
               </div>
             </div>
           </div>
@@ -388,7 +404,20 @@ const DashboardLayout = ({ children }) => {
                   id="userMenuButton"
                   className="flex cursor-pointer items-center gap-2 bg-gray-800/50 p-2 rounded-lg hover:bg-gray-800 transition-colors"
                 >
-                  <FaUserCircle className="text-2xl text-teal-400" />
+                  {user?.image ? (
+                    <img
+                      src={
+                        user?.image
+                          ? BASE_BUCKET_URL + user?.image
+                          : "profile.png"
+                      }
+                      id="userAvatar"
+                      className="w-6 h-6 object-cover rounded-full bg-gray-800"
+                      alt="User Avatar"
+                    />
+                  ) : (
+                    <FaUserCircle className="text-2xl text-teal-400" />
+                  )}
                   <span className="text-gray-300">{user?.name}</span>
                 </button>
 

@@ -80,3 +80,5 @@ export const bankCountryCodeMap = {
   "Эсхата (Таджикистан)": "+992",
   "Спитамен (Таджикистан)": "+992",
 };
+
+export const BASE_BUCKET_URL = "https://jjazxisotidfcmfrgqsw.supabase.co/storage/v1/object/public/"

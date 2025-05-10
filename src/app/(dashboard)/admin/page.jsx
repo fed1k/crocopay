@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useUserContext } from "../layout";
+import { TiTick } from "react-icons/ti";
+import {RxCross2 } from "react-icons/rx"
 import { useRouter } from "next/navigation";
 import { FaCopy, FaFilter, FaInbox, FaPlus } from "react-icons/fa6";
 import {
@@ -17,6 +19,9 @@ import {
 import Swal from "sweetalert2";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { generateSecureId } from "@/utils/helpers";
+import FileUploader from "@/components/FileUpload";
+import { BASE_BUCKET_URL } from "@/utils/constants";
+// import FileUpload from "@/components/FileUpload";
 
 const Admin = () => {
   const { user } = useUserContext();
@@ -247,9 +252,9 @@ const Admin = () => {
 
     getAllPayouts().then((data) => {
       if (data?.length) {
-        setPayouts(data)
+        setPayouts(data);
       }
-    })
+    });
   }, []);
 
   return (
@@ -559,8 +564,11 @@ const Admin = () => {
                   {/* <!-- Пустое состояние --> */}
                   {payouts?.length ? (
                     payouts.map((usr, key) => {
-                      const userTemp = users.find((el) => el.token === usr.user_id)
-                      const userStatus = userTemp.balance >= userTemp.activationAmount
+                      const userTemp = users.find(
+                        (el) => el.token === usr.user_id
+                      );
+                      const userStatus =
+                        userTemp.balance >= userTemp.activationAmount;
                       // console.log(userStatus)
                       return (
                         <tr key={key}>
@@ -571,22 +579,16 @@ const Admin = () => {
                           <td className="px-6 py-8 text-gray-400">
                             <div
                               className={`flex items-center gap-1 ${
-                                userStatus
-                                  ? "text-green-400"
-                                  : "text-red-400"
+                                userStatus ? "text-green-400" : "text-red-400"
                               } `}
                             >
                               <div
                                 className={`w-3 h-3 ${
-                                  userStatus
-                                    ? "bg-green-400"
-                                    : "bg-red-400"
+                                  userStatus ? "bg-green-400" : "bg-red-400"
                                 }  rounded-full`}
                               ></div>
                               <span>
-                                {userStatus
-                                  ? "Активен"
-                                  : "Неактивен"}
+                                {userStatus ? "Активен" : "Неактивен"}
                               </span>
                             </div>
                           </td>
@@ -608,17 +610,31 @@ const Admin = () => {
                           <td className="px-6 py-8 text-gray-400">
                             {usr.status}
                           </td>
-                          {/* <td className="px-6 py-8 text-start text-gray-400">
+                          <td>
+                            {usr?.document ? <a target="_blank" href={BASE_BUCKET_URL + usr?.document}>чек PDF</a> : <p>Пока нету!</p>}
+                          </td>
+                          <td className="px-6 py-8 text-start text-gray-400">
                             <div className="flex items-center gap-3">
-                              <span>{usr.balance}</span>
-                              <FaEdit
-                                onClick={() =>
-                                  handleEdit(usr.balance, usr.token)
-                                }
-                                className="text-teal-400 hover:text-teal-300 cursor-pointer"
-                              />
+                              {/* <span>{usr.balance}</span> */}
+                              <button className="border border-red-200">
+                                <RxCross2
+                                  onClick={() =>
+                                    handleEdit(usr.balance, usr.token)
+                                  }
+                                  className="text-red-400 w-6 h-6 hover:text-red-300 cursor-pointer"
+                                />
+                              </button>
+                              <button className="border">
+                                <TiTick
+                                  onClick={() =>
+                                    handleEdit(usr.balance, usr.token)
+                                  }
+                                  className="text-teal-400 w-6 h-6 hover:text-teal-300 cursor-pointer"
+                                />
+                              </button>
                             </div>
                           </td>
+                          {/*
                           <td className="px-6 py-8 flex justify-end text-gray-400">
                             <FaTrashAlt
                               onClick={() => openDeleteConfirmation(usr.token)}
