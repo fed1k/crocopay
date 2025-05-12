@@ -291,7 +291,7 @@ export const getAllPayouts = async () => {
   const payoutsCollection = collection(db, "payOuts");
   const q = query(payoutsCollection);
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => ({ ...doc.data() }));
+  return snapshot.docs.map((doc) => ({ ...doc.data(), doc_id: doc.id }));
 };
 
 export const getUserPayouts = async (user_id) => {
@@ -320,3 +320,12 @@ export const updatePayout = async (fieldName, value, doc_id) => {
     throw error;
   }
 };
+
+export const deletePayout = async (doc_id) => {
+  try {
+    await deleteDoc(doc(db, "payOuts", doc_id));
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    throw error;
+  }
+}

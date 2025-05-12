@@ -3,17 +3,19 @@
 import { useEffect, useState } from "react";
 import { useUserContext } from "../layout";
 import { TiTick } from "react-icons/ti";
-import {RxCross2 } from "react-icons/rx"
+import { RxCross2 } from "react-icons/rx";
 import { useRouter } from "next/navigation";
 import { FaCopy, FaFilter, FaInbox, FaPlus } from "react-icons/fa6";
 import {
   addPayout,
+  deletePayout,
   deleteUser,
   getAllPaymentsAdmin,
   getAllPayouts,
   getAllUsers,
   markPaymentAdmin,
   registerUser,
+  updatePayout,
   updateProfile,
 } from "@/utils/firebase_utils";
 import Swal from "sweetalert2";
@@ -225,6 +227,25 @@ const Admin = () => {
         showConfirmButton: false,
       });
     }
+  };
+
+  const handleStatus = async (status, id, user_id, user_balance, amount) => {
+    const response = await updatePayout("status", status, id);
+    if (status === "Выполнено") {
+      const newBalance = +user_balance + +amount;
+      await updateProfile("balance", newBalance, user_id);
+    }
+
+    if (response?.success) {
+    }
+  };
+
+  const [deletePayoutLoading, setDeletePayoutLoading] = useState(false);
+  const handleDeletePayout = async (doc_id) => {
+    setDeletePayoutLoading(true);
+    await deletePayout(doc_id);
+    setDeletePayoutLoading(false);
+    setPayouts((prev) => [...prev].filter((el) => el.doc_id !== doc_id));
   };
 
   useEffect(() => {
@@ -568,7 +589,7 @@ const Admin = () => {
                         (el) => el.token === usr.user_id
                       );
                       const userStatus =
-                        userTemp.balance >= userTemp.activationAmount;
+                        userTemp?.balance >= userTemp?.activationAmount;
                       // console.log(userStatus)
                       return (
                         <tr key={key}>
@@ -593,7 +614,7 @@ const Admin = () => {
                             </div>
                           </td>
                           <td className="px-6 py-8 text-gray-400">
-                            {userTemp.balance}
+                            {userTemp?.balance}
                           </td>
                           <td className="px-6 py-8 text-gray-400">
                             {usr.paymentTime}
@@ -607,11 +628,30 @@ const Admin = () => {
                           <td className="px-6 py-8 text-gray-400">
                             {usr.method}
                           </td>
-                          <td className="px-6 py-8 text-gray-400">
+                          <td
+                            className={`px-6 py-8 ${
+                              usr.status === "Ожидает"
+                                ? "text-yellow-400"
+                                : usr.status === "Выполнено"
+                                ? "text-green-500"
+                                : usr.status === "Откланено"
+                                ? "text-red-500"
+                                : "text-gray-400"
+                            }`}
+                          >
                             {usr.status}
                           </td>
                           <td>
-                            {usr?.document ? <a target="_blank" href={BASE_BUCKET_URL + usr?.document}>чек PDF</a> : <p>Пока нету!</p>}
+                            {usr?.document ? (
+                              <a
+                                target="_blank"
+                                href={BASE_BUCKET_URL + usr?.document}
+                              >
+                                чек PDF
+                              </a>
+                            ) : (
+                              <p>Пока нету!</p>
+                            )}
                           </td>
                           <td className="px-6 py-8 text-start text-gray-400">
                             <div className="flex items-center gap-3">
@@ -619,7 +659,13 @@ const Admin = () => {
                               <button className="border border-red-200">
                                 <RxCross2
                                   onClick={() =>
-                                    handleEdit(usr.balance, usr.token)
+                                    handleStatus(
+                                      "Откланено",
+                                      usr.doc_id,
+                                      usr.user_id,
+                                      userTemp.balance,
+                                      usr.amount
+                                    )
                                   }
                                   className="text-red-400 w-6 h-6 hover:text-red-300 cursor-pointer"
                                 />
@@ -627,20 +673,27 @@ const Admin = () => {
                               <button className="border">
                                 <TiTick
                                   onClick={() =>
-                                    handleEdit(usr.balance, usr.token)
+                                    handleStatus(
+                                      "Выполнено",
+                                      usr.doc_id,
+                                      usr.user_id,
+                                      userTemp.balance,
+                                      usr.amount
+                                    )
                                   }
                                   className="text-teal-400 w-6 h-6 hover:text-teal-300 cursor-pointer"
                                 />
                               </button>
                             </div>
                           </td>
-                          {/*
+
                           <td className="px-6 py-8 flex justify-end text-gray-400">
                             <FaTrashAlt
-                              onClick={() => openDeleteConfirmation(usr.token)}
-                              className="text-red-400 cursor-pointer hover:opacity-70"
+                              onClick={() => handleDeletePayout(usr.doc_id)}
+                              disabled={deletePayoutLoading}
+                              className="text-red-400 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer hover:opacity-70"
                             />
-                          </td> */}
+                          </td>
                         </tr>
                       );
                     })
