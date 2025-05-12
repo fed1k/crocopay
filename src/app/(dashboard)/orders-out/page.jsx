@@ -336,7 +336,17 @@ const OrdersOut = () => {
                   <td className="px-6 text-sm py-8 text-gray-400">
                     {payout.bank}
                   </td>
-                  <td className="px-6 text-sm py-8 text-gray-400">
+                  <td
+                    className={`px-6 py-8 ${
+                      payout.status === "Ожидает"
+                        ? "text-yellow-400"
+                        : payout.status === "Выполнено"
+                        ? "text-green-500"
+                        : payout.status === "Откланено"
+                        ? "text-red-500"
+                        : "text-gray-400"
+                    }`}
+                  >
                     {payout.status}
                   </td>
                   <td className="px-6 text-sm py-8 text-gray-400">
@@ -354,7 +364,11 @@ const OrdersOut = () => {
                       ) : (
                         <label
                           htmlFor="cheque"
-                          className={`flex ${docLoading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"} gap-2 items-center `}
+                          className={`flex ${
+                            docLoading
+                              ? "opacity-50 cursor-not-allowed"
+                              : "cursor-pointer"
+                          } gap-2 items-center `}
                         >
                           {docLoading ? (
                             <div className="flex items-center gap-1">
