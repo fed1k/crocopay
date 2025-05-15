@@ -164,8 +164,7 @@ export const markPaymentAdmin = async (doc_id, status) => {
       }
 
       const userData = userSnap.data();
-      const currentAmount = userData.amount || 0;
-
+      const currentAmount = userData?.balance || 0;
       await updateDoc(userRef, {
         balance: currentAmount + paymentAmount,
       });
