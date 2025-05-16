@@ -120,7 +120,8 @@ const OrdersOut = () => {
 
   const showStatusModal = () => {
     Swal.fire({
-      title: "Вам пока не доступны Pay out заказы, активируйте личный кабинет",
+      title: "Активация недоступна",
+      text: "Для включения Pay out заказов необходимо активировать личный кабинет",
       icon: "warning",
       color: "white",
       confirmButtonText: "Понятно",
@@ -149,9 +150,10 @@ const OrdersOut = () => {
       if (result.isConfirmed) {
         console.log(payout);
         updatePayout("status", "Отклонено", payout.doc_id).then(() => {
-          setPayouts((prev) => ([...prev].filter((el) => el.doc_id !== payout.doc_id)))
-        })
-
+          setPayouts((prev) =>
+            [...prev].filter((el) => el.doc_id !== payout.doc_id)
+          );
+        });
       }
     });
   };
@@ -326,7 +328,7 @@ const OrdersOut = () => {
           <tbody className="divide-y divide-gray-700">
             {payouts?.length ? (
               payouts.map((payout) => {
-                if (payout.status === "Отклонено") return <></>
+                if (payout.status === "Отклонено") return <></>;
                 return (
                   <tr>
                     <td className="px-6 text-sm py-8 text-gray-400">

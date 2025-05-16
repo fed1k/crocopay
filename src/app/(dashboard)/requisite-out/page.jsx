@@ -208,9 +208,9 @@ const RequisiteOut = () => {
 
   const turnOnSelected = () => {
     Swal.fire({
-      title: user?.activationAmount <= user?.balance ? "Реквизиты включено" : "Включение статус",
+      title: user?.activationAmount <= user?.balance ? "Реквизиты включено" : "Активация недоступна",
       color: "white",
-      text: user?.activationAmount <= user?.balance ? "" : "Требуется активация Личного кабинета",
+      text: user?.activationAmount <= user?.balance ? "" : "Для включения Pay out реквизитов необходимо активировать личный кабинет",
       icon: "warning",
       confirmButtonText: "Понятно",
       customClass: {

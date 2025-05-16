@@ -207,12 +207,12 @@ const Requisite = () => {
       title:
         user?.activationAmount <= user?.balance
           ? "Реквизиты включено"
-          : "Включение статус",
+          : "Активация недоступна",
       color: "white",
       text:
         user?.activationAmount <= user?.balance
           ? ""
-          : "Требуется активация Личного кабинета",
+          : "Для включения Pay in реквизитов необходимо активировать личный кабинет",
       icon: "warning",
       confirmButtonText: "Понятно",
       customClass: {

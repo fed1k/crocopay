@@ -35,6 +35,7 @@ const Profile = () => {
 
 
   const openAuthModal = () => {
+    if (user?.activationAmount <= user?.balance) return
     Swal.fire({
       title: "Активация недоступна",
       color: "white",
