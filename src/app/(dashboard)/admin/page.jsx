@@ -634,7 +634,7 @@ const Admin = () => {
                                 ? "text-yellow-400"
                                 : usr.status === "Выполнено"
                                 ? "text-green-500"
-                                : usr.status === "Откланено"
+                                : usr.status === "Отклонено"
                                 ? "text-red-500"
                                 : "text-gray-400"
                             }`}
@@ -660,7 +660,7 @@ const Admin = () => {
                                 <RxCross2
                                   onClick={() =>
                                     handleStatus(
-                                      "Откланено",
+                                      "Отклонено",
                                       usr.doc_id,
                                       usr.user_id,
                                       userTemp.balance,
@@ -950,10 +950,10 @@ const Admin = () => {
                   <li
                     className="py-1 px-3 cursor-pointer hover:bg-gray-800"
                     onClick={() =>
-                      setNewPayout((prev) => ({ ...prev, status: "Откланено" }))
+                      setNewPayout((prev) => ({ ...prev, status: "Отклонено" }))
                     }
                   >
-                    Откланено
+                    Отклонено
                   </li>
                 </ul>
               </div>

@@ -132,6 +132,30 @@ const OrdersOut = () => {
     });
   };
 
+  const handleCancel = async (payout) => {
+    Swal.fire({
+      title: "Вы уверены, что хотите отменить заявку",
+      icon: "warning",
+      color: "white",
+      confirmButtonText: "Подтвердить",
+      showCancelButton: true,
+      cancelButtonText: "Отмена",
+      customClass: {
+        confirmButton: "bg-greenish",
+      },
+      background: "#1F2937FF",
+      showConfirmButton: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log(payout);
+        updatePayout("status", "Отклонено", payout.doc_id).then(() => {
+          setPayouts((prev) => ([...prev].filter((el) => el.doc_id !== payout.doc_id)))
+        })
+
+      }
+    });
+  };
+
   useEffect(() => {
     if (user) {
       getUserPayouts(user.token).then((data) => {
@@ -301,106 +325,118 @@ const OrdersOut = () => {
           </thead>
           <tbody className="divide-y divide-gray-700">
             {payouts?.length ? (
-              payouts.map((payout) => (
-                <tr>
-                  <td className="px-6 text-sm py-8 text-gray-400">
-                    {payout.id}
-                  </td>
-                  <td className="px-6 text-sm py-8 text-gray-400">
-                    <div className="flex items-center gap-1">
-                      <p>{payout.client}</p>
-                      <FaCopy
-                        onClick={() => copyToClipboard(payout.client, "Клиент")}
-                        className="w-4 h-4 cursor-pointer"
-                      />
-                    </div>
-                  </td>
-                  <td className="px-6 text-sm py-8 text-gray-400">
-                    <div className="flex items-center gap-1">
-                      <p>{payout.amount}</p>
-                      <FaCopy
-                        onClick={() => copyToClipboard(payout.amount, "Сумма")}
-                        className="w-4 h-4 cursor-pointer"
-                      />
-                    </div>
-                  </td>
-                  <td className="px-6 text-sm py-8 text-gray-400">
-                    <div className="flex items-center gap-1">
-                      <p>{payout.method}</p>
-                      <FaCopy
-                        onClick={() => copyToClipboard(payout.method, "Метод")}
-                        className="w-4 h-4 cursor-pointer"
-                      />
-                    </div>
-                  </td>
-                  <td className="px-6 text-sm py-8 text-gray-400">
-                    {payout.bank}
-                  </td>
-                  <td
-                    className={`px-6 py-8 ${
-                      payout.status === "Ожидает"
-                        ? "text-yellow-400"
-                        : payout.status === "Выполнено"
-                        ? "text-green-500"
-                        : payout.status === "Откланено"
-                        ? "text-red-500"
-                        : "text-gray-400"
-                    }`}
-                  >
-                    {payout.status}
-                  </td>
-                  <td className="px-6 text-sm py-8 text-gray-400">
-                    {payout.paymentTime}
-                  </td>
-                  <td className="px-6 text-sm py-8 text-gray-400">
-                    <div className="space-y-2">
-                      {payout?.document ? (
-                        <a
-                          target="_blank"
-                          href={BASE_BUCKET_URL + payout.document}
-                        >
-                          Чек PDF
-                        </a>
-                      ) : (
-                        <label
-                          htmlFor="cheque"
-                          className={`flex ${
-                            docLoading
-                              ? "opacity-50 cursor-not-allowed"
-                              : "cursor-pointer"
-                          } gap-2 items-center `}
-                        >
-                          {docLoading ? (
-                            <div className="flex items-center gap-1">
-                              <p>Загружает</p>
-                              <AiOutlineLoading3Quarters className=" animate-spin" />
-                            </div>
-                          ) : (
-                            <p>Загрузите ваш чек PDF</p>
-                          )}
-                          <input
-                            onChange={(e) =>
-                              handleProfileImageUpload(
-                                e.target.files?.[0] ?? null,
-                                payout.doc_id
-                              )
-                            }
-                            className="hidden"
-                            type="file"
-                            disabled={docLoading}
-                            id="cheque"
-                          />
-                          <HiOutlineClipboardDocumentList className="w-6 h-6" />
-                        </label>
-                      )}
-                      <div className="flex cursor-pointer gap-2 items-center">
-                        <p>Отменить заявку на выплату</p>
-                        <FaTrash className="text-red-400" />
+              payouts.map((payout) => {
+                if (payout.status === "Отклонено") return <></>
+                return (
+                  <tr>
+                    <td className="px-6 text-sm py-8 text-gray-400">
+                      {payout.id}
+                    </td>
+                    <td className="px-6 text-sm py-8 text-gray-400">
+                      <div className="flex items-center gap-1">
+                        <p>{payout.client.slice(0, 5)}...</p>
+                        <FaCopy
+                          onClick={() =>
+                            copyToClipboard(payout.client, "Клиент")
+                          }
+                          className="w-4 h-4 cursor-pointer"
+                        />
                       </div>
-                    </div>
-                  </td>
-                </tr>
-              ))
+                    </td>
+                    <td className="px-6 text-sm py-8 text-gray-400">
+                      <div className="flex items-center gap-1">
+                        <p>{payout.amount}</p>
+                        <FaCopy
+                          onClick={() =>
+                            copyToClipboard(payout.amount, "Сумма")
+                          }
+                          className="w-4 h-4 cursor-pointer"
+                        />
+                      </div>
+                    </td>
+                    <td className="px-6 text-sm py-8 text-gray-400">
+                      <div className="flex items-center gap-1">
+                        <p>{payout.method}</p>
+                        <FaCopy
+                          onClick={() =>
+                            copyToClipboard(payout.method, "Метод")
+                          }
+                          className="w-4 h-4 cursor-pointer"
+                        />
+                      </div>
+                    </td>
+                    <td className="px-6 text-sm py-8 text-gray-400">
+                      {payout.bank}
+                    </td>
+                    <td
+                      className={`px-6 py-8 ${
+                        payout.status === "Ожидает"
+                          ? "text-yellow-400"
+                          : payout.status === "Выполнено"
+                          ? "text-green-500"
+                          : payout.status === "Отклонено"
+                          ? "text-red-500"
+                          : "text-gray-400"
+                      }`}
+                    >
+                      {payout.status}
+                    </td>
+                    <td className="px-6 text-sm py-8 text-gray-400">
+                      {payout.paymentTime}
+                    </td>
+                    <td className="px-6 text-sm py-8 text-gray-400">
+                      <div className="space-y-2">
+                        {payout?.document ? (
+                          <a
+                            target="_blank"
+                            href={BASE_BUCKET_URL + payout.document}
+                          >
+                            Чек PDF
+                          </a>
+                        ) : (
+                          <label
+                            htmlFor="cheque"
+                            className={`flex ${
+                              docLoading
+                                ? "opacity-50 cursor-not-allowed"
+                                : "cursor-pointer"
+                            } gap-2 items-center `}
+                          >
+                            {docLoading ? (
+                              <div className="flex items-center gap-1">
+                                <p>Загружает</p>
+                                <AiOutlineLoading3Quarters className=" animate-spin" />
+                              </div>
+                            ) : (
+                              <p>Загрузите ваш чек PDF</p>
+                            )}
+                            <input
+                              onChange={(e) =>
+                                handleProfileImageUpload(
+                                  e.target.files?.[0] ?? null,
+                                  payout.doc_id
+                                )
+                              }
+                              className="hidden"
+                              type="file"
+                              disabled={docLoading}
+                              id="cheque"
+                            />
+                            <HiOutlineClipboardDocumentList className="w-6 h-6" />
+                          </label>
+                        )}
+                        <div
+                          onClick={() => handleCancel(payout)}
+                          className="flex cursor-pointer gap-2 items-center"
+                        >
+                          <p>Отменить заявку на выплату</p>
+                          <FaTrash className="text-red-400" />
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
             ) : (
               <tr>
                 <td colSpan="8" className="px-6 py-8 text-center text-gray-400">
