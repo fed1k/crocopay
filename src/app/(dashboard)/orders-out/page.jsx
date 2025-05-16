@@ -119,6 +119,7 @@ const OrdersOut = () => {
   };
 
   const showStatusModal = () => {
+    if (user?.activationAmount <= user?.balance) return
     Swal.fire({
       title: "Активация недоступна",
       text: "Для включения Pay out заказов необходимо активировать личный кабинет",

@@ -90,9 +90,10 @@ const OrdersIn = () => {
   };
 
   const showStatusModal = () => {
+    
     Swal.fire({
       title: "Активация недоступна",
-      text: "Для включения Pay in заказов необходимо активировать личный кабинет",
+      text: `Для включения Pay in заказов необходимо ${user?.activationAmount <= user?.balance ? "выполнить минимум 5 Pay out заказов" : "активировать личный кабинет"}`,
       icon: "warning",
       color: "white",
       confirmButtonText: "Понятно",
