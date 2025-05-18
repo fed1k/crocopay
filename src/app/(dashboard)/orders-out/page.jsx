@@ -481,7 +481,7 @@ const OrdersOut = () => {
                           : "text-gray-400"
                       }`}>
                       +
-                      {((Number(payout.amount) / rate) * 1.035).toFixed(2)} $
+                      {((Number(payout.amount.slice(0, -3)) / rate) * 1.035).toFixed(2)} $
                     </td>
                   </tr>
                 );
