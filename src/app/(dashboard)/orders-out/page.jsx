@@ -36,7 +36,7 @@ const OrdersOut = () => {
   const settingsBtnRef = useRef(null);
   const settingsMenuRef = useRef(null);
 
-  const { user } = useUserContext();
+  const { user, rate } = useUserContext();
 
   const handleDateChange = (selectedDates, dateStr, instance) => {
     console.log("Selected date:", dateStr);
@@ -481,11 +481,7 @@ const OrdersOut = () => {
                           : "text-gray-400"
                       }`}>
                       +
-                      {(
-                        (3.5 / 100) *
-                        Number(payout.amount.slice(0, -3))
-                      ).toFixed(2)}
-                      $
+                      {((Number(payout.amount) / rate) * 1.035).toFixed(2)} $
                     </td>
                   </tr>
                 );
