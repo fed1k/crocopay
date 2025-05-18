@@ -16,14 +16,18 @@ import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
 import Swal from "sweetalert2";
 import { useUserContext } from "../layout";
 import { sendTelegramMessage } from "@/bot";
-import { getUserPayouts, updatePayout } from "@/utils/firebase_utils";
+import {
+  getUserPayouts,
+  updatePayout,
+  updateProfile,
+} from "@/utils/firebase_utils";
 import { sbaseUploadService } from "@/utils/supabase_utils";
 import { BASE_BUCKET_URL } from "@/utils/constants";
 
 const OrdersOut = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [payouts, setPayouts] = useState([]);
-  // const [file, setFile] = useState(null);
+  const [workStatus, setWorkStatus] = useState(false);
 
   const inputRefFrom = useRef(null);
   const inputRefTo = useRef(null);
@@ -118,20 +122,41 @@ const OrdersOut = () => {
     setIsSettingsOpen(false);
   };
 
-  const showStatusModal = () => {
-    if (user?.activationAmount <= user?.balance) return
-    Swal.fire({
-      title: "Активация недоступна",
-      text: "Для включения Pay out заказов необходимо активировать личный кабинет",
-      icon: "warning",
-      color: "white",
-      confirmButtonText: "Понятно",
-      customClass: {
-        confirmButton: "bg-greenish",
-      },
-      background: "#1F2937FF",
-      showConfirmButton: true,
-    });
+  const showStatusModal = async (e) => {
+    const isActive = e.target.checked;
+
+    setWorkStatus((prev) => !prev);
+    await updateProfile("workStatus", isActive, user?.token);
+    if (user?.activationAmount <= user?.balance && isActive) {
+      Swal.fire({
+        icon: "success",
+        title: "Активно!",
+        text: "Статус работы включен",
+        timer: 1500,
+        showConfirmButton: false,
+        background: "#1F2937",
+        color: "#fff",
+        toast: true,
+        position: "top-end",
+      });
+
+      return;
+    }
+
+    if (user?.activationAmount >= user?.balance) {
+      Swal.fire({
+        title: "Активация недоступна",
+        text: "Для включения Pay out заказов необходимо активировать личный кабинет",
+        icon: "warning",
+        color: "white",
+        confirmButtonText: "Понятно",
+        customClass: {
+          confirmButton: "bg-greenish",
+        },
+        background: "#1F2937FF",
+        showConfirmButton: true,
+      });
+    }
   };
 
   const handleCancel = async (payout) => {
@@ -161,6 +186,7 @@ const OrdersOut = () => {
 
   useEffect(() => {
     if (user) {
+      setWorkStatus(user?.workStatus || false);
       getUserPayouts(user.token).then((data) => {
         setPayouts(data);
       });
@@ -225,9 +251,10 @@ const OrdersOut = () => {
               onChange={showStatusModal}
               type="checkbox"
               id="workStatus"
+              checked={workStatus}
               className="sr-only peer"
             />
-            <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer  after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all "></div>
+            <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
           </label>
         </div>
       </div>
@@ -333,6 +360,7 @@ const OrdersOut = () => {
             {payouts?.length ? (
               payouts.map((payout) => {
                 if (payout.status === "Отклонено") return <></>;
+                if (!workStatus) return <></>;
                 return (
                   <tr>
                     <td className="px-6 text-sm py-8 text-gray-400">
