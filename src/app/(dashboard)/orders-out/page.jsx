@@ -301,6 +301,9 @@ const OrdersOut = () => {
           <thead className="bg-gray-700">
             <tr>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                Дата
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
                 ID
               </th>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
@@ -332,6 +335,16 @@ const OrdersOut = () => {
                 if (payout.status === "Отклонено") return <></>;
                 return (
                   <tr>
+                    <td className="px-6 text-sm py-8 text-gray-400">
+                      {payout.createdAt?.toDate?.().toLocaleString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false,
+                      })}
+                    </td>
                     <td className="px-6 text-sm py-8 text-gray-400">
                       {payout.id}
                     </td>

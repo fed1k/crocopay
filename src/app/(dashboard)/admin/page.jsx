@@ -121,7 +121,7 @@ const Admin = () => {
   };
 
   const savePayout = async () => {
-    const response = await addPayout(newPayout);
+    const response = await addPayout({...newPayout, createdAt: new Date()});
     if (response) {
       setPayoutModal(false);
     }
