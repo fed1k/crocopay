@@ -4,7 +4,7 @@ import "flatpickr/dist/flatpickr.min.css";
 import flatpickr from "flatpickr";
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { FaCog, FaTrashAlt } from "react-icons/fa";
+import { FaCloudDownloadAlt, FaCog, FaTrashAlt } from "react-icons/fa";
 import {
   FaCalendar,
   FaCopy,
@@ -138,7 +138,7 @@ const OrdersOut = () => {
         background: "#1F2937FF",
         showConfirmButton: true,
       });
-      return 
+      return;
     }
 
     setWorkStatus((prev) => !prev);
@@ -158,8 +158,6 @@ const OrdersOut = () => {
 
       return;
     }
-
-   
   };
 
   const handleCancel = async (payout) => {
@@ -331,9 +329,6 @@ const OrdersOut = () => {
           <thead className="bg-gray-700">
             <tr>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
-                Дата
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
                 ID
               </th>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
@@ -357,6 +352,9 @@ const OrdersOut = () => {
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
                 Действия
               </th>
+              <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                Прибыль
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-700">
@@ -366,16 +364,6 @@ const OrdersOut = () => {
                 if (!workStatus) return <></>;
                 return (
                   <tr>
-                    <td className="px-6 text-sm py-8 text-gray-400">
-                      {payout.createdAt?.toDate?.().toLocaleString("en-GB", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: false,
-                      })}
-                    </td>
                     <td className="px-6 text-sm py-8 text-gray-400">
                       {payout.id}
                     </td>
@@ -432,13 +420,13 @@ const OrdersOut = () => {
                       {payout.paymentTime}
                     </td>
                     <td className="px-6 text-sm py-8 text-gray-400">
-                      <div className="space-y-2">
+                      <div className="flex gap-3">
                         {payout?.document ? (
                           <a
                             target="_blank"
                             href={BASE_BUCKET_URL + payout.document}
                           >
-                            Чек PDF
+                            <FaCloudDownloadAlt className="w-5 h-5" />
                           </a>
                         ) : (
                           <label
@@ -472,14 +460,32 @@ const OrdersOut = () => {
                             <HiOutlineClipboardDocumentList className="w-6 h-6" />
                           </label>
                         )}
-                        <div
+                        {payout.status === "Ожидает" &&
+
+                          <div
                           onClick={() => handleCancel(payout)}
                           className="flex cursor-pointer gap-2 items-center"
-                        >
-                          <p>Отменить заявку на выплату</p>
+                          >
                           <FaTrash className="text-red-400" />
                         </div>
+                        }
                       </div>
+                    </td>
+                    <td className={`px-6 text-sm py-8 ${
+                        payout.status === "Ожидает"
+                          ? "text-yellow-400"
+                          : payout.status === "Выполнено"
+                          ? "text-green-500"
+                          : payout.status === "Отклонено"
+                          ? "text-red-500"
+                          : "text-gray-400"
+                      }`}>
+                      +
+                      {(
+                        (3.5 / 100) *
+                        Number(payout.amount.slice(0, -3))
+                      ).toFixed(2)}
+                      $
                     </td>
                   </tr>
                 );
