@@ -77,7 +77,6 @@ const DashboardLayout = ({ children }) => {
         if (data.price) {
           const numeric = parseFloat(data.price.replace(",", "."));
           setRate(numeric + 2);
-          console.log(numeric)
         }
       } catch {
         setRate("Error");

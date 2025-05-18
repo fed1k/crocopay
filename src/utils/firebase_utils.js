@@ -163,10 +163,18 @@ export const markPaymentAdmin = async (doc_id, status) => {
         throw new Error("User not found");
       }
 
+      // const total = 100;
+      // const percent = 3.5;
+
+      // const result = (percent / 100) * total;
+
+      // console.log(result); // 3.5
+      let addedPaymentAmount = (3.5 / 100) * paymentAmount
+
       const userData = userSnap.data();
       const currentAmount = userData?.balance || 0;
       await updateDoc(userRef, {
-        balance: currentAmount + paymentAmount,
+        balance: currentAmount + addedPaymentAmount,
       });
     }
 
@@ -327,4 +335,4 @@ export const deletePayout = async (doc_id) => {
     console.error("Error deleting user:", error);
     throw error;
   }
-}
+};

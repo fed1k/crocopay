@@ -125,6 +125,22 @@ const OrdersOut = () => {
   const showStatusModal = async (e) => {
     const isActive = e.target.checked;
 
+    if (user?.activationAmount >= user?.balance) {
+      Swal.fire({
+        title: "Активация недоступна",
+        text: "Для включения Pay out заказов необходимо активировать личный кабинет",
+        icon: "warning",
+        color: "white",
+        confirmButtonText: "Понятно",
+        customClass: {
+          confirmButton: "bg-greenish",
+        },
+        background: "#1F2937FF",
+        showConfirmButton: true,
+      });
+      return 
+    }
+
     setWorkStatus((prev) => !prev);
     await updateProfile("workStatus", isActive, user?.token);
     if (user?.activationAmount <= user?.balance && isActive) {
@@ -143,20 +159,7 @@ const OrdersOut = () => {
       return;
     }
 
-    if (user?.activationAmount >= user?.balance) {
-      Swal.fire({
-        title: "Активация недоступна",
-        text: "Для включения Pay out заказов необходимо активировать личный кабинет",
-        icon: "warning",
-        color: "white",
-        confirmButtonText: "Понятно",
-        customClass: {
-          confirmButton: "bg-greenish",
-        },
-        background: "#1F2937FF",
-        showConfirmButton: true,
-      });
-    }
+   
   };
 
   const handleCancel = async (payout) => {
