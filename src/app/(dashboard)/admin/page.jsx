@@ -26,7 +26,7 @@ import { BASE_BUCKET_URL } from "@/utils/constants";
 // import FileUpload from "@/components/FileUpload";
 
 const Admin = () => {
-  const { user } = useUserContext();
+  const { user, rate } = useUserContext();
 
   const router = useRouter();
 
@@ -230,10 +230,15 @@ const Admin = () => {
   };
 
   const handleStatus = async (status, id, user_id, user_balance, amount) => {
+    // console.log(40 + +amount)
     const response = await updatePayout("status", status, id);
     if (status === "Выполнено") {
-      const newBalance = +user_balance + +amount;
+      // const profit = (3.5 / 100 ) * +amount.slice(0,-3) 
+      const usdtConverted = +amount.slice(0,-3) / (rate + 1.15)
+      const profit = (3.5 / 100 ) * usdtConverted
+      const newBalance = +user_balance + profit + usdtConverted;
       await updateProfile("balance", newBalance, user_id);
+      await updatePayout("profit", profit + usdtConverted, id)
     }
 
     if (response?.success) {
