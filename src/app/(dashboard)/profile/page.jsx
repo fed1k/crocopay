@@ -12,7 +12,7 @@ import {
 } from "react-icons/fa6";
 import Swal from "sweetalert2";
 import { useUserContext } from "../layout";
-import { updateProfile } from "@/utils/firebase_utils";
+import { getUserPayouts, updateProfile } from "@/utils/firebase_utils";
 import { useEffect, useState } from "react";
 import { sendTelegramMessage } from "@/bot";
 import { sbaseUploadService } from "@/utils/supabase_utils";
@@ -21,21 +21,20 @@ import { BASE_BUCKET_URL } from "@/utils/constants";
 const Profile = () => {
   const { user, setUser } = useUserContext();
 
-  const [file, setFile] = useState(null)
+  const [file, setFile] = useState(null);
+  const [stats, setStats] = useState({ totalPaymentCount: 0, totalPayment: 0 });
 
-  const handleProfileImageUpload = async() => {
+  const handleProfileImageUpload = async () => {
     const response = await sbaseUploadService(file);
 
     if (response) {
-      setUser((prev) => ({...prev, image: response}))
-      updateProfile("image", response, user.token)
+      setUser((prev) => ({ ...prev, image: response }));
+      updateProfile("image", response, user.token);
     }
-  }
-
-
+  };
 
   const openAuthModal = () => {
-    if (user?.activationAmount <= user?.balance) return
+    if (user?.activationAmount <= user?.balance) return;
     Swal.fire({
       title: "Активация недоступна",
       color: "white",
@@ -110,12 +109,34 @@ const Profile = () => {
       sendTelegramMessage(
         `Пользователь ${user.name} перешел на страницу 'Профил'`
       );
+      getUserPayouts(user?.token).then((data) => {
+        if (data?.length) {
+          const result = data.reduce(
+            (acc, item) => {
+              if (item.status === "Выполнено" && item.profit) {
+                acc.totalProfit += item.profit;
+                acc.successCount += 1;
+              }
+              return acc;
+            },
+            { totalProfit: 0, successCount: 0 }
+          );
+
+          // Destructure the result
+          const { totalProfit, successCount } = result;
+
+          setStats({
+            totalPaymentCount: successCount,
+            totalPayment: totalProfit,
+          });
+        }
+      });
     }
   }, [user]);
 
   useEffect(() => {
-    handleProfileImageUpload()
-  }, [file])
+    handleProfileImageUpload();
+  }, [file]);
 
   return (
     <main className=" bg-gray-900 h-auto lg:h-[calc(100vh-64px)]  overflow-hidden">
@@ -164,12 +185,19 @@ const Profile = () => {
                 <div className="flex items-center gap-6 mb-8">
                   <div className="relative group">
                     <img
-                      src={user?.image ? BASE_BUCKET_URL + user?.image : "profile.png"}
+                      src={
+                        user?.image
+                          ? BASE_BUCKET_URL + user?.image
+                          : "profile.png"
+                      }
                       id="userAvatar"
                       className="w-20 h-20 object-cover rounded-full bg-gray-800"
                       alt="User Avatar"
                     />
-                    <label htmlFor="profile-pic" className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
+                    <label
+                      htmlFor="profile-pic"
+                      className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
+                    >
                       <FaCamera className="text-white" />
                     </label>
                     <input
@@ -295,7 +323,7 @@ const Profile = () => {
                       <span className="text-gray-400">Всего транзакций</span>
                     </div>
                     <p className="md:text-2xl text-xl font-bold text-white">
-                      0
+                      {stats.totalPaymentCount}
                     </p>
                   </div>
                   <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
@@ -305,7 +333,7 @@ const Profile = () => {
                       <span className="text-gray-400">Общий оборот</span>
                     </div>
                     <p className="md:text-2xl text-xl font-bold text-white">
-                      0.00 USDT
+                      {Math.floor(stats.totalPayment)} USDT
                     </p>
                   </div>
                   <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
@@ -315,7 +343,7 @@ const Profile = () => {
                       <span className="text-gray-400">Всего получено</span>
                     </div>
                     <p className="md:text-2xl text-xl font-bold text-white">
-                      0.00 USDT
+                      {Math.floor(stats.totalPayment)} USDT
                     </p>
                   </div>
                   <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">

@@ -128,7 +128,7 @@ const DashboardLayout = ({ children }) => {
                   id="sidebarBalance"
                   className="text-2xl font-bold text-white"
                 >
-                  {user?.balance + ".00" || 0.0}
+                  {Math.floor(user?.balance) + ".00" || 0.0}
                 </p>
                 <span className="text-sm font-mono text-teal-400">USDT</span>
               </div>

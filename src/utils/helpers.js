@@ -1,4 +1,4 @@
-import * as cheerio from 'cheerio';
+import * as cheerio from "cheerio";
 export function maskCardNumber(value) {
   // Strip all non-digit characters and limit to 16 digits
   const digits = value.replace(/\D/g, "").slice(0, 16);
@@ -11,7 +11,8 @@ export function maskPhoneNumber(value, countryCode) {
   const digits = value.replace(/\D/g, "");
 
   switch (countryCode) {
-    case "+7": { // Russia, Kazakhstan
+    case "+7": {
+      // Russia, Kazakhstan
       const d = digits.slice(1); // exclude country code digit
       let result = "+7";
       if (d.length > 0) result += ` (${d.slice(0, 3)}`;
@@ -20,7 +21,8 @@ export function maskPhoneNumber(value, countryCode) {
       if (d.length >= 9) result += `-${d.slice(8, 10)}`;
       return result;
     }
-    case "+998": { // Uzbekistan
+    case "+998": {
+      // Uzbekistan
       const d = digits.slice(3); // exclude country code digits
       let result = "+998";
       if (d.length > 0) result += ` (${d.slice(0, 2)}`;
@@ -30,7 +32,8 @@ export function maskPhoneNumber(value, countryCode) {
       return result;
     }
     case "+374": // Armenia
-    case "+992": { // Tajikistan
+    case "+992": {
+      // Tajikistan
       const d = digits.slice(3); // exclude country code digits
       let result = countryCode;
       if (d.length > 0) result += ` (${d.slice(0, 2)}`;
@@ -43,7 +46,6 @@ export function maskPhoneNumber(value, countryCode) {
       return value; // fallback, no mask
   }
 }
-
 
 // Converts string (like a Firebase doc ID) to a numeric hash
 function stringToNumber(str) {
@@ -99,7 +101,12 @@ export const requisitePercentageCalculator = (country) => {
     "Halyk Bank (Казахстан)",
   ];
 
-  const azeb = ["Kapital Bank (Азербайджан)", "PASHA Bank (Азербайджан)", "AMERIA Bank (Армения)", "Ararat Bank (Армения)"];
+  const azeb = [
+    "Kapital Bank (Азербайджан)",
+    "PASHA Bank (Азербайджан)",
+    "AMERIA Bank (Армения)",
+    "Ararat Bank (Армения)",
+  ];
   const gruz = ["Bank of Georgia (Грузия)", "TBC Bank (Грузия)"];
   const kryg = ["Optima Bank (Кыргызстан)", "KICB (Кыргызстан)"];
   const tj = [
@@ -145,31 +152,30 @@ export const requisitePercentageCalculator = (country) => {
   return data;
 };
 
-
 export async function scrapePrice() {
   try {
-    const res = await fetch('https://ru.investing.com/crypto/tether/usdt-rub', {
+    const res = await fetch("https://ru.investing.com/crypto/tether/usdt-rub", {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
       },
-      cache: 'no-store',
+      cache: "no-store",
     });
     const html = await res.text();
     const $ = cheerio.load(html);
     const raw = $('div[data-test="instrument-price-last"]').text().trim();
-    return parseFloat(raw.replace(',', '.'));
+    return parseFloat(raw.replace(",", "."));
   } catch {
     return null;
   }
 }
 
 export const generateSecureId = () => {
-  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-  const numbers = '0123456789';
-  const specials = '-';
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  const numbers = "0123456789";
+  const specials = "-";
   const allChars = letters + numbers + specials;
 
-  let id = '';
+  let id = "";
   // Ensure at least one character from each type
   id += letters.charAt(Math.floor(Math.random() * letters.length));
   id += numbers.charAt(Math.floor(Math.random() * numbers.length));
@@ -181,7 +187,16 @@ export const generateSecureId = () => {
   }
 
   // Shuffle the result so required chars aren't always in front
-  return id.split('').sort(() => 0.5 - Math.random()).join('');
+  return id
+    .split("")
+    .sort(() => 0.5 - Math.random())
+    .join("");
 };
 
+export const calculateProfileSuccessRate = (data) => {
+  const total = data.length; // 5
+  const completed = data.filter((item) => item.status === "Выполнено").length; // 3
+  const successRate = total > 0 ? ((completed / total) * 100) : "0";
 
+  return successRate;
+};

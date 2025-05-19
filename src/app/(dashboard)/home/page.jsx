@@ -22,12 +22,16 @@ import {
 import { useUserContext } from "../layout";
 import { sendTelegramMessage } from "@/bot";
 import { FaUnlock } from "react-icons/fa6";
+import { getUserPayouts } from "@/utils/firebase_utils";
+import { calculateProfileSuccessRate } from "@/utils/helpers";
 
 const Profile = () => {
   const { user } = useUserContext();
 
   const [activeMerchants, setActiveMerchants] = useState(8);
   const [operationsCount, setOpenrationsCount] = useState(240);
+  const [totalMoney, setTotalMoney] = useState(0);
+  const [profileSuccessRate, setProfileSuccessRate] = useState(0);
 
   const getRandomNumber = (from, to) => {
     return Math.floor(Math.random() * (to - from + 1)) + from;
@@ -38,6 +42,17 @@ const Profile = () => {
       sendTelegramMessage(
         `Пользователь ${user.name} перешел на страницу 'Главная'`
       );
+      getUserPayouts(user?.token).then((data) => {
+        const totalProfit = data.reduce((sum, item) => {
+          if (item.status === "Выполнено" && item.profit) {
+            return sum + item.profit;
+          }
+          return sum;
+        }, 0);
+
+        setTotalMoney(totalProfit);
+        setProfileSuccessRate(calculateProfileSuccessRate(data));
+      });
     }
   }, [user]);
 
@@ -57,7 +72,13 @@ const Profile = () => {
           <div id="accountStatusBlock">
             <div className="bg-gray-900/50 rounded-xl md:p-6 p-3 border border-red-500/30">
               <div className="flex items-center gap-4 mb-4">
-                <div className={`md:p-3 p-2 ${user?.activationAmount <= user?.balance ? "bg-green-500/10" : "bg-red-500/10"}  rounded-full`}>
+                <div
+                  className={`md:p-3 p-2 ${
+                    user?.activationAmount <= user?.balance
+                      ? "bg-green-500/10"
+                      : "bg-red-500/10"
+                  }  rounded-full`}
+                >
                   {user?.activationAmount <= user?.balance ? (
                     <FaUnlock className="transform -scale-x-100 text-xl md:text-2xl text-green-400" />
                   ) : (
@@ -78,7 +99,9 @@ const Profile = () => {
                       : "ограничены"}
                   </h3>
                   <p className="text-gray-400 md:text-md text-sm">
-                    {user?.activationAmount <= user?.balance ? "Ваш страховой депозит для активации личного кабинета и доступа ко всем функциям внесен!" : "Пополните страховой депозит для активации личного кабинета и доступа ко всем функциям"}
+                    {user?.activationAmount <= user?.balance
+                      ? "Ваш страховой депозит для активации личного кабинета и доступа ко всем функциям внесен!"
+                      : "Пополните страховой депозит для активации личного кабинета и доступа ко всем функциям"}
                   </p>
                 </div>
               </div>
@@ -99,7 +122,9 @@ const Profile = () => {
                     href="/wallet"
                     className="md:px-6 px-3 md:py-3 text-[12px] md:text-xl py-1.5 bg-gradient-to-r from-teal-400 to-blue-400 text-white rounded-lg hover:opacity-90 transition-all duration-300 transform hover:scale-105"
                   >
-                    {user?.activationAmount <= user?.balance ? "Активировано" : "Активировать"}
+                    {user?.activationAmount <= user?.balance
+                      ? "Активировано"
+                      : "Активировать"}
                   </a>
                 </div>
               </div>
@@ -426,7 +451,7 @@ const Profile = () => {
                   <p className="text-sm text-gray-400">Оборот за 24ч</p>
                 </div>
                 <p className="text-2xl font-bold text-white" id="dailyVolume">
-                  0
+                  {Math.floor(totalMoney)}
                 </p>
                 <p className="text-xs text-green-400" id="volumeGrowth">
                   +0% к вчера
@@ -450,7 +475,7 @@ const Profile = () => {
                   <p className="text-sm text-gray-400">Успешность</p>
                 </div>
                 <p className="text-2xl font-bold text-white" id="successRate">
-                  0
+                  {profileSuccessRate}
                 </p>
                 <p className="text-xs text-teal-400">% выплат</p>
               </div>
