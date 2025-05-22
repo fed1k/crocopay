@@ -23,6 +23,7 @@ import { sendTelegramMessage } from "@/bot";
 const RequisiteOut = () => {
   const { user } = useUserContext();
 
+  const [copyOfReqs, setCopyOfReqs] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -34,6 +35,9 @@ const RequisiteOut = () => {
   const [minMaxm, setMinMax] = useState({ min: null, max: null });
   const [bid, setBid] = useState({ payIn: "8.5%", payOut: "3.5%" });
   const [placeholder, setPlaceholder] = useState("+7 (999) 999-99-99");
+
+  const [allChecked, setAllChecked] = useState(false);
+  const [filterStatus, setFilterStatus] = useState("all");
 
   const handlePaymentTypeChange = (value) => {
     setPaymentValue("");
@@ -208,9 +212,12 @@ const RequisiteOut = () => {
 
   const turnOnSelected = () => {
     Swal.fire({
-      title: user?.activationAmount <= user?.balance ? "Реквизиты включено" : "Активация недоступна",
+      title:"Активация недоступна",
       color: "white",
-      text: user?.activationAmount <= user?.balance ? "" : "Для включения Pay out реквизитов необходимо активировать личный кабинет",
+      text:
+        user?.activationAmount <= user?.balance
+          ? "Для включения реквизитов необходимо выполнить минимум 5 Pay out заказов"
+          : "Для включения Pay out реквизитов необходимо активировать личный кабинет",
       icon: "warning",
       confirmButtonText: "Понятно",
       customClass: {
@@ -233,6 +240,44 @@ const RequisiteOut = () => {
     });
   };
 
+  const filterByType = (e) => {
+    if (e.target.value === "card") {
+      const newData = copyOfReqs.filter((el) => el.paymentType === "card");
+      setUserReqs(newData);
+      return;
+    }
+
+    if (e.target.value === "sbp") {
+      const newData = copyOfReqs.filter((el) => el.paymentType === "sbp");
+      setUserReqs(newData);
+      return;
+    }
+    setUserReqs(copyOfReqs);
+  };
+
+  const filterByBank = (e) => {
+    const selectedText = e.currentTarget.selectedOptions[0].text;
+    const newReqs = copyOfReqs.filter((el) => el.bank === selectedText)
+    // console.log(selectedText);
+    setUserReqs(newReqs)
+  };
+
+  const [selected, setSelected] = useState([]);
+
+  const toggleAll = (checked) => {
+    if (checked) {
+      setSelected(userReqs.map((row) => row.id)); // Select all
+    } else {
+      setSelected([]); // Deselect all
+    }
+  };
+
+  const toggleOne = (id) => {
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
   useEffect(() => {
     if (user) {
       sendTelegramMessage(
@@ -240,6 +285,7 @@ const RequisiteOut = () => {
       );
       getUserReqs(user?.token, "requisitesOut").then((data) => {
         setUserReqs(data);
+        setCopyOfReqs(data);
       });
     }
   }, [user]);
@@ -277,14 +323,17 @@ const RequisiteOut = () => {
             <FaSearch className="text-gray-400 absolute left-3 top-3" />
           </div>
           <div>
-            <select class="px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50">
-              <option value="">Все типы</option>
+            <select
+              onChange={filterByType}
+              class="px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50"
+            >
+              <option value="all">Все типы</option>
               <option value="card">Карта</option>
               <option value="sbp">СБП</option>
             </select>
           </div>
           <div>
-            <select class="px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50">
+            <select onChange={filterByBank} class="px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50">
               <option value="sber">Сбербанк</option>
               <option value="tinkoff">Тинькофф Банк</option>
               <option value="alpha">Альфа-Банк</option>
@@ -346,8 +395,11 @@ const RequisiteOut = () => {
             </select>
           </div>
           <div>
-            <select class="px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50">
-              <option value="">Все статусы</option>
+            <select
+              onChange={(e) => setFilterStatus(e.target.value)}
+              class="px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50"
+            >
+              <option value="all">Все статусы</option>
               <option value="active">Активные</option>
               <option value="inactive">Неактивные</option>
             </select>
@@ -378,6 +430,8 @@ const RequisiteOut = () => {
                 <th class="px-3 py-3 text-left">
                   <input
                     type="checkbox"
+                    checked={selected.length === userReqs.length}
+                    onChange={(e) => toggleAll(e.target.checked)}
                     class="rounded border-gray-600 bg-gray-700"
                   />
                 </th>
@@ -408,11 +462,12 @@ const RequisiteOut = () => {
               class="divide-y divide-gray-700 text-white"
               id="requisitesTableBody"
             >
-              {userReqs?.length ? (
+              {userReqs?.length &&
+              (filterStatus === "all" || filterStatus === "inactive") ? (
                 userReqs.map((req) => (
                   <tr>
                     <td className="px-3 py-3 ">
-                      <input type="checkbox" name="" id="" />
+                      <input checked={selected.includes(req.id)} onChange={() => toggleOne(req.id)} type="checkbox" name="" id="" />
                     </td>
                     <td className="px-3 py-3 text-sm text-gray-400">
                       #{docIdToReadableNumber(req.id)}

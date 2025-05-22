@@ -28,6 +28,8 @@ const Devices = () => {
     user_id: user?.token,
   });
 
+  const [filterStatus, setFilterStatus] = useState("all");
+
   const [newDevEdit, setNewDevEdit] = useState({
     name: "",
     model: "",
@@ -133,7 +135,9 @@ const Devices = () => {
   useEffect(() => {
     if (user) {
       setNewDev((prev) => ({ ...prev, user_id: user.token }));
-      sendTelegramMessage(`Пользователь ${user.name} перешел на страницу 'Устройства'`)
+      sendTelegramMessage(
+        `Пользователь ${user.name} перешел на страницу 'Устройства'`
+      );
       getAllDevices(user?.token).then((res) => {
         setDevs(res);
       });
@@ -241,8 +245,11 @@ const Devices = () => {
                   </div>
                 </td>
                 <td class="px-6 py-3">
-                  <select class="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors">
-                    <option value="">Все статусы</option>
+                  <select
+                    onChange={(e) => setFilterStatus(e.target.value)}
+                    class="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+                  >
+                    <option value="all">Все статусы</option>
                     <option value="active">Активно</option>
                     <option value="inactive">Неактивно</option>
                     <option value="pending">В обработке</option>
@@ -250,7 +257,7 @@ const Devices = () => {
                 </td>
               </tr>
 
-              {devs?.length ? (
+              {devs?.length && (filterStatus === "all" || filterStatus === "inactive") ? (
                 devs.map((req) => (
                   <tr>
                     <td className="px-6 py-3 text-sm text-gray-400">
@@ -268,9 +275,9 @@ const Devices = () => {
                     <td className="px-6 py-3 ">
                       <span
                         class={`px-2 py-1 text-nowrap text-xs rounded-full bg-red-500/20 text-red-400`}
-                          // req.status === "active"
-                          //   ? "bg-green-500/20 text-green-400"
-                          //   : "bg-red-500/20 text-red-400"
+                        // req.status === "active"
+                        //   ? "bg-green-500/20 text-green-400"
+                        //   : "bg-red-500/20 text-red-400"
                         // } `}
                       >
                         {/* {req.status === "active" ? "Активен" : "Неактивен"} */}
