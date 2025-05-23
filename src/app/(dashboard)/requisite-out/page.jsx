@@ -36,7 +36,6 @@ const RequisiteOut = () => {
   const [bid, setBid] = useState({ payIn: "8.5%", payOut: "3.5%" });
   const [placeholder, setPlaceholder] = useState("+7 (999) 999-99-99");
 
-  const [allChecked, setAllChecked] = useState(false);
   const [filterStatus, setFilterStatus] = useState("all");
 
   const handlePaymentTypeChange = (value) => {

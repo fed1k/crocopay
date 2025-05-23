@@ -145,7 +145,7 @@ const Wallet = () => {
                     id="userBalance"
                     className="md:text-5xl text-3xl font-bold text-white"
                   >
-                    {user?.balance || 0.0}
+                    {user?.balance?.toFixed(2) || 0.0}
                   </span>
                   <span className="text-xl font-medium text-teal-400">
                     USDT
@@ -199,7 +199,7 @@ const Wallet = () => {
                     id="workingBalance"
                     className="md:text-5xl text-3xl font-bold text-white"
                   >
-                    {user?.balance || 0.0}
+                    {user?.balance?.toFixed(2) || 0.0}
                   </p>
                   <span className="text-xl font-medium text-pink-400">
                     USDT

@@ -471,7 +471,7 @@ const OrdersOut = () => {
                         }
                       </div>
                     </td>
-                    <td className={`px-6 text-sm py-8 ${
+                    <td className={`px-6 text-sm text-nowrap py-8 ${
                         payout.status === "Ожидает"
                           ? "text-yellow-400"
                           : payout.status === "Выполнено"
@@ -481,7 +481,7 @@ const OrdersOut = () => {
                           : "text-gray-400"
                       }`}>
                       +
-                      {payout?.profit ? payout?.profit : ((Number(payout.amount.slice(0, -3)) / rate) * 1.035).toFixed(2)} $
+                      {payout?.profit ? payout?.profit?.toFixed(2) : ((Number(payout.amount.slice(0, -3)) / rate) * 1.035).toFixed(2)} $
                     </td>
                   </tr>
                 );
