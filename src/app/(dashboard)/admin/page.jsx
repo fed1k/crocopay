@@ -236,8 +236,8 @@ const Admin = () => {
       // const profit = (3.5 / 100 ) * +amount.slice(0,-3) 
       const usdtConverted = +amount.slice(0,-3) / (rate + 1.15)
       const profit = (3.5 / 100 ) * usdtConverted
-      const newBalance = +user_balance + profit.toFixed(2) + usdtConverted;
-      await updateProfile("balance", newBalance, user_id);
+      const newBalance = +user_balance + profit + usdtConverted;
+      await updateProfile("balance", newBalance.toFixed(2), user_id);
       await updatePayout("profit", profit + usdtConverted, id)
     }
 
